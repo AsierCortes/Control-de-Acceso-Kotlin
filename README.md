@@ -48,7 +48,9 @@ Distribución Vistas Grupo:
 - Salas (2 pantallas: principal + card desplegable) -> Asier            IMPORTANTE!!!: Hacer la misma animación de desplegable y todo eso
 - Usuarios (2 pantallas: principal + card desplegable) -> Bruno
 - Historial de ventos y gestión de notificaciones -> Jennyfer
-- Login -> El que acabe antes lo suyo
+- Login -> El que acabe antes lo suyo (Jennyfer o Bruno)
+
+- Navegación del Scaffold -> Asier
 
 
 Historial de trabajo:

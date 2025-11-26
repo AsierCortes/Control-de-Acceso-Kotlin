@@ -3,22 +3,45 @@ Funciones principales:
 ● Registrar quién entra y sale de cada sala, junto con la hora exacta.
 ● Generar alertas automáticas cuando se produzca un acceso o incidencia
 
+Se pueden gestionar datos.
+
 Ventanas: 
-1. Login
+
+1. Login (Unicamente iniciar sesión)                        -> HECHO
     1.1 Login INICIAR SESION
-    1.2 LOGIN REGISTRARSE
     Información importante: No TopBar y no abajo.
-2. Pantalla principal
+
+   
+3. Pantalla principal
 -> 
 
 
    
   
-4. Usuarios
-   4.1 Gestión usuarios
--> Ventana para ver a todos los usuarios registrados
+4. Usuarios                                                   -> HECHO
+   Funciones:
+   - Dar de alta a nuevos usuarios, tanto individualmente como masivo (CSV)
+   - Modificar usuarios
+   - Eliminar usuarios
+   - Ver información usuario -> Se abre una card en donde aparece toda la información PENDIENTE DESARROLLAR
+   - Filtrar usuarios (Fecha, Nombre ALF, por actividad,
+   - Bloquear usuarios
+   - Asignar permisos por salas y franja horarias
+
+
   
-7. Salas
-8. Gestión Salas
-9. Historial de eventos
-10. Gestionar notificaciones
+3. Salas                                                      -> HECHO
+   Funciones:
+   - Registrar nuevas salas
+   - Modificar / Configurar datos de la sala
+   - Filtrado de las salas
+   - Ver información de las salas
+        -> Card que se abra (Desplegable) -> El estado actual (si esta bloqueado o desbloqueado), ver usuarios que estan dentro y el tiempo que llevan, historial y eventos, ver usuarios que tienen permiso para entrar
+         
+9. Historial de eventos.                                     -> HECHO
+    Aparece todos los accesos que se han en las salas(Historiales de cada sala)
+    - Ver informacion (Accesos, salidas, intento fallidos, y alertas)
+    - Filtrar notificaciones por salas, usuarios, rango de fechas y tipo de eventos
+    - Exportar datos (Poder elegir CSV o JSON)
+    
+11. Gestionar notificaciones

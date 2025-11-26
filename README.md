@@ -38,10 +38,10 @@ Ventanas:
    - Ver información de las salas
         -> Card que se abra (Desplegable) -> El estado actual (si esta bloqueado o desbloqueado), ver usuarios que estan dentro y el tiempo que llevan, historial y eventos, ver usuarios que tienen permiso para entrar
          
-9. Historial de eventos.                                     -> HECHO
+9. Historial de eventos y gestión de notificaciones.                                     -> HECHO
     Aparece todos los accesos que se han en las salas(Historiales de cada sala)
     - Ver informacion (Accesos, salidas, intento fallidos, y alertas)
     - Filtrar notificaciones por salas, usuarios, rango de fechas y tipo de eventos
     - Exportar datos (Poder elegir CSV o JSON)
     
-11. Gestionar notificaciones
+

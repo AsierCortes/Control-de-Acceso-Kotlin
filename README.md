@@ -7,6 +7,8 @@ Se pueden gestionar datos.
 
 Ventanas: 
 
+IMPORTANTE!!!! ----> Todas las pantallas tienen Scaffold
+
 1. Login (Unicamente iniciar sesión)                        -> HECHO
     1.1 Login INICIAR SESION
     Información importante: No TopBar y no abajo.

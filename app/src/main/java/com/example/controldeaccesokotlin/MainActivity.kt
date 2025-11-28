@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -49,9 +52,8 @@ class MainActivity : ComponentActivity() {
 fun Main(){
     val navController = rememberNavController();
 
-    //Saber en qué ventana estamos en todo momento.
+    // Te dice en que pantalla estas actualmente (Es como un GPS)
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {if (currentRoute != "login") {
@@ -65,13 +67,39 @@ fun Main(){
     ) { innerPadding ->
 
         // Ventana de comienzo
-        NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(innerPadding)){
+        //initialState.destination.route: Es la pantalla de origen (de dónde vienes).
+        //targetState.destination.route: Es la pantalla de destino (a dónde vas).
+        NavHost(
+            navController = navController,
+            startDestination = "login",
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = {
+                /*
+                    Si estamos en login, la unica opción es pasar a salas,
+                    asi que unicamente se realizará la animación cuando estemos
+                    en login
+                 */
+                val origin = initialState.destination.route
+                val goTo = targetState.destination.route
+
+                (if(origin == "login"){
+                    fadeIn(tween(5000))
+                }else{
+                    // Animación del resto de pantallas
+                    slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300))
+                })
+            }
+        ){
             composable("salas") { Salas()}
             composable("usuarios") { Usuarios() }
             composable("notificaciones") { Notificaciones() }
             composable("login") { Login(changePrincipal = {
                 rutaSeleccionada ->
                 navController.navigate(rutaSeleccionada)
+                /*
+                    De momento pasamos un String con la ruta, ya que de momento
+                    no sabemos cual será la ventana principal desdpués de logearse
+                 */
             }) }
 
 

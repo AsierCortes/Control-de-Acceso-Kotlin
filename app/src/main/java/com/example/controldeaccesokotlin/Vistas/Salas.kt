@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Salas() {
-    Column (Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+    Column (Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
         Text("HOLA DESDE SALAS")
     }
 }

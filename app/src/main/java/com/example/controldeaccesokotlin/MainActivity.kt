@@ -33,14 +33,13 @@ import com.example.controldeaccesokotlin.Vistas.Login
 import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
-import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ControlDeAccesoKotlinTheme {
+            ControldeAccesoKotlinTheme() {
                 Main()
             }
         }
@@ -58,11 +57,11 @@ fun Main(){
         modifier = Modifier.fillMaxSize(),
         bottomBar = {if (currentRoute != "login") {
             CustomBottomBar(
-            changeView = {
-                rutaSeleccionada ->
-                navController.navigate(rutaSeleccionada)
-            }
-        )
+                changeView = {
+                        rutaSeleccionada ->
+                    navController.navigate(rutaSeleccionada)
+                }
+            )
         }}
     ) { innerPadding ->
 
@@ -93,14 +92,15 @@ fun Main(){
             composable("salas") { Salas()}
             composable("usuarios") { Usuarios() }
             composable("notificaciones") { Notificaciones() }
-            composable("login") { Login(changePrincipal = {
-                rutaSeleccionada ->
-                navController.navigate(rutaSeleccionada)
-                /*
-                    De momento pasamos un String con la ruta, ya que de momento
-                    no sabemos cual será la ventana principal desdpués de logearse
-                 */
-            }) }
+            composable("login") {
+                Login(changePrincipal = { rutaSeleccionada ->
+                    navController.navigate(rutaSeleccionada)
+                    /*
+                        De momento pasamos un String con la ruta, ya que de momento
+                        no sabemos cual será la ventana principal desdpués de logearse
+                     */
+                })
+            }
 
 
         }
@@ -144,11 +144,9 @@ fun CustomBottomBar(changeView : (String) -> Unit){
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun GreetingPreview() {
-    ControlDeAccesoKotlinTheme {
+fun ControldeAccesoKotlinTheme(function: @Composable () -> Unit) {
         Main()
     }
-}
 

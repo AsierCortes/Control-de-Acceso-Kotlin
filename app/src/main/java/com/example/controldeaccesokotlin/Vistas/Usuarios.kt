@@ -1,31 +1,27 @@
 package com.example.controldeaccesokotlin.Vistas
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+
 @Composable
-fun Usuarios(){
+fun Usuarios() {
     var inputText by remember { mutableStateOf("") }
 
     Column(
@@ -39,13 +35,6 @@ fun Usuarios(){
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Administra usuarios, permisos y accesos del sistema",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -69,12 +58,69 @@ fun Usuarios(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        TextField(
-            value = inputText,
-            onValueChange = { inputText = it },
-            label = { Text("Buscar usuario o ingresar dato") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+        BuscarTexto(  query = inputText,
+            onQueryChange = { newQuery -> inputText = newQuery },
+            onSearchClick = {})
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            items(10) { index ->
+                Tarjeta()
+            }
+        }
+    }
+
+}
+@Composable
+fun BuscarTexto(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearchClick: () -> Unit
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text("Buscar contactos...") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        shape = RoundedCornerShape(28.dp),
+        singleLine = true,
+        trailingIcon = {
+            IconButton(onClick = onSearchClick) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar"
+                )
+            }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            cursorColor = MaterialTheme.colorScheme.primary
+        )
+    )
+}
+@Composable
+fun Tarjeta() {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        modifier = Modifier
+            .size(width = 320.dp, height = 80.dp)
+    ) {
+        Text(
+            text = "Usuario ",
+            modifier = Modifier
+                .padding(8.dp),
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            text = "email@gmail.com "
+
         )
     }
 }

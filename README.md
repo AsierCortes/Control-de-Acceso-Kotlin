@@ -52,7 +52,4 @@ Distribución Vistas Grupo:
 
 - Navegación del Scaffold -> Asier
 
-
-Historial de trabajo:
-- 26/11/2025
-  Diseño (Draw.io)
+Titulos -> typography.headlineMedium, fontWeight = FontWeight.Bold)

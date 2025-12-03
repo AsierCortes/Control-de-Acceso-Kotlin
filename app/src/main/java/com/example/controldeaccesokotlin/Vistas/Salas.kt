@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -148,9 +149,12 @@ fun GenerarSalas() {
         listOf<String>("Sala 01", "Sala 02", "Sala 03", "Sala 04", "Sala 05", "Sala 06", "Sala 07")
 
     // Va a ver dos salas por fila
-    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        horizontalArrangement = Arrangement.Center
+    ) {
         items(salas) {
-            Card() {
+            Card(Modifier.fillMaxWidth()) {
                 Text(it)
             }
         }

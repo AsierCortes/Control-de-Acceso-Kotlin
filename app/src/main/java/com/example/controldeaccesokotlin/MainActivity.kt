@@ -33,7 +33,6 @@ import com.example.controldeaccesokotlin.Vistas.Login
 import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
-import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,11 +143,10 @@ fun CustomBottomBar(changeView : (String) -> Unit){
     }
 }
 
-@Preview(showBackground = true)
+
+
 @Composable
-fun GreetingPreview() {
-    ControlDeAccesoKotlinTheme {
-        Main()
-    }
+fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
+    Main()
 }
 

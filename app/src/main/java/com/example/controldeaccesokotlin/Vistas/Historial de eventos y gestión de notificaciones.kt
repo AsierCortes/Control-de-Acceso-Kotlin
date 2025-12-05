@@ -418,7 +418,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
     ) {
         val scroll = rememberScrollState()
 
-        Column(Modifier.padding(20.dp).verticalScroll(scroll)) {
+        Column(Modifier.padding(20.dp)) {
 
             // Tengo una funcion para llamar los diferentes tipos, que seguramente se transformará en tres diferentes funciones
             FiltrarPorUsuarioSalas(usuarios, "usuarios")

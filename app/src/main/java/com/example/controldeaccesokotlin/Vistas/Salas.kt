@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -59,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -421,7 +423,6 @@ fun BotonFlotanteAniadirSala(pulsaBotonFlontante: () -> Unit) {
 }
 
 
-
 @Composable
 fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
     Dialog(
@@ -455,13 +456,14 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
 
                 Spacer(Modifier.padding(20.dp))
 
+                // NOMBRE
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom =10.dp),
+                        .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = "Nombre: ",
                         style = typography.bodyLarge,
@@ -476,15 +478,56 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
                     )
                 }
 
+                // PLANTAx
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom =10.dp),
+                        .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
-                        text = "Ubicación ",
+                        text = "Planta: ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    Desplegable(modifier = Modifier.weight(0.6f), mutableListOf("1", "2", "3", "4"))
+
+                }
+
+                // EDIFICIO
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Edificio ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    Desplegable(
+                        modifier = Modifier.weight(0.6f),
+                        mutableListOf("Madrid", "Berlin", "Londres")
+                    )
+
+                }
+
+
+                // Nº Puerta
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Nº Puerta ",
                         style = typography.bodyLarge,
                         modifier = Modifier.weight(0.3f)
                     )
@@ -497,13 +540,15 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
                     )
                 }
 
+
+                // Capacidad
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom =10.dp),
+                        .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = "Capacidad :",
                         style = typography.bodyLarge,
@@ -518,40 +563,63 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
                     )
                 }
 
+
+                // Estado
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom =10.dp),
+                        .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = "Estado ",
                         style = typography.bodyLarge,
                         modifier = Modifier.weight(0.3f)
                     )
-                    Desplegable(modifier = Modifier.weight(0.6f))
+                    Desplegable(
+                        modifier = Modifier.weight(0.6f),
+                        mutableListOf("Libre", "Ocupado", "Bloqueado")
+                    )
                 }
 
+
+                // TIPO DE CERRADURA
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom =10.dp),
+                        .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = "Tipo de cerradura: ",
                         style = typography.bodyLarge,
                         modifier = Modifier.weight(0.3f)
                     )
 
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .weight(0.6f),
-                        value = "sddddddd ",
-                        onValueChange = {}
+                    Desplegable(
+                        modifier = Modifier.weight(0.6f),
+                        mutableListOf("Sobreponer", "Electrónica", "Digital", "Multipunto")
                     )
+
+                }
+
+                Spacer(Modifier.padding(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    // BOTÓN CREAR SALA
+                    Button(
+                        onClick = {},       // CREAR SALA
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(text = "Crear Sala")
+                    }
                 }
 
 
@@ -562,12 +630,11 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
 
 
 @Composable
-fun Desplegable(modifier: Modifier) {
+fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
     var expanded by remember { mutableStateOf(false) }
-    val opciones = listOf("Usuario", "Administrador")
     var seleccion by remember { mutableStateOf(opciones[0]) }
 
-    Column (modifier = modifier.border(1.dp, Color.Black)) {
+    Column(modifier = modifier.border(1.dp, Color.Black)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -604,7 +671,6 @@ fun Desplegable(modifier: Modifier) {
 }
 
 
-
 @Composable
 fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit) {
     Dialog(
@@ -622,13 +688,117 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-
+            // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
             Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .fillMaxSize()         // Que ocupe toda la carta
+                    .padding(16.dp) // Un poco de margen para que no toque los bordes
+                    .weight(0.2f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
             ) {
-                Text(textoMostrar)
+                Text(
+                    text = "Información de la Sala",
+                    style = typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Spacer(Modifier.padding(20.dp))
+
+                // ESTADO DE LA SALA
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Estado ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .border(1.dp, Color.Black)
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .height(30.dp)
+                            .wrapContentHeight(Alignment.CenterVertically), // Para que el texto quede centrado verticalmente en esos 30dp,
+
+                        text = " \uD83D\uDD34 Bloqueado",
+                    )
+
+
+                }
+
+                // Usuarios
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Usuarios ",
+                        style = typography.bodyLarge,
+                    )
+
+                    // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
+                    Text(
+                        text = "Aqui iría una lazyGridColumn con los usuarios que hay dentro"
+                    )
+
+                }
+
+                // Cambiar el estado de la sala
+                // Estado
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.2f)
+
+                        .padding(bottom = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Cambiar Estado ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+                    Desplegable(
+                        modifier = Modifier.weight(0.6f),
+                        mutableListOf("\uD83D\uDFE2 Libre", " \uD83D\uDFE2 Ocupado", " \uD83D\uDD34 Bloqueado")
+                    )
+                }
+
+
+                // Visualizar histórico de accesos y eventos
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Histórico Accesos ",
+                        style = typography.bodyLarge,
+                    )
+
+                    // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
+                    Text(
+                        text = "Aqui iría una lazyGridColumn con los el histórico de accesos y eventos"
+                    )
+
+                }
+
+
             }
         }
     }
@@ -647,6 +817,16 @@ fun PreviewSalas() {
 fun PreviewMostrarDialogCrearSala() {
     ControlDeAccesoKotlinTheme {
         MostrarDialogoCrearSala {
+
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PrevierMostrarDialogoInformacionSala() {
+    ControlDeAccesoKotlinTheme {
+        MostrarDialogoInformacionSala("Sala1") {
 
         }
     }

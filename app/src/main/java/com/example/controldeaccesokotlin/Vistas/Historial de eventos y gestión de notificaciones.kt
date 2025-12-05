@@ -216,7 +216,6 @@ fun Notificaciones() {
             // 2. EL BOTÓN
             Button(
                 onClick = {},
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                 shape = RoundedCornerShape(10.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
@@ -235,15 +234,17 @@ fun Notificaciones() {
         // Escoger entre ModalBottomSheet, AlertDialog o DropDown
         Row(Modifier.padding(vertical = 20.dp)) {
             Button(
-                { verOpcionesFiltrado = true },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+                onClick = { verOpcionesFiltrado = true },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF455A64)),
                 modifier = Modifier
                     .weight(1f) // Hace referencia a unidades de peso, tal como flex-grow en CSS
                     .padding(end = 8.dp)
             ) { Text("Filtrar") }
             Button(
-                { verOpcionesExportado = true},
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                onClick = { verOpcionesExportado = true},
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)

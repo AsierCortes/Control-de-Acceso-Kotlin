@@ -1,4 +1,6 @@
 package com.example.controldeaccesokotlin
+import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
+
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -33,7 +36,7 @@ import com.example.controldeaccesokotlin.Vistas.Login
 import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
-import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +114,7 @@ fun Main(){
 @Composable
 fun CustomBottomBar(changeView : (String) -> Unit){
 
-    var salasChecked by remember { mutableStateOf(true) }
+    var salasChecked: Boolean by remember { mutableStateOf(true) }
     var usuariosChecked by remember { mutableStateOf(false) }
     var notificacionesChecked by remember { mutableStateOf(false) }
 
@@ -144,11 +147,4 @@ fun CustomBottomBar(changeView : (String) -> Unit){
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ControlDeAccesoKotlinTheme {
-        Main()
-    }
-}
 

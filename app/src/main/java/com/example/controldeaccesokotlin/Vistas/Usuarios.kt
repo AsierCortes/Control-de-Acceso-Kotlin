@@ -112,7 +112,7 @@ fun Usuarios() {
             Button(
                 onClick = { registrar = true },
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF263238)),
                 modifier = Modifier
                     .height(50.dp)
             ) {
@@ -122,7 +122,7 @@ fun Usuarios() {
             Button(
                 onClick = { cargar = true },
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                 modifier = Modifier
                     .height(50.dp)
             ) {
@@ -526,7 +526,6 @@ fun BotonFiltrar(onClick: () -> Unit) {
         modifier = Modifier
             .height(50.dp)
             .padding(horizontal = 8.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {

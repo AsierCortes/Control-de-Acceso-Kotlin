@@ -27,23 +27,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+// Modelo para representar un usuario
 data class Usuario(
     val nombre: String,
     val email: String,
     val telefono: String,
     val fecha: String,
     val activo: Boolean,
-    val bloqueado: Boolean,
+    val bloqueado: Boolean
 )
-
 
 @Composable
 fun Usuarios() {
+    // Estados locales para controlar la UI
     var texto by remember { mutableStateOf("") }
     var registrar by remember { mutableStateOf(false) }
     var cargar by remember { mutableStateOf(false) }
     var mostrarFiltros by remember { mutableStateOf(false) }
 
+    // Lista inicial de usuarios de ejemplo
     var usuarios by remember {
         mutableStateOf(
             listOf(
@@ -51,43 +53,16 @@ fun Usuarios() {
                 Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
                 Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
                 Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
-                Usuario(
-                    "Miguel Torres",
-                    "miguel@gmail.com",
-                    "600555666",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "Sofía Martínez",
-                    "sofia@gmail.com",
-                    "600666777",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "David Fernández",
-                    "david@gmail.com",
-                    "600777888",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
+                Usuario("Miguel Torres", "miguel@gmail.com", "600555666", "13/03/2024", true, false),
+                Usuario("Sofía Martínez", "sofia@gmail.com", "600666777", "13/03/2024", true, false),
+                Usuario("David Fernández", "david@gmail.com", "600777888", "13/03/2024", true, false),
                 Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
-                Usuario(
-                    "Javier Morales",
-                    "javier@gmail.com",
-                    "600999000",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
+                Usuario("Javier Morales", "javier@gmail.com", "600999000", "13/03/2024", true, false),
                 Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
             )
         )
     }
+
 
     val usuariosFiltrados = usuarios.filter {
         it.nombre.contains(texto, ignoreCase = true) ||
@@ -99,6 +74,7 @@ fun Usuarios() {
             .fillMaxSize()
             .padding(24.dp)
     ) {
+        // Título
         Text(
             text = "Gestión de Usuarios",
             style = MaterialTheme.typography.headlineMedium,
@@ -107,24 +83,25 @@ fun Usuarios() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Botones de acción
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
 
+            // Botón para registrar nuevo usuario
             Button(
                 onClick = { registrar = true },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF263238)),
-                modifier = Modifier
-                    .height(50.dp)
+                modifier = Modifier.height(50.dp)
             ) {
                 Text("Nuevo Usuario")
             }
 
+            // Botón para carga masiva desde CSV
             Button(
                 onClick = { cargar = true },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
-                modifier = Modifier
-                    .height(50.dp)
+                modifier = Modifier.height(50.dp)
             ) {
                 Text("Carga Masiva (CSV)")
             }
@@ -132,32 +109,36 @@ fun Usuarios() {
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        //TextField para buscar usuarios
         BuscarTexto()
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
+        // Botón para abrir filtros
         BotonFiltrar(onClick = { mostrarFiltros = true })
 
+        // Si se muestran filtros te lleva a la funcion filtros porque empece primero el boton de filtrar
         if (mostrarFiltros) {
             Filtros(
-                Cancelar = { mostrarFiltros = false }, Aplicar = { mostrarFiltros = false }
+                Cancelar = { mostrarFiltros = false },
+                Aplicar = { mostrarFiltros = false }
             )
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Lista de usuarios filtrados
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(usuariosFiltrados) { usuario ->
-                Tarjeta(usuario)
+                Tarjeta(usuario) // Mete cada usuario en una tarjeta
             }
         }
     }
 
+    // Diálogo de carga masiva
     if (cargar) {
         CargaMasiva(
             Cancelar = { cargar = false },
@@ -168,17 +149,11 @@ fun Usuarios() {
         )
     }
 
-
+    // Diálogo de nuevo usuario
     if (registrar) {
         NuevoUsuario(
             Cancelar = { registrar = false },
-            Guardar = { nombre, email, telefono, fecha ->
-                if (nombre.isNotBlank() && email.isNotBlank() && telefono.isNotBlank() && fecha.isNotBlank()) {
-                    usuarios = usuarios + Usuario(nombre, email, telefono, fecha, true, false)
 
-                }
-                registrar = false
-            }
         )
     }
 }
@@ -197,6 +172,7 @@ fun CargaMasiva(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
+                // Instrucciones sobre el formato del archivo CSV
                 Text(
                     text = "Formato del archivo CSV",
                     style = MaterialTheme.typography.titleMedium,
@@ -210,12 +186,13 @@ fun CargaMasiva(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Área simulada para seleccionar o arrastrar archivo
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp)
                         .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
-                        .clickable { },
+                        .clickable { }, // Aquí podrías implementar selección de archivo
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -225,11 +202,13 @@ fun CargaMasiva(
                 }
             }
         },
+        // Botón de confirmación
         confirmButton = {
             Button(onClick = Importar) {
                 Text("Importar Usuarios...")
             }
         },
+        // Botón de cancelación
         dismissButton = {
             Button(onClick = Cancelar) {
                 Text("Cancelar")
@@ -237,115 +216,108 @@ fun CargaMasiva(
         }
     )
 }
-
+//Funcion para crear un nuevo usuario
 @Composable
 fun NuevoUsuario(
     Cancelar: () -> Unit,
-    Guardar: (String, String, String, String) -> Unit
 ) {
+    // Estados locales para los campos del formulario
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
 
+    // Estados para los checkboxes
     var usuarioActivo by remember { mutableStateOf(false) }
     var usuarioBloqueado by remember { mutableStateOf(false) }
+
+    // Diálogo para crear un nuevo usuario
     AlertDialog(
-        onDismissRequest = Cancelar,
-        title = { Text("Nuevo Usuario") },
+        onDismissRequest = Cancelar, // Se cierra si se pulsa fuera del diálogo
+        title = { Text("Nuevo Usuario") }, // Título del diálogo
         text = {
             Column {
+
                 Text(
                     "* Campos obligatorios*",
                     style = typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Nombre Completo*",
-                    style = typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+
+                Text("Nombre Completo*", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
                     label = { Text("Nombre Completo") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Email*",
-                    style = typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+                // Campo: Email
+                Text("Email*", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("ejemplo@gmail.com") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Telefono *",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+                // Campo: Teléfono
+                Text("Telefono *", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = telefono,
                     onValueChange = { telefono = it },
                     label = { Text("+34 600 333 999") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Rol *",
-                    style = typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+                // Campo: Rol (usa un desplegable)
+                Text("Rol *", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 Desplegable()
-                Text(
-                    "Fecha del alta *",
-                    style = typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+                // Campo: Fecha de alta
+                Text("Fecha del alta *", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = fecha,
                     onValueChange = { fecha = it },
                     label = { Text("DD/MM/AAAA") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                // Checkbox: Usuario activo
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = usuarioActivo,
                         onCheckedChange = { usuarioActivo = it }
                     )
-                    Text(
-                        "Usuario Activo",
-                        style = typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Usuario Activo", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 }
 
+                // Checkbox: Usuario bloqueado
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = usuarioBloqueado,
                         onCheckedChange = { usuarioBloqueado = it }
                     )
-                    Text(
-                        "Usuario Bloqueado",
-                        style = typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Usuario Bloqueado", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
                 }
             }
-
-
         },
+        // Botón de confirmación
         confirmButton = {
-            Button(onClick = { Guardar(nombre, email, telefono, fecha) }) {
+            Button(onClick = { }) {
                 Text("Guardar")
             }
         },
+        // Botón de cancelación
         dismissButton = {
             Button(onClick = Cancelar) {
                 Text("Cancelar")
@@ -353,29 +325,23 @@ fun NuevoUsuario(
         }
     )
 }
-
 @Composable
 fun Desplegable() {
-    var expandir by remember { mutableStateOf(false) }
-    val opciones = listOf("Usuario", "Administrador")
-    var seleccion by remember { mutableStateOf(opciones[0]) }
+    var expandir by remember { mutableStateOf(false) } // Controla si el menú está abierto
+    val opciones = listOf("Usuario", "Administrador") // Opciones disponibles
+    var seleccion by remember { mutableStateOf(opciones[0]) } // Opción seleccionada
 
     Column {
+        // Fila que muestra la opción seleccionada y el icono de desplegar
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expandir = true }
+                .clickable { expandir = true } // Al hacer clic abre el menú
                 .padding(8.dp)
         ) {
-            Text(
-                text = seleccion,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Desplegar"
-            )
+            Text(text = seleccion, modifier = Modifier.weight(1f))
+            Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Desplegar")
         }
 
         // Menú desplegable
@@ -387,40 +353,33 @@ fun Desplegable() {
                 DropdownMenuItem(
                     text = { Text(opcion) },
                     onClick = {
-                        seleccion = opcion
-                        expandir = false
+                        seleccion = opcion // Actualiza la selección
+                        expandir = false   // Cierra el menú
                     }
                 )
             }
         }
     }
 }
-
 @Composable
 fun DesplegableOrdenarPor() {
-    var expandir by remember { mutableStateOf(false) }
+    var expandir by remember { mutableStateOf(false) } // Controla si el menú está abierto
     val opciones = listOf("Nombre A-Z", "Nombre Z-A", "FechaAlta(Reciente)", "FechaAlta(Antigua)")
-    var seleccion by remember { mutableStateOf(opciones[0]) }
+    var seleccion by remember { mutableStateOf(opciones[0]) } // Opción seleccionada
 
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expandir = true }
+                .clickable { expandir = true } // Abre el menú
                 .padding(8.dp)
         ) {
-            Text(
-                text = seleccion,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Desplegar"
-            )
+            Text(text = seleccion, modifier = Modifier.weight(1f))
+            Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Desplegar")
         }
 
-        // Menú desplegable
+        // Menú desplegable con opciones de ordenación
         DropdownMenu(
             expanded = expandir,
             onDismissRequest = { expandir = false }
@@ -480,9 +439,7 @@ fun DesplegableEstado() {
 }
 
 @Composable
-fun BuscarTexto(
-
-) {
+fun BuscarTexto() {
     var textoIntroducido by remember { mutableStateOf("") }
 
     OutlinedTextField(
@@ -493,7 +450,7 @@ fun BuscarTexto(
             .height(50.dp),
         placeholder = {
             Text(
-                text = "Buscar sala...",
+                text = "Buscar usuario...",
                 style = typography.bodyMedium,
                 color = Color.Gray
             )
@@ -510,6 +467,7 @@ fun BuscarTexto(
                 modifier = Modifier.size(20.dp)
             )
         },
+        //Colores del textfield
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
@@ -518,7 +476,7 @@ fun BuscarTexto(
         )
     )
 }
-
+//Funcion del boton filtrar
 @Composable
 fun BotonFiltrar(onClick: () -> Unit) {
     Button(
@@ -529,6 +487,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
+        //Icono para filtrar
         Icon(
             imageVector = Icons.Filled.AddCircle,
             contentDescription = "Filtrar",
@@ -542,7 +501,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
         )
     }
 }
-
+//Tarjeta aplicada a cada usuario
 @Composable
 fun Tarjeta(usuario: Usuario) {
     var expandir by remember { mutableStateOf(false) }
@@ -563,7 +522,6 @@ fun Tarjeta(usuario: Usuario) {
                 .padding(12.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // Encabezado
             Text(
                 text = usuario.nombre,
                 style = MaterialTheme.typography.bodyLarge,
@@ -578,7 +536,7 @@ fun Tarjeta(usuario: Usuario) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Fila clickable para expandir/contraer
+            // Fila clickable para expandir y contraer
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -595,7 +553,7 @@ fun Tarjeta(usuario: Usuario) {
                     contentDescription = "Expandir/Contraer"
                 )
             }
-
+            //Condicion si se expande muestra todos los botones de opciones
             if (expandir) {
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -640,7 +598,7 @@ fun Tarjeta(usuario: Usuario) {
         }
     }
 }
-
+//Funcion para los filtros
 @Composable
 fun Filtros(
     Cancelar: () -> Unit,
@@ -648,9 +606,9 @@ fun Filtros(
 ) {
     var desdeFecha by remember { mutableStateOf("") }
     var hastaFecha by remember { mutableStateOf("") }
-
+//Diálogo de filtros mas los campos
     AlertDialog(
-        onDismissRequest = { /* nada */ },
+        onDismissRequest = { Cancelar() },
         title = { Text("Filtrar por:") },
         text = {
             Column {
@@ -697,13 +655,14 @@ fun Filtros(
                 DesplegableOrdenarPor()
             }
         },
+
         dismissButton = {
             Button(onClick = Cancelar) {
                 Text("Cancelar")
             }
         },
         confirmButton = {
-            Button(onClick = { Cancelar }) {
+            Button(onClick =  Cancelar ) {
                 Text("Aplicar filtros")
             }
 

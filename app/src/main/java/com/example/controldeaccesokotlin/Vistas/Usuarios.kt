@@ -47,16 +47,44 @@ fun Usuarios() {
     var usuarios by remember {
         mutableStateOf(
             listOf(
-                Usuario("Bruno Linares", "bruno@gmail.com", "600111222", "13/03/2024",true,false),
-                Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024",true,false),
-                Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024",true,false),
-                Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024",true,false),
-                Usuario("Miguel Torres", "miguel@gmail.com", "600555666", "13/03/2024",true,false),
-                Usuario("Sofía Martínez", "sofia@gmail.com", "600666777", "13/03/2024",true,false),
-                Usuario("David Fernández", "david@gmail.com", "600777888", "13/03/2024",true,false),
-                Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024",true,false),
-                Usuario("Javier Morales", "javier@gmail.com", "600999000", "13/03/2024",true,false),
-                Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024",true,false)
+                Usuario("Bruno Linares", "bruno@gmail.com", "600111222", "13/03/2024", true, false),
+                Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
+                Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
+                Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
+                Usuario(
+                    "Miguel Torres",
+                    "miguel@gmail.com",
+                    "600555666",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario(
+                    "Sofía Martínez",
+                    "sofia@gmail.com",
+                    "600666777",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario(
+                    "David Fernández",
+                    "david@gmail.com",
+                    "600777888",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
+                Usuario(
+                    "Javier Morales",
+                    "javier@gmail.com",
+                    "600999000",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
             )
         )
     }
@@ -113,8 +141,7 @@ fun Usuarios() {
 
         if (mostrarFiltros) {
             Filtros(
-                Cancelar = { mostrarFiltros = false }
-                , Aplicar = { mostrarFiltros = false }
+                Cancelar = { mostrarFiltros = false }, Aplicar = { mostrarFiltros = false }
             )
         }
 
@@ -368,6 +395,7 @@ fun Desplegable() {
         }
     }
 }
+
 @Composable
 fun DesplegableOrdenarPor() {
     var expandir by remember { mutableStateOf(false) }
@@ -409,6 +437,7 @@ fun DesplegableOrdenarPor() {
         }
     }
 }
+
 @Composable
 fun DesplegableEstado() {
     var expandir by remember { mutableStateOf(false) }
@@ -449,6 +478,7 @@ fun DesplegableEstado() {
         }
     }
 }
+
 @Composable
 fun BuscarTexto(
 
@@ -609,77 +639,82 @@ fun Tarjeta(usuario: Usuario) {
                 }
             }
         }
-    }}
-    @Composable
-    fun Filtros(
-        Cancelar: () -> Unit,
-        Aplicar: () -> Unit) {
-        var desdeFecha by remember { mutableStateOf("") }
-        var hastaFecha by remember { mutableStateOf("") }
+    }
+}
 
-        AlertDialog(
-            onDismissRequest = { /* nada */ },
-            title = { Text("Filtrar por:") },
-            text = {
-                Column {
-                    Text(
-                        "Fecha Alta Desde*",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    OutlinedTextField(
-                        value = desdeFecha,
-                        onValueChange = { desdeFecha = it },
-                        label = { Text("DD/MM/AAAA") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+@Composable
+fun Filtros(
+    Cancelar: () -> Unit,
+    Aplicar: () -> Unit
+) {
+    var desdeFecha by remember { mutableStateOf("") }
+    var hastaFecha by remember { mutableStateOf("") }
 
-                    Text(
-                        "Fecha Alta Hasta*",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    OutlinedTextField(
-                        value = hastaFecha,
-                        onValueChange = { hastaFecha = it },
-                        label = { Text("DD/MM/AAAA") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+    AlertDialog(
+        onDismissRequest = { /* nada */ },
+        title = { Text("Filtrar por:") },
+        text = {
+            Column {
+                Text(
+                    "Fecha Alta Desde*",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                OutlinedTextField(
+                    value = desdeFecha,
+                    onValueChange = { desdeFecha = it },
+                    label = { Text("DD/MM/AAAA") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    "Fecha Alta Hasta*",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                OutlinedTextField(
+                    value = hastaFecha,
+                    onValueChange = { hastaFecha = it },
+                    label = { Text("DD/MM/AAAA") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Text(
-                        "Estado",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    DesplegableEstado()
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    "Estado",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                DesplegableEstado()
 
-                    Text(
-                        "Rol *",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    DesplegableOrdenarPor()
-                }
-            },
-            confirmButton = {
-                Button(onClick = { /* nada */ }) {
-                    Text("Aplicar filtros")
-                }
-            },
-            dismissButton = {
-                Button(onClick = { /* nada */ }) {
-                    Text("Cancelar")
-                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    "Rol *",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                DesplegableOrdenarPor()
             }
-        )
-    }
+        },
+        dismissButton = {
+            Button(onClick = Cancelar) {
+                Text("Cancelar")
+            }
+        },
+        confirmButton = {
+            Button(onClick = { Cancelar }) {
+                Text("Aplicar filtros")
+            }
 
-    @Preview
-    @Composable
-    fun UsuariosPreview() {
-        Usuarios()
-    }
+
+        }
+    )
+}
+
+@Preview
+@Composable
+fun UsuariosPreview() {
+    Usuarios()
+}

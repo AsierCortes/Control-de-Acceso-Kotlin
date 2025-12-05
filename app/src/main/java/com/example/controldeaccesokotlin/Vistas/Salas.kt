@@ -2,6 +2,7 @@ package com.example.controldeaccesokotlin.Vistas
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,15 +22,24 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
@@ -343,6 +353,7 @@ fun GenerarSalas() {
                 elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),   // SOMBRA TARJETA
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                 border = BorderStroke(1.dp, Color.Black),
+                // Hacemos que sea clickeable
                 modifier = Modifier.clickable(
                     onClick = { salaSeleccionada = infoSalaActual }
 
@@ -409,6 +420,8 @@ fun BotonFlotanteAniadirSala(pulsaBotonFlontante: () -> Unit) {
     }
 }
 
+
+
 @Composable
 fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
     Dialog(
@@ -440,17 +453,156 @@ fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                 )
 
-                Spacer(Modifier.padding(10.dp))
-                Text(text = "Nombre: ")
-                Text(text = "Ubicación: ")
-                Text(text = "Capacidad: ")
-                Text(text = "Estado: ")
-                Text(text = "Tipo de cerradura: ")
+                Spacer(Modifier.padding(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom =10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Nombre: ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(0.6f),
+                        value = "Pedro Camacho",
+                        onValueChange = {}
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom =10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Ubicación ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(0.6f),
+                        value = "B104",
+                        onValueChange = {}
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom =10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Capacidad :",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(0.6f),
+                        value = "30 personas",
+                        onValueChange = {}
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom =10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Estado ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+                    Desplegable(modifier = Modifier.weight(0.6f))
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom =10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = "Tipo de cerradura: ",
+                        style = typography.bodyLarge,
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(0.6f),
+                        value = "sddddddd ",
+                        onValueChange = {}
+                    )
+                }
+
 
             }
         }
     }
 }
+
+
+@Composable
+fun Desplegable(modifier: Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+    val opciones = listOf("Usuario", "Administrador")
+    var seleccion by remember { mutableStateOf(opciones[0]) }
+
+    Column (modifier = modifier.border(1.dp, Color.Black)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
+                .padding(8.dp)
+        ) {
+            Text(
+                text = seleccion,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = "Desplegar"
+            )
+        }
+
+        // Menú desplegable
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            opciones.forEach { opcion ->
+                DropdownMenuItem(
+                    text = { Text(opcion) },
+                    onClick = {
+                        seleccion = opcion
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
 
 
 @Composable

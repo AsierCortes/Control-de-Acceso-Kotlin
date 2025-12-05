@@ -2,7 +2,6 @@ package com.example.controldeaccesokotlin.Vistas
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,11 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -32,16 +28,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,15 +45,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.isTraversalGroup
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -161,15 +148,8 @@ fun BuscadorSencillo() {
             modifier = Modifier
                 .height(50.dp) // Misma altura que el input
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 4.dp)
-                    .size(20.dp)
-            )
             Text(
-                text = "Añadir",
+                text = "Buscar",
                 style = typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -186,8 +166,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
     var libres = false
     var ocupadas = false
 
-   var tabSeleccionado by remember { mutableStateOf(0) }
-
+    var tabSeleccionado by remember { mutableStateOf(0) }
 
 
     var selectedDestination by rememberSaveable { mutableStateOf("todas") }
@@ -201,7 +180,13 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             ocupadas = false
 
             tabSeleccionado = 0
-        }) { Text(text = "Todas", style = typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp)) }
+        }) {
+            Text(
+                text = "Todas",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
 
         // LIBRE
         Tab(libres, {
@@ -211,7 +196,13 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             ocupadas = false
 
             tabSeleccionado = 1
-        }) { Text(text = "Libres", style = typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp))}
+        }) {
+            Text(
+                text = "Libres",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
 
         // OCUPADAS
         Tab(ocupadas, {
@@ -221,7 +212,13 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             libres = false
 
             tabSeleccionado = 2
-        }) { Text(text = "Ocupadas", style = typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp))}
+        }) {
+            Text(
+                text = "Ocupadas",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
     }
 
     NavHost(navController, startDestination = "todas") {
@@ -236,14 +233,47 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
 
 @Composable
 fun Todas() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+    // Se activa y se pone a true si alguien lo pulsa
+    var crearSala by remember { mutableStateOf(false) }
+
+    // 1. Usamos BOX para apilar capas (Lista al fondo, Botón arriba)
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
 
-        GenerarSalas()
+        // CAPA DEL FONDO: La lista de salas
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter  // Lo alinea en el centro horizontal
+
+        ) {
+            GenerarSalas()
+        }
+
+        // CAPA SUPERIOR: El botón flotante
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd) // Alineado abajo a la derecha
+                .padding(25.dp)             // Margen para no pegar al borde
+        ) {
+            BotonFlotanteAniadirSala(
+                pulsaBotonFlontante = {
+                    // Creamos sala == true
+                    crearSala = true
+                }
+            )
+        }
+
+        // El diálogo se crea aquí, fuera del botón, condicionado por la variable de estado.
+        if (crearSala) {
+            MostrarDialogoCrearSala(
+                pulsarFuera = {
+                    // Al cerrar, volvemos a ponerlo en false
+                    crearSala = false
+                }
+            )
+        }
     }
 }
 
@@ -275,10 +305,27 @@ fun Ocupadas() {
 @Composable
 fun GenerarSalas() {
     val salas =
-        listOf<String>("Sala 01", "Sala 02", "Sala 03", "Sala 04", "Sala 05", "Sala 06", "Sala 07", "Sala 08", "Sala 09", "Sala 10", "Sala 11", "Sala 12", "Sala 13", "Sala 14", "Sala 15")
+        listOf<String>(
+            "Sala 01",
+            "Sala 02",
+            "Sala 03",
+            "Sala 04",
+            "Sala 05",
+            "Sala 06",
+            "Sala 07",
+            "Sala 08",
+            "Sala 09",
+            "Sala 10",
+            "Sala 11",
+            "Sala 12",
+            "Sala 13",
+            "Sala 14",
+            "Sala 15"
+        )
 
     // Este es null al principio, si alguien pulsa una sala, guarda el nombre de la sala pulsada
     var salaSeleccionada by remember { mutableStateOf<String?>(null) }
+
 
     LazyVerticalGrid(
         // Esto va a manejar lo que ocupa la carta también
@@ -300,7 +347,7 @@ fun GenerarSalas() {
                     onClick = { salaSeleccionada = infoSalaActual }
 
                 )
-                ) {
+            ) {
                 // La columna ocupa el 85% de la LazyVerticalGrid
                 Column(
                     modifier = Modifier
@@ -308,7 +355,7 @@ fun GenerarSalas() {
                         .padding(top = 15.dp, bottom = 15.dp)
                         // FORZAMOS para que la propia columna se coloque en medio, ya que card no tiene ni vertical ni horizontal aligment
                         .align(Alignment.CenterHorizontally),
-                        horizontalAlignment = Alignment.Start
+                    horizontalAlignment = Alignment.Start
                 ) {
                     // Forzamos para que vaya a la izq
                     Text(text = infoSalaActual, style = typography.titleMedium)
@@ -332,29 +379,40 @@ fun GenerarSalas() {
             }
 
 
-
         }
     }
     // El dialogo se pone fuera de la lazyGrid para que solo pinte la sala seleccionada. Ya que de lo contrario,
     // pintaria todas
     // Solo aparece el dialogo si alguien ha pusado una sala (Es decir, cuando salaSeleccionada es distinto de null)
     if (salaSeleccionada != null) {
-        mostrarDialogo(
+        MostrarDialogoInformacionSala(
             textoMostrar = salaSeleccionada!!, // Pasamos la sala seleccionada
-            pulsarFuera = { salaSeleccionada = null } // Al pulsar fuera del dialogo, se sale y se vuelve a null
+            pulsarFuera = {
+                salaSeleccionada = null
+            } // Al pulsar fuera del dialogo, se sale y se vuelve a null
         )
     }
+
+
 }
 
 
-
-
-
+@Composable
+fun BotonFlotanteAniadirSala(pulsaBotonFlontante: () -> Unit) {
+    // Pulsa y llama a la funcion crearNuevaSala()
+    FloatingActionButton(
+        { pulsaBotonFlontante() },
+        shape = CircleShape,
+        containerColor = Color(0xFFFFFFE0),
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+    }
+}
 
 @Composable
-fun mostrarDialogo(textoMostrar : String, pulsarFuera : () -> Unit){
+fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
     Dialog(
-        onDismissRequest = {pulsarFuera()} ,    // Si pulsa fuera del dialog
+        onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
         properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
     ) {
 
@@ -367,22 +425,77 @@ fun mostrarDialogo(textoMostrar : String, pulsarFuera : () -> Unit){
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
-        ){
+        ) {
+            // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()         // Que ocupe toda la carta
+                    .padding(16.dp), // Un poco de margen para que no toque los bordes
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    text = "Registrar sala nueva",
+                    style = typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Spacer(Modifier.padding(10.dp))
+                Text(text = "Nombre: ")
+                Text(text = "Ubicación: ")
+                Text(text = "Capacidad: ")
+                Text(text = "Estado: ")
+                Text(text = "Tipo de cerradura: ")
+
+            }
+        }
+    }
+}
+
+
+@Composable
+fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit) {
+    Dialog(
+        onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
+        properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
+    ) {
+
+        // El dialog centra automáticamente la carta
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)  // 90% ancho
+                .fillMaxHeight(0.8f),
+
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
 
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
-            ){
+            ) {
                 Text(textoMostrar)
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewSalas() {
     ControlDeAccesoKotlinTheme {
         Salas()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMostrarDialogCrearSala() {
+    ControlDeAccesoKotlinTheme {
+        MostrarDialogoCrearSala {
+
+        }
     }
 }

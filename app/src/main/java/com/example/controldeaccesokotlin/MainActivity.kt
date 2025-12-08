@@ -1,9 +1,11 @@
 package com.example.controldeaccesokotlin
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -38,6 +40,7 @@ import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,6 +53,7 @@ class MainActivity : ComponentActivity() {
 }
 
 // NAVEGACIÓN
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Main() {
     val navController = rememberNavController();
@@ -193,6 +197,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
     Main()

@@ -1,11 +1,13 @@
 package com.example.controldeaccesokotlin.Vistas
 
+import android.widget.Button
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.controldeaccesokotlin.R
 
 // Modelo para representar un usuario
@@ -57,11 +61,39 @@ fun Usuarios() {
                 Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
                 Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
                 Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
-                Usuario("Miguel Torres", "miguel@gmail.com", "600555666", "13/03/2024", true, false),
-                Usuario("Sofía Martínez", "sofia@gmail.com", "600666777", "13/03/2024", true, false),
-                Usuario("David Fernández", "david@gmail.com", "600777888", "13/03/2024", true, false),
+                Usuario(
+                    "Miguel Torres",
+                    "miguel@gmail.com",
+                    "600555666",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario(
+                    "Sofía Martínez",
+                    "sofia@gmail.com",
+                    "600666777",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
+                Usuario(
+                    "David Fernández",
+                    "david@gmail.com",
+                    "600777888",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
                 Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
-                Usuario("Javier Morales", "javier@gmail.com", "600999000", "13/03/2024", true, false),
+                Usuario(
+                    "Javier Morales",
+                    "javier@gmail.com",
+                    "600999000",
+                    "13/03/2024",
+                    true,
+                    false
+                ),
                 Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
             )
         )
@@ -81,7 +113,7 @@ fun Usuarios() {
         // Título
         Text(
             text = "Gestión de Usuarios",
-            style = MaterialTheme.typography.headlineMedium,
+            style = typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
 
@@ -158,7 +190,7 @@ fun Usuarios() {
         NuevoUsuario(
             Cancelar = { registrar = false },
 
-        )
+            )
     }
 }
 
@@ -167,26 +199,54 @@ fun CargaMasiva(
     Cancelar: () -> Unit,
     Importar: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = Cancelar,
-        title = { Text("Carga Masiva (CSV)") },
-        text = {
+    Dialog(
+        onDismissRequest = { Cancelar() },    // Si pulsa fuera del dialog
+        properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
+    ) {
+        // El dialog centra automáticamente la carta
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)  // 90% ancho
+                .fillMaxHeight(0.6f),
+
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 // Instrucciones sobre el formato del archivo CSV
                 Text(
                     text = "Formato del archivo CSV",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("• Columnas requeridas: nombre, apellidos, email, telefono, rol")
-                Text("• Roles válidos: admin, usuario")
-                Text("• Columnas opcionales: activo (true/false), bloqueado (true/false)")
-                Text("• La primera fila debe contener los nombres de las columnas")
+                Text(
+                    text = "• Columnas requeridas: nombre, apellidos, email, telefono, rol",
+                    textAlign = TextAlign.Justify,
+                    style = typography.bodyLarge
+                )
+                Text(
+                    text = "• Roles válidos: admin, usuario",
+                    textAlign = TextAlign.Justify,
+                    style = typography.bodyLarge
+                )
+                Text(
+                    text = "• Columnas opcionales: activo (true/false), bloqueado (true/false)",
+                    textAlign = TextAlign.Justify,
+                    style = typography.bodyLarge
+                )
+                Text(
+                    text = "• La primera fila debe contener los nombres de las columnas",
+                    textAlign = TextAlign.Justify,
+                    style = typography.bodyLarge
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -204,22 +264,37 @@ fun CargaMasiva(
                         textAlign = TextAlign.Center
                     )
                 }
-            }
-        },
-        // Botón de confirmación
-        confirmButton = {
-            Button(onClick = Importar) {
-                Text("Importar Usuarios...")
-            }
-        },
-        // Botón de cancelación
-        dismissButton = {
-            Button(onClick = Cancelar) {
-                Text("Cancelar")
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 14.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    // Botón de confirmación
+                    Button(
+                        onClick = {}
+                    ) {
+                        Text(text = "Guardar")
+                    }
+
+                    Spacer(Modifier.padding(10.dp))
+                    // Botón de cancelación
+                    Button(
+                        onClick = { Cancelar() }
+                    ) {
+                        Text(text = "Cancelar")
+                    }
+                }
             }
         }
-    )
+
+    }
+
 }
+
 //Funcion para crear un nuevo usuario
 @Composable
 fun NuevoUsuario(
@@ -236,12 +311,29 @@ fun NuevoUsuario(
     var usuarioBloqueado by remember { mutableStateOf(false) }
 
     // Diálogo para crear un nuevo usuario
-    AlertDialog(
-        onDismissRequest = Cancelar, // Se cierra si se pulsa fuera del diálogo
-        title = { Text("Nuevo Usuario") }, // Título del diálogo
-        text = {
-            Column {
+    Dialog(
+        onDismissRequest = { Cancelar() },    // Si pulsa fuera del dialog
+        properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
+    ) {
+        // El dialog centra automáticamente la carta
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)  // 90% ancho
+                .fillMaxHeight(0.8f),
 
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()         // Que ocupe toda la carta
+                    .padding(16.dp),   // Un poco de margen para que no toque los bordes
+
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     "* Campos obligatorios*",
                     style = typography.bodyLarge,
@@ -251,7 +343,11 @@ fun NuevoUsuario(
                 Spacer(modifier = Modifier.height(8.dp))
 
 
-                Text("Nombre Completo*", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Nombre Completo*",
+                    style = typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
@@ -273,7 +369,11 @@ fun NuevoUsuario(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Campo: Teléfono
-                Text("Telefono *", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Telefono *",
+                    style = typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
                 OutlinedTextField(
                     value = telefono,
                     onValueChange = { telefono = it },
@@ -288,7 +388,11 @@ fun NuevoUsuario(
                 Desplegable()
 
                 // Campo: Fecha de alta
-                Text("Fecha del alta *", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Fecha del alta *",
+                    style = typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
                 OutlinedTextField(
                     value = fecha,
                     onValueChange = { fecha = it },
@@ -302,7 +406,11 @@ fun NuevoUsuario(
                         checked = usuarioActivo,
                         onCheckedChange = { usuarioActivo = it }
                     )
-                    Text("Usuario Activo", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Text(
+                        "Usuario Activo",
+                        style = typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
                 // Checkbox: Usuario bloqueado
@@ -311,24 +419,43 @@ fun NuevoUsuario(
                         checked = usuarioBloqueado,
                         onCheckedChange = { usuarioBloqueado = it }
                     )
-                    Text("Usuario Bloqueado", style = typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Text(
+                        "Usuario Bloqueado",
+                        style = typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    // Botón de confirmación
+                    Button(
+                        onClick = {}
+                    ) {
+                        Text(text = "Guardar")
+                    }
+
+                    Spacer(Modifier.padding(10.dp))
+                    // Botón de cancelación
+                    Button(
+                        onClick = { Cancelar() }
+                    ) {
+                        Text(text = "Cancelar")
+                    }
                 }
             }
-        },
-        // Botón de confirmación
-        confirmButton = {
-            Button(onClick = { }) {
-                Text("Guardar")
-            }
-        },
-        // Botón de cancelación
-        dismissButton = {
-            Button(onClick = Cancelar) {
-                Text("Cancelar")
-            }
         }
-    )
+
+    }
 }
+
+
 @Composable
 fun Desplegable() {
     var expandir by remember { mutableStateOf(false) } // Controla si el menú está abierto
@@ -365,6 +492,7 @@ fun Desplegable() {
         }
     }
 }
+
 @Composable
 fun DesplegableOrdenarPor() {
     var expandir by remember { mutableStateOf(false) } // Controla si el menú está abierto
@@ -480,6 +608,7 @@ fun BuscarTexto() {
         )
     )
 }
+
 //Funcion del boton filtrar
 @Composable
 fun BotonFiltrar(onClick: () -> Unit) {
@@ -505,6 +634,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
         )
     }
 }
+
 //Tarjeta aplicada a cada usuario
 @Composable
 fun Tarjeta(usuario: Usuario) {
@@ -530,7 +660,7 @@ fun Tarjeta(usuario: Usuario) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
 
                 // FOTO DE PERFIL
                 Image(
@@ -544,7 +674,7 @@ fun Tarjeta(usuario: Usuario) {
                     // NOMBRE DE USUARIO
                     Text(
                         text = usuario.nombre,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start
                     )
@@ -552,14 +682,14 @@ fun Tarjeta(usuario: Usuario) {
                     // CORREO ELECTRÓNICO
                     Text(
                         text = usuario.email,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                 }
             }
 
-            
+
 
 
 
@@ -574,7 +704,7 @@ fun Tarjeta(usuario: Usuario) {
             ) {
                 Text(
                     text = if (expandir) "Ocultar acciones" else "Mostrar acciones",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
@@ -627,6 +757,7 @@ fun Tarjeta(usuario: Usuario) {
         }
     }
 }
+
 //Funcion para los filtros
 @Composable
 fun Filtros(
@@ -635,15 +766,32 @@ fun Filtros(
 ) {
     var desdeFecha by remember { mutableStateOf("") }
     var hastaFecha by remember { mutableStateOf("") }
-//Diálogo de filtros mas los campos
-    AlertDialog(
-        onDismissRequest = { Cancelar() },
-        title = { Text("Filtrar por:") },
-        text = {
-            Column {
+
+    Dialog(
+        onDismissRequest = { Cancelar() },    // Si pulsa fuera del dialog
+        properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
+    ) {
+        // El dialog centra automáticamente la carta
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)  // 90% ancho
+                .fillMaxHeight(0.5f),
+
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()         // Que ocupe toda la carta
+                    .padding(16.dp),   // Un poco de margen para que no toque los bordes
+
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     "Fecha Alta Desde*",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 OutlinedTextField(
@@ -655,7 +803,7 @@ fun Filtros(
 
                 Text(
                     "Fecha Alta Hasta*",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 OutlinedTextField(
@@ -669,7 +817,7 @@ fun Filtros(
 
                 Text(
                     "Estado",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 DesplegableEstado()
@@ -678,30 +826,65 @@ fun Filtros(
 
                 Text(
                     "Rol *",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 DesplegableOrdenarPor()
-            }
-        },
 
-        dismissButton = {
-            Button(onClick = Cancelar) {
-                Text("Cancelar")
-            }
-        },
-        confirmButton = {
-            Button(onClick =  Cancelar ) {
-                Text("Aplicar filtros")
-            }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 14.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
+                    // Botón de confirmación
+                    Button(
+                        onClick = {}
+                    ) {
+                        Text(text = "Guardar")
+                    }
+
+                    Spacer(Modifier.padding(10.dp))
+                    // Botón de cancelación
+                    Button(
+                        onClick = { Cancelar() }
+                    ) {
+                        Text(text = "Cancelar")
+                    }
+                }
+            }
 
         }
-    )
+    }
 }
+
 
 @Preview
 @Composable
 fun UsuariosPreview() {
     Usuarios()
 }
+
+@Preview
+@Composable
+fun NuevoUsuarioPreview() {
+    NuevoUsuario() { }
+}
+
+@Preview
+@Composable
+fun CargaMasivaPreview() {
+    CargaMasiva({}, {})
+}
+
+@Preview
+@Composable
+fun FiltrosPreview() {
+    Filtros(
+        Cancelar = {},
+        Aplicar = {}
+    )
+}
+

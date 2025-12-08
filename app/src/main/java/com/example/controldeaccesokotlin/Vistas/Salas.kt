@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -68,6 +70,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.controldeaccesokotlin.ModeloUsuarios
 import com.example.controldeaccesokotlin.R
 import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
@@ -692,8 +695,9 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
             Column(
                 modifier = Modifier
                     .fillMaxSize()         // Que ocupe toda la carta
-                    .padding(16.dp) // Un poco de margen para que no toque los bordes
-                    .weight(0.2f),
+                    .weight(2f)
+                    .padding(16.dp),   // Un poco de margen para que no toque los bordes
+
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -709,6 +713,7 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .weight(1f)
                         .padding(bottom = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -737,6 +742,7 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .weight(4f)
                         .padding(bottom = 10.dp),
 
                     horizontalAlignment = Alignment.Start,
@@ -747,10 +753,64 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                         style = typography.bodyLarge,
                     )
 
+
+                    // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
+                    val usuario1 = ModeloUsuarios("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
+                    val usuario2 = ModeloUsuarios("2", "Kevin", "Estévez", "García", "1º DAM")
+                    val usuario3 = ModeloUsuarios("3", "Marta", "Laguna", "Pérez", "2º DAW")
+                    val usuario4 = ModeloUsuarios("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
+                    val usuario5 = ModeloUsuarios("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
+                    val usuario6 = ModeloUsuarios("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
+                    val usuario7 = ModeloUsuarios("7", "Laura", "Gómez", "Vázquez", "1º DAW")
+                    val usuario8 = ModeloUsuarios("8", "Javier", "Hernández", "Díaz", "2º ASIR")
+                    val usuario9 = ModeloUsuarios("9", "Cristina", "López", "Martín", "1º DAMP")
+                    val usuario10 = ModeloUsuarios("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
+                    val usuario11 = ModeloUsuarios("11", "Natalia", "Gil", "Castro", "1º DAM")
+                    val usuario12 = ModeloUsuarios("12", "Sergio", "Ramos", "García", "2º ASIR")
+                    val usuario13 = ModeloUsuarios("13", "Patricia", "Molina", "Serrano", "1º DAW")
+                    val usuario14 = ModeloUsuarios("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
+                    val usuario15 = ModeloUsuarios("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
+
+                    // Lista usuarios ejemplo
+                    val listaUsuariosMutable: MutableList<ModeloUsuarios> =
+                        mutableListOf(usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11, usuario12, usuario13, usuario14, usuario15)
+
+
                     // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
-                    Text(
-                        text = "Aqui iría una lazyGridColumn con los usuarios que hay dentro"
-                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // Recorre la lista de usuarios (Instancias ModeloUsuario)
+                        items(listaUsuariosMutable) { usuarioActual ->
+                            Card(
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                                border = BorderStroke(1.dp, Color.Black),
+                                shape = RoundedCornerShape(4.dp)
+
+                                ) {
+
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(5.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    Image(
+                                        painter = painterResource(id = R.drawable.perfilusuario),
+                                        contentDescription = "foto perfil usuario",
+                                        contentScale = ContentScale.Fit,
+                                        modifier = Modifier.size(60.dp)
+                                    )
+
+                                    Text(text = usuarioActual.nombreCompleto)
+                                }
+                            }
+
+
+                        }
+                    }
 
                 }
 
@@ -759,9 +819,8 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.2f)
-
-                        .padding(bottom = 10.dp),
+                        .weight(1f)
+                        .padding( top = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -772,7 +831,11 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                     )
                     Desplegable(
                         modifier = Modifier.weight(0.6f),
-                        mutableListOf("\uD83D\uDFE2 Libre", " \uD83D\uDFE2 Ocupado", " \uD83D\uDD34 Bloqueado")
+                        mutableListOf(
+                            "\uD83D\uDFE2 Libre",
+                            "\uD83D\uDFE0 Ocupado",
+                            "\uD83D\uDD34 Bloqueado"
+                        )
                     )
                 }
 
@@ -781,7 +844,8 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp),
+                        .weight(4f)
+                        .padding(top = 15.dp),
 
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.spacedBy(10.dp)

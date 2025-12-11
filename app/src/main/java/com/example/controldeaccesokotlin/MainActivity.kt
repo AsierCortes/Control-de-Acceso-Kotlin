@@ -1,12 +1,17 @@
 package com.example.controldeaccesokotlin
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -34,8 +39,8 @@ import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
 
-
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,22 +53,26 @@ class MainActivity : ComponentActivity() {
 }
 
 // NAVEGACIÓN
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Main(){
+fun Main() {
     val navController = rememberNavController();
 
     // Te dice en que pantalla estas actualmente (Es como un GPS)
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = {if (currentRoute != "login") {
-            CustomBottomBar(
-            changeView = {
-                rutaSeleccionada ->
-                navController.navigate(rutaSeleccionada)
+        bottomBar = {
+            if (currentRoute != "login") {
+                CustomBottomBar(
+                    changeView = { rutaSeleccionada ->
+                        navController.navigate(rutaSeleccionada)
+                    }
+                )
             }
-        )
-        }}
+        }
     ) { innerPadding ->
 
         // Ventana de comienzo
@@ -82,25 +91,48 @@ fun Main(){
                 val origin = initialState.destination.route
                 val goTo = targetState.destination.route
 
-                (if(origin == "login"){
+                (if (origin == "login") {
                     fadeIn(tween(5000))
-                }else{
+                } else {
                     // Animación del resto de pantallas
-                    slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(
+                            durationMillis = 280,
+                            easing = FastOutSlowInEasing
+                        )
+                    )
+                })
+            },
+            exitTransition = {
+                val origin = initialState.destination.route
+                val goTo = targetState.destination.route
+
+                (if (origin != "login") {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(
+                            durationMillis = 280,
+                            easing = FastOutSlowInEasing
+                        )
+                    )
+                }else{
+                    fadeOut(animationSpec = tween(300))
                 })
             }
-        ){
-            composable("salas") { Salas()}
+        ) {
+            composable("salas") { Salas() }
             composable("usuarios") { Usuarios() }
             composable("notificaciones") { Notificaciones() }
-            composable("login") { Login(changePrincipal = {
-                rutaSeleccionada ->
-                navController.navigate(rutaSeleccionada)
-                /*
-                    De momento pasamos un String con la ruta, ya que de momento
-                    no sabemos cual será la ventana principal desdpués de logearse
-                 */
-            }) }
+            composable("login") {
+                Login(changePrincipal = { rutaSeleccionada ->
+                    navController.navigate(rutaSeleccionada)
+                    /*
+                        De momento pasamos un String con la ruta, ya que de momento
+                        no sabemos cual será laa ventana principal desdpués de logearse
+                     */
+                })
+            }
 
 
         }
@@ -109,7 +141,7 @@ fun Main(){
 
 
 @Composable
-fun CustomBottomBar(changeView : (String) -> Unit){
+fun CustomBottomBar(changeView: (String) -> Unit) {
 
     var salasChecked by remember { mutableStateOf(true) }
     var usuariosChecked by remember { mutableStateOf(false) }
@@ -119,7 +151,10 @@ fun CustomBottomBar(changeView : (String) -> Unit){
         // SALAS
         NavigationBarItem(
             selected = salasChecked,
-            onClick = {changeView("salas"); salasChecked = true; usuariosChecked = false; notificacionesChecked = false },
+            onClick = {
+                changeView("salas"); salasChecked = true; usuariosChecked =
+                false; notificacionesChecked = false
+            },
             icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Icono salas") },
             label = { Text(text = "Salas") }
 
@@ -128,16 +163,32 @@ fun CustomBottomBar(changeView : (String) -> Unit){
         // USUARIOS
         NavigationBarItem(
             selected = usuariosChecked,
-            onClick = {changeView("usuarios"); usuariosChecked = true; salasChecked = false; notificacionesChecked = false},
-            icon = { Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Icono usuarios") },
+            onClick = {
+                changeView("usuarios"); usuariosChecked = true; salasChecked =
+                false; notificacionesChecked = false
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Icono usuarios"
+                )
+            },
             label = { Text(text = "Usuarios") }
 
         )
         // NOTIFICACIONES
         NavigationBarItem(
             selected = notificacionesChecked,
-            onClick = {changeView("notificaciones"); notificacionesChecked = true; salasChecked = false; usuariosChecked = false},
-            icon = { Icon(imageVector = Icons.Default.Notifications, contentDescription = "Icono notificaciones") },
+            onClick = {
+                changeView("notificaciones"); notificacionesChecked = true; salasChecked =
+                false; usuariosChecked = false
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "Icono notificaciones"
+                )
+            },
             label = { Text(text = "Notificaciones") }
 
         )
@@ -151,4 +202,3 @@ fun CustomBottomBar(changeView : (String) -> Unit){
 fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
     Main()
 }
-

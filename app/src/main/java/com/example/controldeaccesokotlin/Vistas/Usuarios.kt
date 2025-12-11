@@ -33,17 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.controldeaccesokotlin.ModeloUsuarios
 import com.example.controldeaccesokotlin.R
 
-// Modelo para representar un usuario
-data class Usuario(
-    val nombre: String,
-    val email: String,
-    val telefono: String,
-    val fecha: String,
-    val activo: Boolean,
-    val bloqueado: Boolean
-)
+
 
 @Composable
 fun Usuarios() {
@@ -53,56 +46,24 @@ fun Usuarios() {
     var cargar by remember { mutableStateOf(false) }
     var mostrarFiltros by remember { mutableStateOf(false) }
 
-    // Lista inicial de usuarios de ejemplo
-    var usuarios by remember {
-        mutableStateOf(
-            listOf(
-                Usuario("Bruno Linares", "bruno@gmail.com", "600111222", "13/03/2024", true, false),
-                Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
-                Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
-                Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
-                Usuario(
-                    "Miguel Torres",
-                    "miguel@gmail.com",
-                    "600555666",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "Sofía Martínez",
-                    "sofia@gmail.com",
-                    "600666777",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "David Fernández",
-                    "david@gmail.com",
-                    "600777888",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
-                Usuario(
-                    "Javier Morales",
-                    "javier@gmail.com",
-                    "600999000",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
-            )
-        )
-    }
+    // USUARIOS EJEMPLO
+    val usuarios = listOf(
+        ModeloUsuarios("img1", "Juan", "Pérez", "López", "1º DAM", "juan@mail.com", "600111222", "12/09/23", true, false, mutableListOf("A1")),
+        ModeloUsuarios("img2", "María", "García", "Ruiz", "2º DAW", "maria@mail.com", "600222333", "13/09/23", true, false, mutableListOf("B1", "B2")),
+        ModeloUsuarios("img3", "Carlos", "Sánchez", "Gil", "1º ASIR", "carlos@mail.com", "600333444", "14/09/23", false, true, mutableListOf("C1")),
+        ModeloUsuarios("img4", "Laura", "Martín", "Díaz", "2º DAM", "laura@mail.com", "600444555", "15/09/23", true, false, mutableListOf("D1")),
+        ModeloUsuarios("img5", "Pedro", "Ruiz", "Sanz", "1º DAW", "pedro@mail.com", "600555666", "16/09/23", true, false, mutableListOf()),
+        ModeloUsuarios("img6", "Sofía", "López", "Mora", "2º ASIR", "sofia@mail.com", "600666777", "17/09/23", true, false, mutableListOf("F1", "F2")),
+        ModeloUsuarios("img7", "Javier", "Gómez", "Cano", "1º DAM", "javier@mail.com", "600777888", "18/09/23", false, false, mutableListOf("G1")),
+        ModeloUsuarios("img8", "Elena", "Torres", "Vila", "2º DAW", "elena@mail.com", "600888999", "19/09/23", true, false, mutableListOf("H1")),
+        ModeloUsuarios("img9", "Diego", "Díaz", "Pola", "1º ASIR", "diego@mail.com", "600999000", "20/09/23", true, true, mutableListOf("I1")),
+        ModeloUsuarios("img10", "Ana", "Vargas", "Ríos", "2º DAM", "ana@mail.com", "600000111", "21/09/23", true, false, mutableListOf("J1"))
+    )
 
 
     val usuariosFiltrados = usuarios.filter {
         it.nombre.contains(texto, ignoreCase = true) ||
-                it.email.contains(texto, ignoreCase = true)
+                it.correoElectronico.contains(texto, ignoreCase = true)
     }
 
     Column(
@@ -637,7 +598,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
 
 //Tarjeta aplicada a cada usuario
 @Composable
-fun Tarjeta(usuario: Usuario) {
+fun Tarjeta(usuario: ModeloUsuarios) {
     var expandir by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -673,7 +634,7 @@ fun Tarjeta(usuario: Usuario) {
                 Column() {
                     // NOMBRE DE USUARIO
                     Text(
-                        text = usuario.nombre,
+                        text = usuario.nombreCompleto,
                         style = typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start
@@ -681,7 +642,7 @@ fun Tarjeta(usuario: Usuario) {
 
                     // CORREO ELECTRÓNICO
                     Text(
-                        text = usuario.email,
+                        text = usuario.correoElectronico,
                         style = typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

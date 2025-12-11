@@ -755,25 +755,18 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
 
 
                     // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
-                    val usuario1 = ModeloUsuarios("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
-                    val usuario2 = ModeloUsuarios("2", "Kevin", "Estévez", "García", "1º DAM")
-                    val usuario3 = ModeloUsuarios("3", "Marta", "Laguna", "Pérez", "2º DAW")
-                    val usuario4 = ModeloUsuarios("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
-                    val usuario5 = ModeloUsuarios("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
-                    val usuario6 = ModeloUsuarios("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
-                    val usuario7 = ModeloUsuarios("7", "Laura", "Gómez", "Vázquez", "1º DAW")
-                    val usuario8 = ModeloUsuarios("8", "Javier", "Hernández", "Díaz", "2º ASIR")
-                    val usuario9 = ModeloUsuarios("9", "Cristina", "López", "Martín", "1º DAMP")
-                    val usuario10 = ModeloUsuarios("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
-                    val usuario11 = ModeloUsuarios("11", "Natalia", "Gil", "Castro", "1º DAM")
-                    val usuario12 = ModeloUsuarios("12", "Sergio", "Ramos", "García", "2º ASIR")
-                    val usuario13 = ModeloUsuarios("13", "Patricia", "Molina", "Serrano", "1º DAW")
-                    val usuario14 = ModeloUsuarios("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
-                    val usuario15 = ModeloUsuarios("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
-
-                    // Lista usuarios ejemplo
-                    val listaUsuariosMutable: MutableList<ModeloUsuarios> =
-                        mutableListOf(usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11, usuario12, usuario13, usuario14, usuario15)
+                    val listaUsuariosMutable = listOf(
+                        ModeloUsuarios("img1", "Juan", "Pérez", "López", "1º DAM", "juan@mail.com", "600111222", "12/09/23", true, false, mutableListOf("A1")),
+                        ModeloUsuarios("img2", "María", "García", "Ruiz", "2º DAW", "maria@mail.com", "600222333", "13/09/23", true, false, mutableListOf("B1", "B2")),
+                        ModeloUsuarios("img3", "Carlos", "Sánchez", "Gil", "1º ASIR", "carlos@mail.com", "600333444", "14/09/23", false, true, mutableListOf("C1")),
+                        ModeloUsuarios("img4", "Laura", "Martín", "Díaz", "2º DAM", "laura@mail.com", "600444555", "15/09/23", true, false, mutableListOf("D1")),
+                        ModeloUsuarios("img5", "Pedro", "Ruiz", "Sanz", "1º DAW", "pedro@mail.com", "600555666", "16/09/23", true, false, mutableListOf()),
+                        ModeloUsuarios("img6", "Sofía", "López", "Mora", "2º ASIR", "sofia@mail.com", "600666777", "17/09/23", true, false, mutableListOf("F1", "F2")),
+                        ModeloUsuarios("img7", "Javier", "Gómez", "Cano", "1º DAM", "javier@mail.com", "600777888", "18/09/23", false, false, mutableListOf("G1")),
+                        ModeloUsuarios("img8", "Elena", "Torres", "Vila", "2º DAW", "elena@mail.com", "600888999", "19/09/23", true, false, mutableListOf("H1")),
+                        ModeloUsuarios("img9", "Diego", "Díaz", "Pola", "1º ASIR", "diego@mail.com", "600999000", "20/09/23", true, true, mutableListOf("I1")),
+                        ModeloUsuarios("img10", "Ana", "Vargas", "Ríos", "2º DAM", "ana@mail.com", "600000111", "21/09/23", true, false, mutableListOf("J1"))
+                    )
 
 
                     // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
@@ -789,11 +782,12 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                                 border = BorderStroke(1.dp, Color.Black),
                                 shape = RoundedCornerShape(4.dp)
 
-                                ) {
+                            ) {
 
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(5.dp),
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(5.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
 
@@ -820,7 +814,7 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding( top = 10.dp),
+                        .padding(top = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -862,10 +856,33 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
 
                 }
 
+                // botón para más información de la sala
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = {},
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+
+                        ) {
+                        Text(text = "Más información", )
+                    }
+                }
+
 
             }
         }
     }
+}
+@Composable
+fun MostrarInformacionSalaDetallada(){
+
 }
 
 @Preview(showBackground = true)

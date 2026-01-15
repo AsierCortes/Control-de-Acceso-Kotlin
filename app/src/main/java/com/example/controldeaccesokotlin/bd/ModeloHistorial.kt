@@ -1,4 +1,4 @@
-package com.example.controldeaccesokotlin
+package com.example.controldeaccesokotlin.bd
 
 data class ModeloHistorial(
     val id: Int = 0,

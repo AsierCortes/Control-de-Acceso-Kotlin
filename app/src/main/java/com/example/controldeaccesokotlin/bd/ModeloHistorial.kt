@@ -1,11 +1,12 @@
 package com.example.controldeaccesokotlin.bd
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "historial")
+//import androidx.room.Entity
+//import androidx.room.PrimaryKey
+//
+//@Entity(tableName = "historial")
 data class ModeloHistorial(
-    @PrimaryKey(true) val id: Int = 0,
+//    @PrimaryKey(true) val id: Int = 0,
+    val id: Int = 0,
     val sala: String = "",
     val usuario: String = "",
     val fecha: String = "",

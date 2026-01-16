@@ -1,5 +1,5 @@
 package com.example.controldeaccesokotlin.bd
-
+/*
 import android.content.Context
 import androidx.room.Room
 import com.example.controldeaccesokotlin.dao.DaoHistorial
@@ -30,3 +30,4 @@ data class ModuloBaseDatos(val algo : String) {
     }
 
 }
+*/

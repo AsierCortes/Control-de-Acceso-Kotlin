@@ -1,5 +1,5 @@
 package com.example.controldeaccesokotlin.bd
-
+/*
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.controldeaccesokotlin.dao.DaoHistorial
@@ -15,3 +15,5 @@ abstract class RoomBaseDatos : RoomDatabase() {
 
     abstract val daoHistorial : DaoHistorial
 }
+
+*/

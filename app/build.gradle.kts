@@ -1,11 +1,9 @@
+import org.jetbrains.kotlin.config.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
-
 }
 
 android {
@@ -35,8 +33,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) // Or JVM_1_8, JVM_11
+        }
     }
     buildFeatures {
         compose = true
@@ -62,24 +62,12 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(libs.androidx.compose.material.icons.extended)
 
-    //------------------- PARA ROOM------------------------
-    val room_version = "2.7.2"
-    implementation(libs.androidx.room.runtime)
-
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP) // See Add the KSP plugin to your project
-    ksp(libs.androidx.room.compiler)
-
-    // (Dagger y Hilt) Tenia un Warning para reemplazar por 2.27.2 antes de Alt+Enter (en las dos)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    // ------------------Para plugin JSON To Kotlin Class---------------
-    implementation(libs.retrofit)//Consumir API.
-    implementation(libs.converter.gson) //Convertir de JSON a Kotlin.
-    implementation(libs.androidx.compose.runtime.livedata) // Me pedia cambiar a version 1.10.1
+    // --------- Para API
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.androidx.compose.runtime.livedata.v1100)
     implementation(libs.androidx.lifecycle.runtime.ktx.v2100)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 

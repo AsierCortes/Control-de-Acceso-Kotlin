@@ -23,7 +23,7 @@ IMPORTANTE!!!! ----> Todas las pantallas tienen Scaffold
    - Modificar usuarios
    - Eliminar usuarios
    - Ver información usuario -> Se abre una card en donde aparece toda la información PENDIENTE DESARROLLAR
-   - Filtrar usuarios (Fecha, Nombre ALF, por actividad,
+   - Filtrar usuarios (Fecha, Nombre ALF, por actividad)
    - Bloquear usuarios
    - Asignar permisos por salas y franja horarias
 
@@ -52,7 +52,4 @@ Distribución Vistas Grupo:
 
 - Navegación del Scaffold -> Asier
 
-
-Historial de trabajo:
-- 26/11/2025
-  Diseño (Draw.io)
+Titulos -> typography.headlineMedium, fontWeight = FontWeight.Bold)

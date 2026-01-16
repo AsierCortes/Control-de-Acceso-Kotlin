@@ -1,0 +1,18 @@
+package com.example.controldeaccesokotlin
+
+data class ModeloUsuarios(
+    val fotoPerfil : String = "",
+    val nombre : String = "",
+    val primerApellido : String = "",
+    val segundoApellido : String = "",
+    val curso : String = "",
+    val correoElectronico : String = "",
+    val telefono: String = "",
+    val fecha: String = "",
+    val activo: Boolean,
+    val bloqueado: Boolean,
+    val tarjetasAsociadas : MutableList<String>
+){
+    val nombreCompleto: String
+        get() = "$nombre $primerApellido $segundoApellido"
+}

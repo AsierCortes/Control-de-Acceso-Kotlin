@@ -7,11 +7,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,16 +20,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -41,14 +33,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.DateRangePickerDefaults.DateRangePickerHeadline
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -60,7 +48,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,11 +61,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -88,13 +73,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
-import com.example.controldeaccesokotlin.bd.ModeloHistorial
-import com.example.controldeaccesokotlin.ModeloUsuarios
+import com.example.controldeaccesokotlin.bd_api.ModeloHistorial_se_eliminara
+import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
-import kotlinx.coroutines.launch
-import java.util.Date
-import kotlin.collections.component1
-import kotlin.collections.component2
+import kotlin.collections.mutableListOf
 import kotlin.collections.set
 
 
@@ -107,8 +89,8 @@ fun Notificaciones() {
     var verOpcionesFiltrado by remember { mutableStateOf(false) }
 
     // En una lista almaceno la información necesaria para cada registro
-    val eventos: List<ModeloHistorial> = listOf(
-        ModeloHistorial(
+    val eventos: List<ModeloHistorial_se_eliminara> = listOf(
+        ModeloHistorial_se_eliminara(
             1,
             "Sala 1",
             "Ususario 1",
@@ -116,7 +98,7 @@ fun Notificaciones() {
             "16:53",
             "Puerta Abierta"
         ),// Puede ser un set con los diferentes eventos posibles
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             2,
             "Sala 3",
             "Ususario 2",
@@ -124,7 +106,7 @@ fun Notificaciones() {
             "15:53",
             "Apertura Forzada"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             3,
             "Sala 5",
             "Ususario 3",
@@ -132,7 +114,7 @@ fun Notificaciones() {
             "14:25",
             "Bloqueo de Sala"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             4,
             "Sala 6",
             "Ususario 1",
@@ -140,7 +122,7 @@ fun Notificaciones() {
             "12:00",
             "Demasiado Tiempo"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             5,
             "Sala 1",
             "Ususario 4",
@@ -148,7 +130,7 @@ fun Notificaciones() {
             "12:00",
             "Acceso Denegado"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             6,
             "Sala 5",
             "Ususario 6",
@@ -156,7 +138,7 @@ fun Notificaciones() {
             "12:00",
             "Puerta Abierta"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             7,
             "Sala 5",
             "Ususario 4",
@@ -164,7 +146,7 @@ fun Notificaciones() {
             "12:00",
             "Acceso Denegado"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             8,
             "Sala 5",
             "Ususario 4",
@@ -172,7 +154,7 @@ fun Notificaciones() {
             "7:00",
             "Puerta Abierta"
         ),
-        ModeloHistorial(
+        ModeloHistorial_se_eliminara(
             8,
             "Sala 5",
             "Ususario 4",
@@ -288,6 +270,7 @@ fun Notificaciones() {
             ) { Text("Exportar") }
         }
 
+
         FormacionCardsRegistros(eventos)
 
 
@@ -311,7 +294,7 @@ fun BotonesFiltrarExportar(verOpcionesFiltrado: Boolean, verOpcionesExportado: B
 
 
 @Composable
-fun FormacionCardsRegistros(eventos: List<ModeloHistorial>) {
+fun FormacionCardsRegistros(eventos: List<ModeloHistorial_se_eliminara>) {
 
     LazyColumn(
         modifier = Modifier
@@ -339,7 +322,9 @@ fun FormacionCardsRegistros(eventos: List<ModeloHistorial>) {
                                 "Puerta Abierta" -> R.drawable.outline_lock_open_right_24
                                 "Demasiado Tiempo" -> R.drawable.outline_hourglass_empty_24
                                 "Bloqueo de Sala" -> R.drawable.outline_lock_person_24
-                                else -> {R.drawable.outline_unknown_med_24}
+                                else -> {
+                                    R.drawable.outline_unknown_med_24
+                                }
                             }
                         ), "Estado de Acceso",
                         tint = Color.Unspecified, // Para que respete los colores asignados a los iconos de drawable
@@ -470,8 +455,6 @@ fun OpcionesExportado(onDismiss: () -> Unit) {
             }
         }
     }
-
-
 //------------ CAMBIADO A DIALOG -----------
 //    val sheetState = rememberModalBottomSheetState()
 //    Column(Modifier.padding(50.dp)){
@@ -503,24 +486,24 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 
     // Me copio la lista de Uusarios de la DataClass de Usuarios creada por Asier
     // TODO. Unificar todo este tipo de cosas de modo que no repitamos código
-    val usuario1 = ModeloUsuarios("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
-    val usuario2 = ModeloUsuarios("2", "Kevin", "Estévez", "García", "1º DAM")
-    val usuario3 = ModeloUsuarios("3", "Marta", "Laguna", "Pérez", "2º DAW")
-    val usuario4 = ModeloUsuarios("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
-    val usuario5 = ModeloUsuarios("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
-    val usuario6 = ModeloUsuarios("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
-    val usuario7 = ModeloUsuarios("7", "Laura", "Gómez", "Vázquez", "1º DAW")
-    val usuario8 = ModeloUsuarios("8", "Javier", "Hernández", "Díaz", "2º ASIR")
-    val usuario9 = ModeloUsuarios("9", "Cristina", "López", "Martín", "1º DAMP")
-    val usuario10 = ModeloUsuarios("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
-    val usuario11 = ModeloUsuarios("11", "Natalia", "Gil", "Castro", "1º DAM")
-    val usuario12 = ModeloUsuarios("12", "Sergio", "Ramos", "García", "2º ASIR")
-    val usuario13 = ModeloUsuarios("13", "Patricia", "Molina", "Serrano", "1º DAW")
-    val usuario14 = ModeloUsuarios("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
-    val usuario15 = ModeloUsuarios("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
+    val usuario1 = ModeloUsuarios_se_eliminara("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
+    val usuario2 = ModeloUsuarios_se_eliminara("2", "Kevin", "Estévez", "García", "1º DAM")
+    val usuario3 = ModeloUsuarios_se_eliminara("3", "Marta", "Laguna", "Pérez", "2º DAW")
+    val usuario4 = ModeloUsuarios_se_eliminara("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
+    val usuario5 = ModeloUsuarios_se_eliminara("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
+    val usuario6 = ModeloUsuarios_se_eliminara("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
+    val usuario7 = ModeloUsuarios_se_eliminara("7", "Laura", "Gómez", "Vázquez", "1º DAW")
+    val usuario8 = ModeloUsuarios_se_eliminara("8", "Javier", "Hernández", "Díaz", "2º ASIR")
+    val usuario9 = ModeloUsuarios_se_eliminara("9", "Cristina", "López", "Martín", "1º DAMP")
+    val usuario10 = ModeloUsuarios_se_eliminara("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
+    val usuario11 = ModeloUsuarios_se_eliminara("11", "Natalia", "Gil", "Castro", "1º DAM")
+    val usuario12 = ModeloUsuarios_se_eliminara("12", "Sergio", "Ramos", "García", "2º ASIR")
+    val usuario13 = ModeloUsuarios_se_eliminara("13", "Patricia", "Molina", "Serrano", "1º DAW")
+    val usuario14 = ModeloUsuarios_se_eliminara("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
+    val usuario15 = ModeloUsuarios_se_eliminara("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
 
     // Lista usuarios ejemplo
-    val usuarios: MutableList<ModeloUsuarios> =
+    val usuarios: MutableList<ModeloUsuarios_se_eliminara> =
         mutableListOf(
             usuario1,
             usuario2,
@@ -667,7 +650,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
                 Spacer(Modifier.padding(15.dp))
 
                 Button(
-                    { mostrarUsuarios = true },
+                    { onDismiss },
                     Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text("Mostrar resultados")
@@ -675,10 +658,15 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
             }
         }
 
+        var usuariosFiltro : List<String>
+        var salasFiltro : List<String>
+        var eventosFiltro : List<String>
+        var fechaFiltro : List<String>
+
         when {
             mostrarUsuarios -> FiltrarPorUsuarios(usuarios, { mostrarUsuarios = false })
             mostrarSalas -> FiltrarPorSalas(salas, { mostrarSalas = false })
-            mostrarEventos -> FiltrarPorEvento(tipoEventos, { mostrarEventos = false})
+            mostrarEventos -> FiltrarPorEvento(tipoEventos, { mostrarEventos = false })
             seleccionarFecha -> FiltrarPorFecha({ seleccionarFecha = false })
         }
     }
@@ -721,7 +709,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 }
 
 @Composable
-fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios>, onDismiss: () -> Unit) {
+fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: () -> Unit) : List<String> {
 
     var usuarioIntroducido by remember { mutableStateOf("") }
 
@@ -740,6 +728,16 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios>, onDismiss: () -> Unit) {
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
+
+            Text(
+                "Cancelar",
+                modifier = Modifier
+                    .align(Alignment.End)
+//                        .clickable()
+                    .padding(end = 25.dp, top = 12.dp),
+                fontStyle = FontStyle.Italic,
+                color = Color.Blue
+            )
 
             Column(
                 Modifier
@@ -821,6 +819,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios>, onDismiss: () -> Unit) {
             }
         }
     }
+    return TODO("Provide the return value")
 }
 
 @Composable
@@ -843,6 +842,16 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
+
+            Text(
+                "Cancelar",
+                modifier = Modifier
+                    .align(Alignment.End)
+//                        .clickable()
+                    .padding(end = 25.dp, top = 12.dp),
+                fontStyle = FontStyle.Italic,
+                color = Color.Blue
+            )
 
             Column(
                 Modifier
@@ -951,6 +960,16 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
 
+            Text(
+                "Cancelar",
+                modifier = Modifier
+                    .align(Alignment.End)
+//                        .clickable()
+                    .padding(end = 25.dp, top = 12.dp),
+                fontStyle = FontStyle.Italic,
+                color = Color.Blue
+            )
+
             Column(
                 Modifier
                     .wrapContentHeight() //Para que el tamaño de la card se adapte al contenido
@@ -1041,7 +1060,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 // Ejemplo copiado exactamente del ej de la documentacion de Material3
-fun FiltrarPorFecha(onDismiss : () -> Unit ) {
+fun FiltrarPorFecha(onDismiss: () -> Unit) {
 
     //TODO Adaptarlo al ejercicio, que se vea en un cuadro de dialogo (DONE)
     // Tiene que ser en pantalla completa ya que colapsa si se  cambia su tamaño
@@ -1061,7 +1080,7 @@ fun FiltrarPorFecha(onDismiss : () -> Unit ) {
         Card(
             modifier = Modifier
                 .fillMaxSize(),
-//                .fillMaxWidth(0.8f)
+//                .fillMaxWidth(0.95f),
 //                .heightIn(max = 800.dp),
 //                .fillMaxHeight(0.4f),
             shape = RoundedCornerShape(16.dp),
@@ -1069,10 +1088,20 @@ fun FiltrarPorFecha(onDismiss : () -> Unit ) {
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
 
-
-            Column(modifier = Modifier
-                .wrapContentHeight() ////Para que el tamaño de la card se adapte al contenido
-                .padding(25.dp)) {
+            Text(
+                "Cancelar",
+                modifier = Modifier
+                    .align(Alignment.End)
+//                        .clickable()
+                    .padding(end = 25.dp, top = 12.dp),
+                fontStyle = FontStyle.Italic,
+                color = Color.Blue
+            )
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight() ////Para que el tamaño de la card se adapte al contenido
+                    .padding(25.dp)
+            ) {
                 // Add a row with "Save" and dismiss actions.
 
                 Text(
@@ -1084,61 +1113,75 @@ fun FiltrarPorFecha(onDismiss : () -> Unit ) {
                 Spacer(Modifier.padding(7.dp))
 
 
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(DatePickerDefaults.colors().containerColor)
-                            .padding(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    IconButton(onClick = { onDismiss() /* dismiss the UI */ }) {
-                        Icon(Icons.Filled.Close, contentDescription = "Localized description")
-                    }
-                    TextButton(
-                        onClick = {
-                            snackScope.launch {
-                                val range =
-                                    state.selectedStartDateMillis!!..state.selectedEndDateMillis!!
-                                snackState.showSnackbar("Saved range (timestamps): $range")
-                            }
-                        },
-                        enabled = state.selectedEndDateMillis != null
-                    ) {
-                        Text(text = "Save")
-                    }
-                }
-                DateRangePicker(state = state,
+//                Row(
+//                    modifier =
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .background(DatePickerDefaults.colors().containerColor)
+//                            .padding(),
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    IconButton(onClick = { onDismiss() /* dismiss the UI */ }) {
+//                        Icon(Icons.Filled.Close, contentDescription = "Localized description")
+//                    }
+//                    TextButton(
+//                        onClick = {
+//                            snackScope.launch {
+//                                val range =
+//                                    state.selectedStartDateMillis!!..state.selectedEndDateMillis!!
+//                                snackState.showSnackbar("Saved range (timestamps): $range")
+//                            }
+//                        },
+//                        enabled = state.selectedEndDateMillis != null
+//                    ) {
+//                        Text(text = "Save")
+//                    }
+//                }
+                DateRangePicker(
+                    state = state,
                     modifier = Modifier
                         .weight(1f)
                         .padding(1.dp),
 
-                    title = {Text("Selecciona fechas", modifier =Modifier.padding(start = 24.dp, top = 16.dp).align(Alignment.CenterHorizontally))},
-                    headline = {DateRangePickerDefaults.DateRangePickerHeadline(
-                        selectedStartDateMillis = state.selectedStartDateMillis,
-                        selectedEndDateMillis = state.selectedEndDateMillis,
-                        displayMode = state.displayMode,
-                        dateFormatter = remember { DatePickerDefaults.dateFormatter() },
-                        modifier = Modifier.padding(start = 24.dp)
-                        // Buscar la forma de sobreescribir los textos de fecha iicial y final
+                    title = {
+                        Text(
+                            "Selecciona fechas",
+                            modifier = Modifier
+                                .padding(start = 24.dp, top = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    },
+                    headline = {
+                        DateRangePickerHeadline(
+                            selectedStartDateMillis = state.selectedStartDateMillis,
+                            selectedEndDateMillis = state.selectedEndDateMillis,
+                            displayMode = state.displayMode,
+                            dateFormatter = remember { DatePickerDefaults.dateFormatter() },
+                            modifier = Modifier.padding(start = 24.dp)
+                            // Buscar la forma de sobreescribir los textos de fecha iicial y final
 //                        startDateText = "Fecha inicio",
 //                        endDateText = "Fecha fin",
 //                        startDatePlaceholder = { Text("Inicio") },
 //                        endDatePlaceholder = { Text("Fin") },
 //                        datesDelimiter = { Text(" - ") }
 
-                    )}
-                    )
-            }
+                        )
+                    }
+                )
 
-            Button(
-                {
-                    onDismiss()
-                },
-                Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Aplicar")
+                Spacer(Modifier.padding(8.dp))
+
+                Button(
+                    {
+                        onDismiss()
+                    },
+                    Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Aplicar")
+                }
+
+
             }
         }
     }
@@ -1253,5 +1296,5 @@ fun PreviewFiltrarPorEventos() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFiltrarPorFecha() {
-    FiltrarPorFecha( {})
+    FiltrarPorFecha({})
 }

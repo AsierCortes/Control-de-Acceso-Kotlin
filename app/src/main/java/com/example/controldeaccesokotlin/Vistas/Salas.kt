@@ -25,24 +25,18 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
@@ -62,7 +56,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -70,7 +63,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.controldeaccesokotlin.ModeloUsuarios
+import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
 import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
@@ -755,24 +748,24 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
 
 
                     // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
-                    val usuario1 = ModeloUsuarios("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
-                    val usuario2 = ModeloUsuarios("2", "Kevin", "Estévez", "García", "1º DAM")
-                    val usuario3 = ModeloUsuarios("3", "Marta", "Laguna", "Pérez", "2º DAW")
-                    val usuario4 = ModeloUsuarios("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
-                    val usuario5 = ModeloUsuarios("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
-                    val usuario6 = ModeloUsuarios("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
-                    val usuario7 = ModeloUsuarios("7", "Laura", "Gómez", "Vázquez", "1º DAW")
-                    val usuario8 = ModeloUsuarios("8", "Javier", "Hernández", "Díaz", "2º ASIR")
-                    val usuario9 = ModeloUsuarios("9", "Cristina", "López", "Martín", "1º DAMP")
-                    val usuario10 = ModeloUsuarios("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
-                    val usuario11 = ModeloUsuarios("11", "Natalia", "Gil", "Castro", "1º DAM")
-                    val usuario12 = ModeloUsuarios("12", "Sergio", "Ramos", "García", "2º ASIR")
-                    val usuario13 = ModeloUsuarios("13", "Patricia", "Molina", "Serrano", "1º DAW")
-                    val usuario14 = ModeloUsuarios("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
-                    val usuario15 = ModeloUsuarios("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
+                    val usuario1 = ModeloUsuarios_se_eliminara("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
+                    val usuario2 = ModeloUsuarios_se_eliminara("2", "Kevin", "Estévez", "García", "1º DAM")
+                    val usuario3 = ModeloUsuarios_se_eliminara("3", "Marta", "Laguna", "Pérez", "2º DAW")
+                    val usuario4 = ModeloUsuarios_se_eliminara("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
+                    val usuario5 = ModeloUsuarios_se_eliminara("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
+                    val usuario6 = ModeloUsuarios_se_eliminara("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
+                    val usuario7 = ModeloUsuarios_se_eliminara("7", "Laura", "Gómez", "Vázquez", "1º DAW")
+                    val usuario8 = ModeloUsuarios_se_eliminara("8", "Javier", "Hernández", "Díaz", "2º ASIR")
+                    val usuario9 = ModeloUsuarios_se_eliminara("9", "Cristina", "López", "Martín", "1º DAMP")
+                    val usuario10 = ModeloUsuarios_se_eliminara("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
+                    val usuario11 = ModeloUsuarios_se_eliminara("11", "Natalia", "Gil", "Castro", "1º DAM")
+                    val usuario12 = ModeloUsuarios_se_eliminara("12", "Sergio", "Ramos", "García", "2º ASIR")
+                    val usuario13 = ModeloUsuarios_se_eliminara("13", "Patricia", "Molina", "Serrano", "1º DAW")
+                    val usuario14 = ModeloUsuarios_se_eliminara("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
+                    val usuario15 = ModeloUsuarios_se_eliminara("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
 
                     // Lista usuarios ejemplo
-                    val listaUsuariosMutable: MutableList<ModeloUsuarios> =
+                    val listaUsuariosMutable: MutableList<ModeloUsuarios_se_eliminara> =
                         mutableListOf(usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11, usuario12, usuario13, usuario14, usuario15)
 
 

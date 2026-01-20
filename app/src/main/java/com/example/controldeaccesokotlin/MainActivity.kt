@@ -202,4 +202,3 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
 fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
     Main()
 }
-

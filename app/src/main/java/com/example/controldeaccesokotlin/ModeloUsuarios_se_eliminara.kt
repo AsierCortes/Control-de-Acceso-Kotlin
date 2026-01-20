@@ -1,6 +1,6 @@
 package com.example.controldeaccesokotlin
 
-data class ModeloUsuarios(
+data class ModeloUsuarios_se_eliminara(
     val fotoPerfil : String = "",
     val nombre : String = "",
     val primerApellido : String = "",

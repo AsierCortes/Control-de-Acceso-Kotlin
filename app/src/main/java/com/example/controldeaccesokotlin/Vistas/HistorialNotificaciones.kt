@@ -486,41 +486,30 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 
     // Me copio la lista de Uusarios de la DataClass de Usuarios creada por Asier
     // TODO. Unificar todo este tipo de cosas de modo que no repitamos código
-    val usuario1 = ModeloUsuarios_se_eliminara("1", "Jennyfer", "Dyanna", "Triana", "2º DAMP")
-    val usuario2 = ModeloUsuarios_se_eliminara("2", "Kevin", "Estévez", "García", "1º DAM")
-    val usuario3 = ModeloUsuarios_se_eliminara("3", "Marta", "Laguna", "Pérez", "2º DAW")
-    val usuario4 = ModeloUsuarios_se_eliminara("4", "Iker", "Unzueta", "Bilbao", "1º ASIR")
-    val usuario5 = ModeloUsuarios_se_eliminara("5", "Sofía", "Orellana", "Ruiz", "2º DAMP")
-    val usuario6 = ModeloUsuarios_se_eliminara("6", "Carlos", "Sánchez", "Mora", "2º ASIR")
-    val usuario7 = ModeloUsuarios_se_eliminara("7", "Laura", "Gómez", "Vázquez", "1º DAW")
-    val usuario8 = ModeloUsuarios_se_eliminara("8", "Javier", "Hernández", "Díaz", "2º ASIR")
-    val usuario9 = ModeloUsuarios_se_eliminara("9", "Cristina", "López", "Martín", "1º DAMP")
-    val usuario10 = ModeloUsuarios_se_eliminara("10", "Adrián", "Pérez", "Sánchez", "2º DAW")
-    val usuario11 = ModeloUsuarios_se_eliminara("11", "Natalia", "Gil", "Castro", "1º DAM")
-    val usuario12 = ModeloUsuarios_se_eliminara("12", "Sergio", "Ramos", "García", "2º ASIR")
-    val usuario13 = ModeloUsuarios_se_eliminara("13", "Patricia", "Molina", "Serrano", "1º DAW")
-    val usuario14 = ModeloUsuarios_se_eliminara("14", "Diego", "Ortiz", "Iglesias", "2º DAMP")
-    val usuario15 = ModeloUsuarios_se_eliminara("15", "Beatriz", "Navarro", "Romero", "1º ASIR")
-
-    // Lista usuarios ejemplo
-    val usuarios: MutableList<ModeloUsuarios_se_eliminara> =
-        mutableListOf(
-            usuario1,
-            usuario2,
-            usuario3,
-            usuario4,
-            usuario5,
-            usuario6,
-            usuario7,
-            usuario8,
-            usuario9,
-            usuario10,
-            usuario11,
-            usuario12,
-            usuario13,
-            usuario14,
-            usuario15
-        )
+    val usuarios = listOf(
+        ModeloUsuarios_se_eliminara(
+            "img1",
+            "Juan",
+            "Pérez",
+            "López",
+            "1º DAM",
+            "juan@mail.com",
+            "600111222",
+            "12/09/23",
+            true,
+            false,
+            mutableListOf("A1")
+        ),
+        ModeloUsuarios_se_eliminara("img2", "María", "García", "Ruiz", "2º DAW", "maria@mail.com", "600222333", "13/09/23", true, false, mutableListOf("B1", "B2")),
+        ModeloUsuarios_se_eliminara("img3", "Carlos", "Sánchez", "Gil", "1º ASIR", "carlos@mail.com", "600333444", "14/09/23", false, true, mutableListOf("C1")),
+        ModeloUsuarios_se_eliminara("img4", "Laura", "Martín", "Díaz", "2º DAM", "laura@mail.com", "600444555", "15/09/23", true, false, mutableListOf("D1")),
+        ModeloUsuarios_se_eliminara("img5", "Pedro", "Ruiz", "Sanz", "1º DAW", "pedro@mail.com", "600555666", "16/09/23", true, false, mutableListOf("")),
+        ModeloUsuarios_se_eliminara("img6", "Sofía", "López", "Mora", "2º ASIR", "sofia@mail.com", "600666777", "17/09/23", true, false, mutableListOf("F1", "F2")),
+        ModeloUsuarios_se_eliminara("img7", "Javier", "Gómez", "Cano", "1º DAM", "javier@mail.com", "600777888", "18/09/23", false, false, mutableListOf("G1")),
+        ModeloUsuarios_se_eliminara("img8", "Elena", "Torres", "Vila", "2º DAW", "elena@mail.com", "600888999", "19/09/23", true, false, mutableListOf("H1")),
+        ModeloUsuarios_se_eliminara("img9", "Diego", "Díaz", "Pola", "1º ASIR", "diego@mail.com", "600999000", "20/09/23", true, true, mutableListOf("I1")),
+        ModeloUsuarios_se_eliminara("img10", "Ana", "Vargas", "Ríos", "2º DAM", "ana@mail.com", "600000111", "21/09/23", true, false, mutableListOf("J1"))
+    )
 
     val salas = listOf(
         "Sala 1",
@@ -709,7 +698,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 }
 
 @Composable
-fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: () -> Unit) : List<String> {
+fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: () -> Unit) {
 
     var usuarioIntroducido by remember { mutableStateOf("") }
 
@@ -819,7 +808,6 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
             }
         }
     }
-    return TODO("Provide the return value")
 }
 
 @Composable

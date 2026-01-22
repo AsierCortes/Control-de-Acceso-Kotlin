@@ -63,6 +63,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -78,8 +79,7 @@ import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 fun Salas() {
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -128,9 +128,7 @@ fun BuscadorSencillo() {
                 .height(50.dp), // Mantenemos la altura compacta
             placeholder = {
                 Text(
-                    text = "Buscar sala...",
-                    style = typography.bodyMedium,
-                    color = Color.Gray
+                    text = "Buscar sala...", style = typography.bodyMedium, color = Color.Gray
                 )
             },
             singleLine = true,
@@ -160,13 +158,10 @@ fun BuscadorSencillo() {
             onClick = {},
             shape = RoundedCornerShape(10.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = Modifier
-                .height(50.dp) // Misma altura que el input
+            modifier = Modifier.height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar",
-                style = typography.labelLarge,
-                fontWeight = FontWeight.Bold
+                text = "Buscar", style = typography.labelLarge, fontWeight = FontWeight.Bold
             )
         }
     }
@@ -249,7 +244,6 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
 @Composable
 fun Todas() {
     // Se activa y se pone a true si alguien lo pulsa
-    var crearSala by remember { mutableStateOf(false) }
 
     // 1. Usamos BOX para apilar capas (Lista al fondo, Botón arriba)
     Box(
@@ -258,37 +252,13 @@ fun Todas() {
 
         // CAPA DEL FONDO: La lista de salas
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter  // Lo alinea en el centro horizontal
 
         ) {
             GenerarSalas()
         }
 
-        // CAPA SUPERIOR: El botón flotante
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd) // Alineado abajo a la derecha
-                .padding(25.dp)             // Margen para no pegar al borde
-        ) {
-            BotonFlotanteAniadirSala(
-                pulsaBotonFlontante = {
-                    // Creamos sala == true
-                    crearSala = true
-                }
-            )
-        }
-
-        // El diálogo se crea aquí, fuera del botón, condicionado por la variable de estado.
-        if (crearSala) {
-            MostrarDialogoCrearSala(
-                pulsarFuera = {
-                    // Al cerrar, volvemos a ponerlo en false
-                    crearSala = false
-                }
-            )
-        }
     }
 }
 
@@ -296,8 +266,7 @@ fun Todas() {
 @Composable
 fun Libres() {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -308,8 +277,7 @@ fun Libres() {
 @Composable
 fun Ocupadas() {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -319,24 +287,23 @@ fun Ocupadas() {
 
 @Composable
 fun GenerarSalas() {
-    val salas =
-        listOf<String>(
-            "Sala 01",
-            "Sala 02",
-            "Sala 03",
-            "Sala 04",
-            "Sala 05",
-            "Sala 06",
-            "Sala 07",
-            "Sala 08",
-            "Sala 09",
-            "Sala 10",
-            "Sala 11",
-            "Sala 12",
-            "Sala 13",
-            "Sala 14",
-            "Sala 15"
-        )
+    val salas = listOf<String>(
+        "Sala 01",
+        "Sala 02",
+        "Sala 03",
+        "Sala 04",
+        "Sala 05",
+        "Sala 06",
+        "Sala 07",
+        "Sala 08",
+        "Sala 09",
+        "Sala 10",
+        "Sala 11",
+        "Sala 12",
+        "Sala 13",
+        "Sala 14",
+        "Sala 15"
+    )
 
     // Este es null al principio, si alguien pulsa una sala, guarda el nombre de la sala pulsada
     var salaSeleccionada by remember { mutableStateOf<String?>(null) }
@@ -362,16 +329,14 @@ fun GenerarSalas() {
                 modifier = Modifier.clickable(
                     onClick = { salaSeleccionada = infoSalaActual }
 
-                )
-            ) {
+                )) {
                 // La columna ocupa el 85% de la LazyVerticalGrid
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .padding(top = 15.dp, bottom = 15.dp)
                         // FORZAMOS para que la propia columna se coloque en medio, ya que card no tiene ni vertical ni horizontal aligment
-                        .align(Alignment.CenterHorizontally),
-                    horizontalAlignment = Alignment.Start
+                        .align(Alignment.CenterHorizontally), horizontalAlignment = Alignment.Start
                 ) {
                     // Forzamos para que vaya a la izq
                     Text(text = infoSalaActual, style = typography.titleMedium)
@@ -427,212 +392,6 @@ fun BotonFlotanteAniadirSala(pulsaBotonFlontante: () -> Unit) {
 
 
 @Composable
-fun MostrarDialogoCrearSala(pulsarFuera: () -> Unit) {
-    Dialog(
-        onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
-        properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
-    ) {
-
-        // El dialog centra automáticamente la carta
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)  // 90% ancho
-                .fillMaxHeight(0.8f),
-
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
-            // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()         // Que ocupe toda la carta
-                    .padding(16.dp), // Un poco de margen para que no toque los bordes
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
-                Text(
-                    text = "Registrar sala nueva",
-                    style = typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Spacer(Modifier.padding(20.dp))
-
-                // NOMBRE
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Nombre: ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .weight(0.6f),
-                        value = "Pedro Camacho",
-                        onValueChange = {}
-                    )
-                }
-
-                // PLANTAx
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Planta: ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    Desplegable(modifier = Modifier.weight(0.6f), mutableListOf("1", "2", "3", "4"))
-
-                }
-
-                // EDIFICIO
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Edificio ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    Desplegable(
-                        modifier = Modifier.weight(0.6f),
-                        mutableListOf("Madrid", "Berlin", "Londres")
-                    )
-
-                }
-
-
-                // Nº Puerta
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Nº Puerta ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .weight(0.6f),
-                        value = "B104",
-                        onValueChange = {}
-                    )
-                }
-
-
-                // Capacidad
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Capacidad :",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .weight(0.6f),
-                        value = "30 personas",
-                        onValueChange = {}
-                    )
-                }
-
-
-                // Estado
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Estado ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    Desplegable(
-                        modifier = Modifier.weight(0.6f),
-                        mutableListOf("Libre", "Ocupado", "Bloqueado")
-                    )
-                }
-
-
-                // TIPO DE CERRADURA
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Tipo de cerradura: ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    Desplegable(
-                        modifier = Modifier.weight(0.6f),
-                        mutableListOf("Sobreponer", "Electrónica", "Digital", "Multipunto")
-                    )
-
-                }
-
-                Spacer(Modifier.padding(20.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    // BOTÓN CREAR SALA
-                    Button(
-                        onClick = {},       // CREAR SALA
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text(text = "Crear Sala")
-                    }
-                }
-
-
-            }
-        }
-    }
-}
-
-
-@Composable
 fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
     var expanded by remember { mutableStateOf(false) }
     var seleccion by remember { mutableStateOf(opciones[0]) }
@@ -643,31 +402,23 @@ fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true }
-                .padding(8.dp)
-        ) {
+                .padding(8.dp)) {
             Text(
-                text = seleccion,
-                modifier = Modifier.weight(1f)
+                text = seleccion, modifier = Modifier.weight(1f)
             )
             Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Desplegar"
+                imageVector = Icons.Default.ArrowDropDown, contentDescription = "Desplegar"
             )
         }
 
         // Menú desplegable
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+            expanded = expanded, onDismissRequest = { expanded = false }) {
             opciones.forEach { opcion ->
-                DropdownMenuItem(
-                    text = { Text(opcion) },
-                    onClick = {
-                        seleccion = opcion
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = { Text(opcion) }, onClick = {
+                    seleccion = opcion
+                    expanded = false
+                })
             }
         }
     }
@@ -691,186 +442,377 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()         // Que ocupe toda la carta
-                    .weight(2f)
-                    .padding(16.dp),   // Un poco de margen para que no toque los bordes
-
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center // Esto permite alinear al cetnro
             ) {
-                Text(
-                    text = "Información de la Sala",
-                    style = typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Spacer(Modifier.padding(20.dp))
-
-                // ESTADO DE LA SALA
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(bottom = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Estado ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .weight(0.6f)
-                            .border(1.dp, Color.Black)
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                            .height(30.dp)
-                            .wrapContentHeight(Alignment.CenterVertically), // Para que el texto quede centrado verticalmente en esos 30dp,
-
-                        text = " \uD83D\uDD34 Bloqueado",
-                    )
 
 
-                }
-
-                // Usuarios
+                // La card no tiene para alinear la columna, es por ello que la aliniamos manualmente con aling
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(4f)
-                        .padding(bottom = 10.dp),
+                    modifier = Modifier.fillMaxSize(0.9f),        // Que ocupe toda la carta
 
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Usuarios ",
-                        style = typography.bodyLarge,
+                        text = "Información de la Sala",
+                        style = typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
                     )
 
-
-                    // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
-                    val listaUsuariosMutable = listOf(
-                        ModeloUsuarios_se_eliminara(
-                            "img1",
-                            "Juan",
-                            "Pérez",
-                            "López",
-                            "1º DAM",
-                            "juan@mail.com",
-                            "600111222",
-                            "12/09/23",
-                            true,
-                            false,
-                            mutableListOf("A1")
-                        ),
-                        ModeloUsuarios_se_eliminara("img2", "María", "García", "Ruiz", "2º DAW", "maria@mail.com", "600222333", "13/09/23", true, false, mutableListOf("B1", "B2")),
-                        ModeloUsuarios_se_eliminara("img3", "Carlos", "Sánchez", "Gil", "1º ASIR", "carlos@mail.com", "600333444", "14/09/23", false, true, mutableListOf("C1")),
-                        ModeloUsuarios_se_eliminara("img4", "Laura", "Martín", "Díaz", "2º DAM", "laura@mail.com", "600444555", "15/09/23", true, false, mutableListOf("D1")),
-                        ModeloUsuarios_se_eliminara("img5", "Pedro", "Ruiz", "Sanz", "1º DAW", "pedro@mail.com", "600555666", "16/09/23", true, false, mutableListOf("")),
-                        ModeloUsuarios_se_eliminara("img6", "Sofía", "López", "Mora", "2º ASIR", "sofia@mail.com", "600666777", "17/09/23", true, false, mutableListOf("F1", "F2")),
-                        ModeloUsuarios_se_eliminara("img7", "Javier", "Gómez", "Cano", "1º DAM", "javier@mail.com", "600777888", "18/09/23", false, false, mutableListOf("G1")),
-                        ModeloUsuarios_se_eliminara("img8", "Elena", "Torres", "Vila", "2º DAW", "elena@mail.com", "600888999", "19/09/23", true, false, mutableListOf("H1")),
-                        ModeloUsuarios_se_eliminara("img9", "Diego", "Díaz", "Pola", "1º ASIR", "diego@mail.com", "600999000", "20/09/23", true, true, mutableListOf("I1")),
-                        ModeloUsuarios_se_eliminara("img10", "Ana", "Vargas", "Ríos", "2º DAM", "ana@mail.com", "600000111", "21/09/23", true, false, mutableListOf("J1"))
-                    )
-
-
-                    // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
-                    LazyColumn(
+                    // Nombre de la sala
+                    Row(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Recorre la lista de usuarios (Instancias ModeloUsuario)
-                        items(listaUsuariosMutable) { usuarioActual ->
-                            Card(
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                                border = BorderStroke(1.dp, Color.Black),
-                                shape = RoundedCornerShape(4.dp)
+                        Text(
+                            text = "Nombre:",
+                            style = typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.weight(0.3f)
+                        )
 
-                                ) {
+                        Text(
+                            text = "B104",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
 
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(5.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.perfilusuario),
-                                        contentDescription = "foto perfil usuario",
-                                        contentScale = ContentScale.Fit,
-                                        modifier = Modifier.size(60.dp)
-                                    )
-
-                                    Text(text = usuarioActual.nombreCompleto)
-                                }
-                            }
-
-
-                        }
                     }
 
-                }
+                    // Ubicación
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    ) {
+                        // Parrafo Ubicación Negro
+                        Row(
+                            modifier = Modifier.weight(1.2f)    //Para tener un poco de separacion
+                        ) {
+                            Text(
+                                text = "Ubicación:",
+                                textDecoration = TextDecoration.Underline,
+                                fontWeight = FontWeight.Bold,
+                                style = typography.bodyLarge
+                            )
+                        }
 
-                // Cambiar el estado de la sala
-                // Estado
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding( top = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Cambiar Estado ",
-                        style = typography.bodyLarge,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    Desplegable(
-                        modifier = Modifier.weight(0.6f),
-                        mutableListOf(
-                            "\uD83D\uDFE2 Libre",
-                            "\uD83D\uDFE0 Ocupado",
-                            "\uD83D\uDD34 Bloqueado"
+
+                        // EDIFICIO Y VALOR
+                        Row(
+                            modifier = Modifier.weight(1f)
+                        ) {
+
+                            // EDIFICIO
+                            Text(
+                                text = "Edificio:",
+                                style = typography.bodyLarge,
+                                modifier = Modifier.weight(0.3f)
+                            )
+
+                            // VALOR
+                            Text(
+                                text = "Berlín",
+                                style = typography.bodyLarge,
+                                modifier = Modifier.weight(0.6f)
+                            )
+
+                        }
+
+                        // NUMERO Y VALOR
+                        Row(
+                            modifier = Modifier.weight(1f)
+                        ) {
+
+                            // NUMERO
+                            Text(
+                                text = "Número:",
+                                style = typography.bodyLarge,
+                                modifier = Modifier.weight(0.3f)
+                            )
+
+                            // VALOR
+                            Text(
+                                text = "104",
+                                style = typography.bodyLarge,
+                                modifier = Modifier.weight(0.6f)
+                            )
+
+                        }
+
+
+                    }
+                    // Estado
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Estado:",
+                            style = typography.bodyLarge,
+                            textDecoration = TextDecoration.Underline,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(0.3f)
                         )
-                    )
+
+                        Text(
+                            text = "Libre \uD83D\uDFE2",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
+
+                    }
+
+                    // Cantidad de usuarios
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = "Cantidad de usuarios:",
+                            style = typography.bodyLarge,
+                            textDecoration = TextDecoration.Underline,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Spacer(Modifier.padding(5.dp))
+                        Text(
+                            text = "10",
+                            style = typography.bodyLarge
+                        )
+
+                    }
+
+                    // Usuarios
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(5f)
+                            .padding(bottom = 10.dp),
+
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "Usuarios en la sala:",
+                            textDecoration = TextDecoration.Underline,
+                            fontWeight = FontWeight.Bold,
+                            style = typography.bodyLarge
+                        )
+
+
+                        // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
+                        val listaUsuariosMutable = listOf(
+                            ModeloUsuarios_se_eliminara(
+                                "img1",
+                                "Juan",
+                                "Pérez",
+                                "López",
+                                "1º DAM",
+                                "juan@mail.com",
+                                "600111222",
+                                "12/09/23",
+                                true,
+                                false,
+                                mutableListOf("A1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img2",
+                                "María",
+                                "García",
+                                "Ruiz",
+                                "2º DAW",
+                                "maria@mail.com",
+                                "600222333",
+                                "13/09/23",
+                                true,
+                                false,
+                                mutableListOf("B1", "B2")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img3",
+                                "Carlos",
+                                "Sánchez",
+                                "Gil",
+                                "1º ASIR",
+                                "carlos@mail.com",
+                                "600333444",
+                                "14/09/23",
+                                false,
+                                true,
+                                mutableListOf("C1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img4",
+                                "Laura",
+                                "Martín",
+                                "Díaz",
+                                "2º DAM",
+                                "laura@mail.com",
+                                "600444555",
+                                "15/09/23",
+                                true,
+                                false,
+                                mutableListOf("D1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img5",
+                                "Pedro",
+                                "Ruiz",
+                                "Sanz",
+                                "1º DAW",
+                                "pedro@mail.com",
+                                "600555666",
+                                "16/09/23",
+                                true,
+                                false,
+                                mutableListOf()
+                            ), ModeloUsuarios_se_eliminara(
+                                "img6",
+                                "Sofía",
+                                "López",
+                                "Mora",
+                                "2º ASIR",
+                                "sofia@mail.com",
+                                "600666777",
+                                "17/09/23",
+                                true,
+                                false,
+                                mutableListOf("F1", "F2")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img7",
+                                "Javier",
+                                "Gómez",
+                                "Cano",
+                                "1º DAM",
+                                "javier@mail.com",
+                                "600777888",
+                                "18/09/23",
+                                false,
+                                false,
+                                mutableListOf("G1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img8",
+                                "Elena",
+                                "Torres",
+                                "Vila",
+                                "2º DAW",
+                                "elena@mail.com",
+                                "600888999",
+                                "19/09/23",
+                                true,
+                                false,
+                                mutableListOf("H1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img9",
+                                "Diego",
+                                "Díaz",
+                                "Pola",
+                                "1º ASIR",
+                                "diego@mail.com",
+                                "600999000",
+                                "20/09/23",
+                                true,
+                                true,
+                                mutableListOf("I1")
+                            ), ModeloUsuarios_se_eliminara(
+                                "img10",
+                                "Ana",
+                                "Vargas",
+                                "Ríos",
+                                "2º DAM",
+                                "ana@mail.com",
+                                "600000111",
+                                "21/09/23",
+                                true,
+                                false,
+                                mutableListOf("J1")
+                            )
+                        )
+
+
+                        // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            // Recorre la lista de usuarios (Instancias ModeloUsuario)
+                            items(listaUsuariosMutable) { usuarioActual ->
+                                Card(
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                                    border = BorderStroke(1.dp, Color.Black),
+                                    shape = RoundedCornerShape(4.dp)
+
+                                ) {
+                                    Column (
+                                        modifier = Modifier.fillMaxWidth()
+                                    ){
+
+
+                                        // IMG Y NOMBRE
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(5.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.perfilusuario),
+                                                contentDescription = "foto perfil usuario",
+                                                contentScale = ContentScale.Fit,
+                                                modifier = Modifier.size(60.dp)
+                                            )
+
+                                            Text(text = usuarioActual.nombreCompleto)
+                                        }
+
+                                        // HORA ACCESO
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(start = 10.dp, bottom = 5.dp),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                        ) {
+                                            Text(
+                                                text = "Hora de acceso:",
+                                                style = typography.bodyLarge,
+                                                fontWeight = FontWeight.Bold
+                                            )
+
+                                            Text(
+                                                text = "9:34 AM",
+                                                style = typography.bodyLarge,
+                                            )
+
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }
+                        }
+
+                    }
                 }
-
-
-                // Visualizar histórico de accesos y eventos
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(4f)
-                        .padding(top = 15.dp),
-
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Text(
-                        text = "Histórico Accesos ",
-                        style = typography.bodyLarge,
-                    )
-
-                    // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
-                    Text(
-                        text = "Aqui iría una lazyGridColumn con los el histórico de accesos y eventos"
-                    )
-
-                }
-
-
             }
         }
     }
+}
+
+@Composable
+fun MostrarInformacionSalaDetallada() {
+
 }
 
 @Preview(showBackground = true)
@@ -881,15 +823,6 @@ fun PreviewSalas() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewMostrarDialogCrearSala() {
-    ControlDeAccesoKotlinTheme {
-        MostrarDialogoCrearSala {
-
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

@@ -271,6 +271,7 @@ fun Notificaciones() {
         }
 
 
+
         FormacionCardsRegistros(eventos)
 
 

@@ -11,6 +11,9 @@ import kotlin.jvm.java
 object API {
     private const val BASE_URL = "http://2.139.157.85:8002/api/v1/"
 
+    // Para registro e inicio de sesion
+    private const val BASE_URL_INICIO_SESION = "http://2.139.157.85:8000/api/v1/"
+
     //Lazy: Se inicializa sólo cuando se necesita.
     val apiDao: DaoControlAcceso by lazy {
         Retrofit.Builder()

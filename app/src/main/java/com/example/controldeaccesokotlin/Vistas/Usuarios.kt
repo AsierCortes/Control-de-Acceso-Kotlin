@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -22,74 +23,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.controldeaccesokotlin.R
-
-// ------------------ MODELO ------------------
-data class Usuario(
-    val nombre: String,
-    val email: String,
-    val telefono: String,
-    val fecha: String,
-    val activo: Boolean,
-    val bloqueado: Boolean
-)
+import com.example.controldeaccesokotlin.bd_api.ModeloUsuario1
+import com.example.controldeaccesokotlin.viewModel.UsuariosViewModel
 
 // ------------------ PANTALLA PRINCIPAL ------------------
 @Composable
-fun Usuarios() {
+fun Usuarios(
+    viewModel: UsuariosViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
 
     var texto by remember { mutableStateOf("") }
     var mostrarFiltros by remember { mutableStateOf(false) }
-    var estadoSeleccionado by remember { mutableStateOf("Todos") }
     var ordenSeleccionado by remember { mutableStateOf("Nombre A-Z") }
 
-    var usuarios by remember {
-        mutableStateOf(
-            listOf(
-                Usuario("Bruno Linares", "bruno@gmail.com", "600111222", "13/03/2024", true, false),
-                Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
-                Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
-                Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
-                Usuario(
-                    "Miguel Torres",
-                    "miguel@gmail.com",
-                    "600555666",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "Sofía Martínez",
-                    "sofia@gmail.com",
-                    "600666777",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "David Fernández",
-                    "david@gmail.com",
-                    "600777888",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
-                Usuario(
-                    "Javier Morales",
-                    "javier@gmail.com",
-                    "600999000",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
-            )
-        )
+    val usuarios by viewModel.usuarios.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getUsuarios()
     }
 
     val usuariosFiltrados = usuarios
@@ -97,20 +53,10 @@ fun Usuarios() {
             it.nombre.contains(texto, true) ||
                     it.email.contains(texto, true)
         }
-        .filter {
-            when (estadoSeleccionado) {
-                "Activo" -> it.activo && !it.bloqueado
-                "Inactivo" -> !it.activo
-                "Bloqueado" -> it.bloqueado
-                else -> true
-            }
-        }
         .sortedWith(
             when (ordenSeleccionado) {
                 "Nombre A-Z" -> compareBy { it.nombre }
                 "Nombre Z-A" -> compareByDescending { it.nombre }
-                "FechaAlta(Reciente)" -> compareByDescending { it.fecha }
-                "FechaAlta(Antigua)" -> compareBy { it.fecha }
                 else -> compareBy { it.nombre }
             }
         )
@@ -136,7 +82,7 @@ fun Usuarios() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        BotonFiltrar(onClick = { mostrarFiltros = true })
+        BotonFiltrar { mostrarFiltros = true }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -152,12 +98,10 @@ fun Usuarios() {
 
     if (mostrarFiltros) {
         Filtros(
-            estadoActual = estadoSeleccionado,
             ordenActual = ordenSeleccionado,
             Cancelar = { mostrarFiltros = false },
-            Aplicar = { estado, orden ->
-                estadoSeleccionado = estado
-                ordenSeleccionado = orden
+            Aplicar = {
+                ordenSeleccionado = it
                 mostrarFiltros = false
             }
         )
@@ -241,7 +185,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
 
 // ------------------ TARJETA ------------------
 @Composable
-fun Tarjeta(usuario: Usuario) {
+fun Tarjeta(usuario: ModeloUsuario1) {
 
     var mostrarMenuEdicion by remember { mutableStateOf(false) }
     var expandir by remember { mutableStateOf(false) }
@@ -317,9 +261,7 @@ fun Tarjeta(usuario: Usuario) {
         EditarUsuario(
             usuario = usuario,
             Cancelar = { mostrarMenuEdicion = false },
-            Aplicar = { mostrarMenuEdicion = false },
-            Permisos = { mostrarMenuEdicion = false },
-            Bloquear = { mostrarMenuEdicion = false }
+            Aplicar = { mostrarMenuEdicion = false }
         )
     }
 }
@@ -327,18 +269,15 @@ fun Tarjeta(usuario: Usuario) {
 // ------------------ EDITAR USUARIO ------------------
 @Composable
 fun EditarUsuario(
-    usuario: Usuario,
+    usuario: ModeloUsuario1,
     Cancelar: () -> Unit,
-    Permisos: () -> Unit,
-    Bloquear: () -> Unit,
-    Aplicar: () -> Unit
+    Aplicar: (ModeloUsuario1) -> Unit
 ) {
     var nombre by remember { mutableStateOf(usuario.nombre) }
     var email by remember { mutableStateOf(usuario.email) }
-    var telefono by remember { mutableStateOf(usuario.telefono) }
-    var fecha by remember { mutableStateOf(usuario.fecha) }
-    var activo by remember { mutableStateOf(usuario.activo) }
-    var bloqueado by remember { mutableStateOf(usuario.bloqueado) }
+    var rol_id by remember { mutableStateOf(usuario.rol_id) }
+
+
 
     Dialog(
         onDismissRequest = Cancelar,
@@ -359,33 +298,32 @@ fun EditarUsuario(
                     value = nombre,
                     onValueChange = { nombre = it },
                     label = { Text("Nombre") })
-                TextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
                 TextField(
-                    value = telefono,
-                    onValueChange = { telefono = it },
-                    label = { Text("Teléfono") })
-                TextField(value = fecha, onValueChange = { fecha = it }, label = { Text("Fecha") })
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Activo")
-                    Switch(checked = activo, onCheckedChange = { activo = it })
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Bloqueado")
-                    Switch(checked = bloqueado, onCheckedChange = { bloqueado = it })
-                }
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") })
+                TextField(
+                    value = rol_id.toString(),
+                    onValueChange = {
+                        rol_id = it.toIntOrNull() ?: 0
+                    },
+                    label = { Text("Rol_ID") }
+                )
 
                 Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = Cancelar) { Text("Cancelar") }
                     Spacer(Modifier.width(8.dp))
-                    Button(onClick = Aplicar) { Text("Guardar") }
+                    Button(onClick = {
+                        Aplicar(
+                            ModeloUsuario1(
+                                nombre = nombre,
+                                email = email,
+                                rol_id = rol_id
+                            )
+                        )
+                    }) {
+                        Text("Guardar")
+                    }
                 }
             }
         }
@@ -395,12 +333,10 @@ fun EditarUsuario(
 // ------------------ FILTROS ------------------
 @Composable
 fun Filtros(
-    estadoActual: String,
     ordenActual: String,
     Cancelar: () -> Unit,
-    Aplicar: (String, String) -> Unit
+    Aplicar: (String) -> Unit
 ) {
-    var estado by remember { mutableStateOf(estadoActual) }
     var orden by remember { mutableStateOf(ordenActual) }
 
     AlertDialog(
@@ -408,13 +344,11 @@ fun Filtros(
         title = { Text("Filtros") },
         text = {
             Column {
-                DesplegableEstado(estado) { estado = it }
-                Spacer(Modifier.height(8.dp))
                 DesplegableOrdenarPor(orden) { orden = it }
             }
         },
         confirmButton = {
-            Button(onClick = { Aplicar(estado, orden) }) {
+            Button(onClick = { Aplicar(orden) }) {
                 Text("Guardar")
             }
         },
@@ -426,43 +360,10 @@ fun Filtros(
     )
 }
 
-// ------------------ DESPLEGABLES ------------------
-@Composable
-fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Todos", "Activo", "Inactivo", "Bloqueado")
-    var expandir by remember { mutableStateOf(false) }
-
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expandir = true }
-                .padding(8.dp)
-        ) {
-            Text(seleccionado, Modifier.weight(1f))
-            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-        }
-
-        DropdownMenu(
-            expanded = expandir,
-            onDismissRequest = { expandir = false }
-        ) {
-            opciones.forEach {
-                DropdownMenuItem(
-                    text = { Text(it) },
-                    onClick = {
-                        onSeleccionChange(it)
-                        expandir = false
-                    }
-                )
-            }
-        }
-    }
-}
-
+// ---------- DESPLEGABLE -------------
 @Composable
 fun DesplegableOrdenarPor(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Nombre A-Z", "Nombre Z-A", "FechaAlta(Reciente)", "FechaAlta(Antigua)")
+    val opciones = listOf("Nombre A-Z", "Nombre Z-A")
     var expandir by remember { mutableStateOf(false) }
 
     Column {

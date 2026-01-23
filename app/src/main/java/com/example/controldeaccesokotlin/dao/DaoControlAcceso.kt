@@ -1,7 +1,7 @@
 package com.example.controldeaccesokotlin.dao
 
-import com.example.controldeaccesokotlin.Vistas.Usuario
 import com.example.controldeaccesokotlin.bd_api.*
+import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -103,7 +103,7 @@ interface DaoControlAcceso {
     suspend fun getSalas(): Response<Any>
 
     @GET("/sala")
-    suspend fun getSalasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
+    suspend fun getSalasPorUsuario(@Query("includes") usuario: ModeloUsuario1): Response<Any>
 
     @POST("/sala")
     suspend fun createSalas(@Body registrarSalas: ModeloSala): Response<Any>
@@ -124,7 +124,7 @@ interface DaoControlAcceso {
     suspend fun getTarjetas(): Response<Any>
 
     @GET("/tarjeta")
-    suspend fun getTarjetasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
+    suspend fun getTarjetasPorUsuario(@Query("includes") usuario: ModeloUsuario1): Response<Any>
 
     @POST("/tarjeta")
     suspend fun createTarjetas(@Body registrarTarjetas: ModeloTarjeta): Response<Any>
@@ -139,20 +139,13 @@ interface DaoControlAcceso {
 
     // Endpoints para USUARIO ------------
 
-    @GET("/usuario")
-    suspend fun getUsuarios(): Response<Any>
+    @GET("usuario")
+    suspend fun getUsuarios(): Response<JsonObject>
 
-    @GET("/usuario")
-    suspend fun getUsuariosPorSala(@Query("includes") sala: String): Response<Any>
-
-    @POST("/usuario")
-    suspend fun createUsuarios(@Body registrarUsuarios: ModeloUsuario1): Response<Any>
-
-    @PUT("/usuario/{id}")
-    suspend fun updateUsuarios(@Path("id") id: Int): Response<Any>
-
-    @DELETE("/usuario/{id}")
-    suspend fun deleteUsuarios(@Path("id") id: Int): Response<Any>
+    @GET("usuario/")
+    suspend fun getUsuariosPorSala(
+        @Query("nombre") nombre: String,
+        @Query("includes") includes: String = "rol"): Response<Any>
 
 }
 

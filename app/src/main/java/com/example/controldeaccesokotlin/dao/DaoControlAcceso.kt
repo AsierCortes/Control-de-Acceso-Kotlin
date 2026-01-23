@@ -1,7 +1,7 @@
 package com.example.controldeaccesokotlin.dao
 
-import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
-import com.example.controldeaccesokotlin.bd_api.RegisterBody
+import com.example.controldeaccesokotlin.Vistas.Usuario
+import com.example.controldeaccesokotlin.bd_api.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -38,7 +38,123 @@ interface DaoControlAcceso {
     @DELETE ("/acceso/{id}")
     suspend fun deleteAcceso(@Path("id") id: Int): Response<Any>
 
+
+
     // Endpoints para INCIDENCIA ------------
 
+    @GET("/incidencia")
+    suspend fun getIncidencias(): Response<Any>
+
+    @GET("/incidencia")
+    suspend fun getIncidenciasPorSala(@Query("includes") sala: String): Response<Any>
+
+    @POST( "/incidencia")
+    suspend fun createIncidencias(@Body registrarIncidencias: ModeloIncidencia): Response<Any>
+
+    @PUT("/incidencia/{id}")
+    suspend fun updateIncidencias(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/incidencia/{id}")
+    suspend fun deleteIncidencias(@Path("id") id: Int): Response<Any>
+
+
+
+    // Endpoints para PERMISO ------------
+
+    @GET("/permiso")
+    suspend fun getPermisos(): Response<Any>
+
+    @GET("/permiso")
+    suspend fun getPermisosPorSala(@Query("includes") sala: String): Response<Any>
+
+    @POST("/permiso")
+    suspend fun createPermisos(@Body registrarPermisos: ModeloPermiso): Response<Any>
+
+    @PUT("/permiso/{id}")
+    suspend fun updatePermisos(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/permiso/{id}")
+    suspend fun deletePermisos(@Path("id") id: Int): Response<Any>
+
+
+
+    // Endpoints para ROL ------------
+
+    @GET("/rol")
+    suspend fun getRolesPorSala(@Query("includes") sala: String): Response<Any>
+
+    @GET("/rol")
+    suspend fun getRoles(): Response<Any>
+
+    @POST("/rol")
+    suspend fun createRoles(@Body registrarRoles: ModeloRol): Response<Any>
+
+    @PUT("/rol/{id}")
+    suspend fun updateRoles(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/rol/{id}")
+    suspend fun deleteRoles(@Path("id") id: Int): Response<Any>
+
+
+
+    // Endpoints para SALA ------------
+
+    @GET("/sala")
+    suspend fun getSalas(): Response<Any>
+
+    @GET("/sala")
+    suspend fun getSalasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
+
+    @POST("/sala")
+    suspend fun createSalas(@Body registrarSalas: ModeloSala): Response<Any>
+
+    @PUT("/sala/{id}")
+    suspend fun updateSalas(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/sala/{id}")
+    suspend fun deleteSalas(@Path("id") id: Int): Response<Any>
+
+
+
+
+    // Endpoints para TARJETA ------------
+
+
+    @GET("/tarjeta")
+    suspend fun getTarjetas(): Response<Any>
+
+    @GET("/tarjeta")
+    suspend fun getTarjetasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
+
+    @POST("/tarjeta")
+    suspend fun createTarjetas(@Body registrarTarjetas: ModeloTarjeta): Response<Any>
+
+    @PUT("/tarjeta/{id}")
+    suspend fun updateTarjetas(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/tarjeta/{id}")
+    suspend fun deleteTarjetas(@Path("id") id: Int): Response<Any>
+
+
+
+    // Endpoints para USUARIO ------------
+
+    @GET("/usuario")
+    suspend fun getUsuarios(): Response<Any>
+
+    @GET("/usuario")
+    suspend fun getUsuariosPorSala(@Query("includes") sala: String): Response<Any>
+
+    @POST("/usuario")
+    suspend fun createUsuarios(@Body registrarUsuarios: ModeloUsuario1): Response<Any>
+
+    @PUT("/usuario/{id}")
+    suspend fun updateUsuarios(@Path("id") id: Int): Response<Any>
+
+    @DELETE("/usuario/{id}")
+    suspend fun deleteUsuarios(@Path("id") id: Int): Response<Any>
+
 }
+
+
 

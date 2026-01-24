@@ -2,6 +2,7 @@ package com.example.controldeaccesokotlin.dao
 
 import com.example.controldeaccesokotlin.Vistas.Usuario
 import com.example.controldeaccesokotlin.bd_api.*
+import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -99,20 +100,12 @@ interface DaoControlAcceso {
 
     // Endpoints para SALA ------------
 
-    @GET("/sala")
-    suspend fun getSalas(): Response<Any>
+    // Retrofit agrega automáticamente el "?page="
+    @GET("sala")        // Devuelve JSON OBJECT
+    suspend fun getSalasPorPagina(@Query("page") num: Int): Response<JsonObject>
 
-    @GET("/sala")
-    suspend fun getSalasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
-
-    @POST("/sala")
-    suspend fun createSalas(@Body registrarSalas: ModeloSala): Response<Any>
-
-    @PUT("/sala/{id}")
-    suspend fun updateSalas(@Path("id") id: Int): Response<Any>
-
-    @DELETE("/sala/{id}")
-    suspend fun deleteSalas(@Path("id") id: Int): Response<Any>
+    @GET("sala/{id}")        // Devuelve JSON OBJECT
+    suspend fun getSalaEspecifica(@Path("id") num: Int?): Response<Sala>
 
 
 

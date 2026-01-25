@@ -223,7 +223,7 @@ fun Filtros(
 }
 @Composable
 fun DesplegableID(seleccionado: Int?, onSeleccion: (Int?) -> Unit) {
-    val opciones = listOf(null, 1, 2, 3)
+    val opciones = listOf(null, 1, 2, 3, 4, 5)
     var expandir by remember { mutableStateOf(false) }
 
     Box {

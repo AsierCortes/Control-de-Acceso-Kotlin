@@ -1,6 +1,5 @@
 package com.example.controldeaccesokotlin.dao
 
-import com.example.controldeaccesokotlin.Vistas.Usuario
 import com.example.controldeaccesokotlin.bd_api.*
 import com.google.gson.JsonObject
 import retrofit2.Response
@@ -132,20 +131,9 @@ interface DaoControlAcceso {
 
     // Endpoints para USUARIO ------------
 
-    @GET("/usuario")
-    suspend fun getUsuarios(): Response<Any>
+    @GET("usuario")        // Devuelve JSON OBJECT
+    suspend fun getUsuariosPorPagina(@Query("page") num: Int): Response<JsonObject>
 
-    @GET("/usuario")
-    suspend fun getUsuariosPorSala(@Query("includes") sala: String): Response<Any>
-
-    @POST("/usuario")
-    suspend fun createUsuarios(@Body registrarUsuarios: ModeloUsuario1): Response<Any>
-
-    @PUT("/usuario/{id}")
-    suspend fun updateUsuarios(@Path("id") id: Int): Response<Any>
-
-    @DELETE("/usuario/{id}")
-    suspend fun deleteUsuarios(@Path("id") id: Int): Response<Any>
 
 }
 

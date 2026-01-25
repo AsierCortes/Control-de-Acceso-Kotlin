@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.controldeaccesokotlin.bd_api.API
 import com.example.controldeaccesokotlin.bd_api.ModeloControlAcceso
 import com.example.controldeaccesokotlin.bd_api.Sala
+import com.example.controldeaccesokotlin.bd_api.Usuario
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,11 +18,16 @@ class ControlAccesoViewModel : ViewModel() {
     private val privateModelo = MutableStateFlow(ModeloControlAcceso())
     val publicModelo = privateModelo.asStateFlow()
 
+
+
     // Para que carge la info antes
     init {
         recogerInfoSalasPorPagina()
+        recogerInfoUsuariosPorPagina()
     }
 
+
+    // --------------------- SALAS --------------------------------
     fun recogerInfoSalaSeleccionada(idSala: Int?){
         if (idSala != -1) {
             viewModelScope.launch {
@@ -126,6 +132,74 @@ class ControlAccesoViewModel : ViewModel() {
             var contador: Int = 1
             for (sala in salasOrdenadas) {
                 println(contador.toString() + ". " + sala.nombre)
+                contador++
+            }
+
+
+        }
+    }
+
+
+
+    // --------------------- USUARIOS --------------------------------
+    fun recogerInfoUsuariosPorPagina(){
+        var cantidadPaginas: Int = 0;
+        val gson = Gson()   // Para no tener que crear un json por cada sala
+        var usuariosTotales: MutableList<Usuario> = mutableListOf()
+
+
+        viewModelScope.launch {
+            var response = API.apiDao.getUsuariosPorPagina(cantidadPaginas)
+            var cantidadDeUsuarios = response.body()?.get("total")!!.asInt                 // Lo recibe coo JSONObject, obtenemos el primitive de total (al hacer get) y hay que convertir el dato a int
+
+            val resultado = cantidadDeUsuarios % 10
+            if (resultado == 0) {
+                cantidadPaginas = cantidadDeUsuarios / 10
+            } else {
+                cantidadPaginas = (cantidadDeUsuarios / 10) + 1
+            }
+            println("Cantidad de paginas: " + cantidadPaginas)
+            println("Cantidad de usuarios: " + cantidadDeUsuarios)
+
+
+            // Bucle for hasta rellenar todos los usuarios
+            for (i in 1..cantidadPaginas) {
+                val respuestaServidor = API.apiDao.getUsuariosPorPagina(i)
+                val jsonArray = respuestaServidor.body()?.get("data")?.asJsonArray
+                /*
+                    El problema es que es un JSON array, y yo quiero convertirlo los JSONELements (es decir, cada sala)
+                    en object sala, es por ello que utilizo un map y recorro el JSON array para convertir cada JSON ELEMENT
+                    a un objecto de tipo sala
+                 */
+                val usuariosPorPagina: List<Usuario> = jsonArray?.map { jsonElement ->
+                    gson.fromJson(jsonElement, Usuario::class.java)
+                } ?: emptyList()
+                usuariosTotales.addAll(usuariosPorPagina)     // Agregamos a salas totales
+                println("Pagina " + i + ", usuarios obtenidas: " + usuariosPorPagina)
+
+            }
+
+            // Ya tenemos todas las usuarios, el problemas es que estan desordenadas, entonces vamos
+            // a ordenarlas por id. El sorted by no modifica la lsita original, te devuelve una copia nueva
+            // ordenada
+            val usuariosOrdenados = usuariosTotales.sortedBy {usuario ->
+                usuario.id
+            }
+
+
+
+            // Actualizamos el modelo:
+            privateModelo.update {
+                it.copy(
+                    usuraios = usuariosOrdenados
+                )
+
+            }
+
+            println(" ")
+            var contador: Int = 1
+            for (usuario in usuariosOrdenados) {
+                println(contador.toString() + ". " + usuario.nombre)
                 contador++
             }
 

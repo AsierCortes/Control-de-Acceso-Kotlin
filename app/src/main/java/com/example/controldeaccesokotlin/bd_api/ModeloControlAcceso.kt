@@ -4,11 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 // MODELO PRINCIPAL
 data class ModeloControlAcceso(
+    // PARA SALAS
     val salas : List<Sala> = emptyList(),
     val salasLibres : List<Sala> = emptyList(),
     val salasOcupadas : List<Sala> = emptyList(),
     val salasBloqueadas : List<Sala> = emptyList(),
-    val salaSeleccionada : Sala? = null
+    val salaSeleccionada : Sala? = null,
+
+    // PARA USUARIOS
+    val usuraios : List<Usuario> = emptyList<Usuario>()
+
+
 )
 
 
@@ -29,9 +35,7 @@ data class Sala(
     val fechaSalaActualizada: String
 )
 
-// La estamos usando de manera provisional para ver algo en las vistas, pero terminará desapareciendo
-// Ya esta creada la de la API
-data class ModeloUsuario (
+data class Usuario (
     val id: Int = 0,
     val nombre: String = "",
     val email: String = "",
@@ -39,6 +43,9 @@ data class ModeloUsuario (
     val created_at: String = "",
     val updated_at: String = ""
 )
+
+
+
 
 data class Profile(
     val name: String = "",

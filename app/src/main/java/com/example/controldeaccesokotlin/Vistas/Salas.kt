@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -77,7 +76,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun Salas(controller: ControlAccesoViewModel = viewModel()) {
-    val getDatosSalas = controller.publicModelo.collectAsState()
+    val getDatos = controller.publicModelo.collectAsState()
 
 
     Column(

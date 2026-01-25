@@ -19,7 +19,8 @@ class UsuariosViewModel : ViewModel() {
         val data = body.getAsJsonArray("data") ?: return emptyList()
         return data.map { json ->
             val obj = json.asJsonObject
-            val rolObj = if (obj.has("rol") && !obj.get("rol").isJsonNull) obj.getAsJsonObject("rol") else null
+            val rolObj =
+                if (obj.has("rol") && !obj.get("rol").isJsonNull) obj.getAsJsonObject("rol") else null
 
             ModeloUsuario1(
                 nombre = obj.get("nombre")?.asString ?: "",
@@ -34,29 +35,31 @@ class UsuariosViewModel : ViewModel() {
             )
         }
     }
+
     fun getUsuarios() {
         viewModelScope.launch {
-            try {
-                val response = API.apiDao.getUsuarios()
-                if (response.isSuccessful && response.body() != null) {
-                    usuariosOriginales = mapearUsuarios(response.body()!!)
-                    _usuarios.value = usuariosOriginales
-                }
-            } catch (e: Exception) { /* Manejar error */ }
+
+            val response = API.apiDao.getUsuarios()
+            if (response.isSuccessful && response.body() != null) {
+                usuariosOriginales = mapearUsuarios(response.body()!!)
+                _usuarios.value = usuariosOriginales
+            }
+
         }
     }
+
     fun buscarUsuarios(nombre: String) {
         if (nombre.isBlank()) {
             _usuarios.value = usuariosOriginales
             return
         }
         viewModelScope.launch {
-            try {
-                val response = API.apiDao.getUsuariosPorNombre(nombre = nombre)
-                if (response.isSuccessful && response.body() != null) {
-                    _usuarios.value = mapearUsuarios(response.body()!!)
-                }
-            } catch (e: Exception) { /* Manejar error */ }
+
+            val response = API.apiDao.getUsuariosPorNombre(nombre = nombre)
+            if (response.isSuccessful && response.body() != null) {
+                _usuarios.value = mapearUsuarios(response.body()!!)
+            }
+
         }
     }
 }

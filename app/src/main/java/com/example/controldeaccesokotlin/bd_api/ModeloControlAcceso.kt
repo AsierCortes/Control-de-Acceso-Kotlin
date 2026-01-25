@@ -1,5 +1,33 @@
 package com.example.controldeaccesokotlin.bd_api
 
+import com.google.gson.annotations.SerializedName
+
+// MODELO PRINCIPAL
+data class ModeloControlAcceso(
+    val salas : List<Sala> = emptyList(),
+    val salasLibres : List<Sala> = emptyList(),
+    val salasOcupadas : List<Sala> = emptyList(),
+    val salasBloqueadas : List<Sala> = emptyList(),
+    val salaSeleccionada : Sala? = null
+)
+
+
+
+data class Sala(
+    val id: Int,
+    val nombre: String,
+    val capacidad: Double,
+    val ubicacion: String,
+    val estado: String,
+    val tipo_cerradura: String,
+
+    // Lo he querido poner el atributo en español, para ello le indico a JSON
+    // que el atributo JSON se llama create_at
+    @SerializedName("created_at")
+    val fechaSalaCreada: String,
+    @SerializedName("updated_at")
+    val fechaSalaActualizada: String
+)
 
 // La estamos usando de manera provisional para ver algo en las vistas, pero terminará desapareciendo
 // Ya esta creada la de la API
@@ -24,16 +52,7 @@ data class RegisterBody(
     val password_confirmation: String
 )
 
-// No estoy segura si sea del todo necesario
-data class ModeloControlAcceso(
-    val acceso: ModeloAcceso,
-    val incidencia: ModeloIncidencia,
-    val permiso: ModeloPermiso,
-    val rol: ModeloRol,
-    val sala: ModeloSala,
-    val tarjeta: ModeloTarjeta,
-    val usuario1: ModeloUsuario1
-)
+
 
 //--------------- Dataclases de las entidades reales de la API
 data class ModeloAcceso(

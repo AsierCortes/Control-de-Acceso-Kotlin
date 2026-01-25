@@ -9,7 +9,6 @@ import kotlin.jvm.java
 
 // Singleton
 object API {
-
     private const val BASE_URL = "http://2.139.157.85:8002/api/v1/"
 
 
@@ -29,12 +28,9 @@ object API {
     val apiDao: DaoControlAcceso by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create()) //Algoritmo de conversión
             .build()
             .create(DaoControlAcceso::class.java)
     }
-
-
 
 }

@@ -56,20 +56,20 @@ data class RegisterBody(
 
 //--------------- Dataclases de las entidades reales de la API
 data class ModeloAcceso(
-    val fecha_salida: String,
-    val fecha_entrada: String,
-    val duracion_estancia: Int,
-    val tarjeta_id: Int,
-    val sala_id: Int
+    val fecha_salida: String? =  "",
+    val fecha_entrada: String = "",
+    val duracion_estancia: String? = "",
+    val tarjeta_id: Int = 0,
+    val sala_id: Int = 0
 )
 
 data class ModeloIncidencia(
-    val nombre: String,
-    val fecha_hora: String,
-    val estado: String,
-    val tipo_incidencia: String,
-    val motivo_denegacion: String,
-    val sala_id: Int
+    val nombre: String = "",
+    val fecha_hora: String = "",
+    var estado: String = "",
+    val tipo_incidencia: String = "",
+    var motivo_denegacion: String = "",
+    val sala_id: Int =1
 )
 
 data class ModeloPermiso(

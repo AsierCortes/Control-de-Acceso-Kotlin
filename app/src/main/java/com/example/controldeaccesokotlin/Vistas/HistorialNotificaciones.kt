@@ -20,11 +20,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -45,12 +48,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,9 +81,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.controldeaccesokotlin.bd_api.ModeloHistorial_se_eliminara
 import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
+import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
+import com.example.controldeaccesokotlin.bd_api.ModeloIncidencia
 import kotlin.collections.mutableListOf
 import kotlin.collections.set
 
@@ -84,11 +97,6 @@ import kotlin.collections.set
 @Composable
 fun Notificaciones() {
 
-    // Una variable para mostrar en ModalBottomSheet, AlertDialog o DropDown las opciones de exportar y filtrar
-    var verOpcionesExportado by remember { mutableStateOf(false) }
-    var verOpcionesFiltrado by remember { mutableStateOf(false) }
-
-    // En una lista almaceno la información necesaria para cada registro
     val eventos: List<ModeloHistorial_se_eliminara> = listOf(
         ModeloHistorial_se_eliminara(
             1,
@@ -165,6 +173,8 @@ fun Notificaciones() {
 
     )
 
+    var textoBuscador = "" // Para el buscador ¡Plantearse quitar el buscador!
+
     // Lo puse en una Column para que no se solape. No sé si afecte el funcionamiento de la LC
     Column(
         Modifier
@@ -186,72 +196,401 @@ fun Notificaciones() {
             color = Color.Gray
         )
 
-        //------------------ Buscador del que luego tomaré sólo la función del de Asier
-        var textoIntroducido by remember { mutableStateOf("") }
+        // Plantearse quitar el buscador
+        Buscador(textoBuscador)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        SelectorAccesosIncidencias(eventos)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
+
+    // En una lista almaceno de manera provisional las incidencias
+    val listaIncidencias = remember {
+        mutableStateListOf(
+            ModeloIncidencia(
+                nombre = "Puerta Abierta",
+                fecha_hora = "2025-11-13 09:10:00",
+                estado = "pendiente",
+                tipo_incidencia = "Puerta sin cerrar",
+                motivo_denegacion = "",
+                sala_id = 1
+            ),
+            ModeloIncidencia(
+                nombre = "Apertura Forzada",
+                fecha_hora = "2025-11-13 09:30:00",
+                estado = "aceptada",
+                tipo_incidencia = "Fuerza en cerradura",
+                motivo_denegacion = "",
+                sala_id = 2
+            ),
+            ModeloIncidencia(
+                nombre = "Bloqueo de Sala",
+                fecha_hora = "2025-11-13 10:00:00",
+                estado = "denegada",
+                tipo_incidencia = "Bloqueo manual",
+                motivo_denegacion = "Incidencia previa",
+                sala_id = 3
+            ),
+            ModeloIncidencia(
+                nombre = "Demasiado Tiempo",
+                fecha_hora = "2025-11-13 10:45:00",
+                estado = "pendiente",
+                tipo_incidencia = "Estancia prolongada",
+                motivo_denegacion = "-",
+                sala_id = 1
+            ),
+            ModeloIncidencia(
+                nombre = "Acceso Denegado",
+                fecha_hora = "2025-11-13 11:15:00",
+                estado = "aceptada",
+                tipo_incidencia = "Tarjeta bloqueada",
+                motivo_denegacion = "",
+                sala_id = 2
+            ),
+            ModeloIncidencia(
+                nombre = "Puerta Abierta",
+                fecha_hora = "2025-11-13 12:00:00",
+                estado = "pendiente",
+                tipo_incidencia = "Puerta quedó abierta tras salida",
+                motivo_denegacion = "",
+                sala_id = 3
+            ),
+            ModeloIncidencia(
+                nombre = "Acceso Denegado",
+                fecha_hora = "2025-11-13 12:20:00",
+                estado = "pendiente",
+                tipo_incidencia = "Intento de acceso sin permiso",
+                motivo_denegacion = "",
+                sala_id = 1
+            )
+        )
+    }
+
+    //En otra lista, también provisional almaceno los accesos
+    val listaAccesos = listOf(
+        ModeloAcceso("2026-01-24", "2026-01-24", "01:15:00", 101, 5),
+        ModeloAcceso("2026-01-24", "2026-01-24", "00:45:00", 102, 3),
+        ModeloAcceso(null, "2026-01-24", null, 105, 5), // Usuario aún dentro
+        ModeloAcceso("2026-01-24", "2026-01-24", "02:10:00", 110, 12),
+        ModeloAcceso("2025-11-13", "2025-11-13", "01:30:00", 1, 23),
+        ModeloAcceso(null, "2026-01-24", null, 115, 8), // Usuario aún dentro
+        ModeloAcceso("2026-01-24", "2026-01-24", "00:20:00", 108, 2),
+        ModeloAcceso("2026-01-24", "2026-01-24", "03:05:00", 120, 10),
+        ModeloAcceso("2026-01-24", "2026-01-24", "00:50:00", 101, 5),
+        ModeloAcceso("2026-01-24", "2026-01-24", "01:00:00", 112, 1)
+    )
+
+    val navController = rememberNavController()
+    var accesos = true
+    var incidencias = false
+
+    var tabSeleccionado by remember { mutableStateOf(0) }
+
+    PrimaryTabRow(selectedTabIndex = tabSeleccionado) {
+
+        // Para las incidencias
+        Tab(incidencias, {
+            navController.navigate("incidencias")
+            incidencias = true
+            accesos = false
+
+            tabSeleccionado = 0
+        }) {
+            Text(
+                text = "Incidencias",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
+
+        // Para los accesos
+        Tab(accesos, {
+            navController.navigate("accesos")
+            accesos = true
+            incidencias = false
+
+            tabSeleccionado = 1
+        }) {
+            Text(
+                text = "Accesos",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    NavHost(navController, startDestination = "incidencias") {
+        composable("incidencias") { FormacionCardsIncidencias(listaIncidencias) }
+        composable("accesos") { FormacionCardsAccesos(eventos) }
+    }
+}
+
+@Composable
+    fun FormacionCardsIncidencias(listaIncidencias: List<ModeloIncidencia>) {
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        items(items = listaIncidencias) { incidenciaAMostrar ->
+
+            val estado = incidenciaAMostrar.estado.lowercase()
+            val esPendiente = estado == "pendiente"
+
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize()
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Row(Modifier.padding(10.dp), verticalAlignment = Alignment.Top) {
+                    Icon(
+                        painterResource(
+                            when (incidenciaAMostrar.nombre) {
+                                "Acceso Denegado" -> R.drawable.outline_do_not_disturb_on_24
+                                "Apertura Forzada" -> R.drawable.outline_report_24
+                                "Puerta Abierta" -> R.drawable.outline_lock_open_right_24
+                                "Demasiado Tiempo" -> R.drawable.outline_hourglass_empty_24
+                                "Bloqueo de Sala" -> R.drawable.outline_lock_person_24
+                                else -> {
+                                    R.drawable.outline_unknown_med_24
+                                }
+                            }
+                        ), "Estado de Acceso",
+//                        tint = Color.Unspecified, // Para que respete los colores asignados a los iconos de drawable
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 20.dp,
+                                vertical = 2.dp
+                            )
+                    )
+
+                    Column {
+                        Row(
+                            Modifier.padding(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                incidenciaAMostrar.nombre,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .weight(1f),
+//                                style = MaterialTheme.typography.titleLarge,
+                                fontSize = 19.sp,
+                                fontWeight = if (esPendiente) FontWeight.ExtraBold else FontWeight.SemiBold
+                            )
+                            if (esPendiente) {
+                                Text(
+                                    "\uD83D\uDD35",
+                                    modifier = Modifier
+//                                        .align(Alignment.End)
+                                        .padding(end = 4.dp)
+
+                                )
+                            }
+                        }
+
+                        val pesoTexto = if (esPendiente) FontWeight.Bold else FontWeight.Normal
+
+                        Text(
+                            "${incidenciaAMostrar.sala_id}", // Tengo que obtener el nombre de la sala apartir de las incidencias
+                            modifier = Modifier
+                                .padding(2.dp),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = pesoTexto
+                        )
+
+
+                        Text(
+                            incidenciaAMostrar.fecha_hora,
+                            modifier = Modifier
+                                .padding(2.dp),
+                            fontWeight = pesoTexto
+                        )
+
+                        Spacer(Modifier.size(3.dp))
+
+                        var expandir by remember { mutableStateOf(false) } // Terminar
+                        // TODO. Mostrar un desplegable dónde se vea el detalle del evento
+                        // (ex: por qué se denegó a entrada, cuanto tiempo duró la puerta abierta...)
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { expandir = !expandir },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            val colorEstado = when (estado) {
+                                "aceptada" -> Color(0xFF388E3C)
+                                "denegada" -> Color(0xFFB71C1C)
+                                else -> Color(0xFF0B1A57)
+                            }
+
+                            val iconoEstado = when (estado) {
+                                "aceptada" -> Icons.Default.Check
+                                "denegada" -> Icons.Default.Close
+                                else -> null
+                            }
+
+                            if (iconoEstado != null) {
+                                Icon(
+                                    imageVector = iconoEstado,
+                                    contentDescription = null,
+                                    tint = colorEstado,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+
+                            Text(
+                                text = estado.uppercase(),
+                                style = typography.titleMedium,
+                                color = colorEstado,
+                                fontWeight = if (esPendiente) FontWeight.Black else FontWeight.SemiBold,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = "Expandir"
+                            )
+                        }
+
+                        if (expandir) {
+
+                            Text(
+                                "• ${incidenciaAMostrar.tipo_incidencia}",
+                                Modifier
+                                    .padding(2.dp),
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+
+                            when (incidenciaAMostrar.estado) {
+                                "pendiente" ->
+                                    IncidenciaPendiente(
+                                        incidenciaAMostrar
+                                    ) { nuevoEstado, motivoDenenegacion, contraer ->
+                                        incidenciaAMostrar.estado = nuevoEstado
+                                        incidenciaAMostrar.motivo_denegacion = motivoDenenegacion
+                                        expandir = contraer
+                                    }
+
+                                "denegada" ->
+                                    Text(
+                                        "Motivo: ${incidenciaAMostrar.motivo_denegacion}",
+                                        Modifier
+                                            .padding(2.dp),
+                                        fontWeight = FontWeight.SemiBold,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = Color(0xFFB71C1C)
+                                    )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun IncidenciaPendiente(incidencia: ModeloIncidencia, onEstadoCambiado: (String, String, Boolean) -> Unit) {
+// La lamba que recibe, devolverá:
+    // Un string, que será el nuevo estado al que se cambiará la incidencia cuando sea antendida
+    // Un motivo de denegación si es el caso
+    // Un boolean para contraer la pestaña donde hemos estado tratando el estado de la incidencia
+    var estadoSeleccionado by remember { mutableStateOf(incidencia.estado) }
+    var motivoDenegacion by remember { mutableStateOf("") }
+
+    Column {
+
+        Text("Responder incidencia",
+            Modifier.padding(2.dp))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(2.dp),
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 1. EL BUSCADOR
-            OutlinedTextField(
-                value = textoIntroducido,
-                onValueChange = { textoIntroducido = it }, // Esto actualiza el estado correctamente
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp), // Mantenemos la altura compacta
-                placeholder = {
-                    Text(
-                        text = "Buscar...",
-                        style = typography.bodyMedium,
-                        color = Color.Gray
-                    )
-                },
-                singleLine = true,
-                textStyle = typography.bodyMedium, // IMPORTANTE: Texto un poco más pequeño para que quepa bien
-                shape = RoundedCornerShape(10.dp),
-
-                // --- HE BORRADO LA LÍNEA contentPadding QUE DABA ERROR ---
-
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Buscar",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(20.dp)
-                    )
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = Color.LightGray
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = (estadoSeleccionado == "aceptada"),
+                    onClick = { estadoSeleccionado = "aceptada" },
+                    colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF388E3C))
                 )
-            )
+                Text("Aceptar")
+            }
 
-            // 2. EL BOTÓN
-            Button(
-                onClick = {},
-                shape = RoundedCornerShape(10.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                modifier = Modifier
-                    .height(50.dp) // Misma altura que el input
-            ) {
-                Text(
-                    text = "Buscar",
-                    style = typography.labelLarge,
-                    fontWeight = FontWeight.Bold
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = (estadoSeleccionado == "denegada"),
+                    onClick = { estadoSeleccionado = "denegada" },
+                    colors = RadioButtonDefaults.colors(selectedColor = Color(0xFFB71C1C))
                 )
+                Text("Denegar")
             }
         }
-        // ---------------------------- Fin del buscador
+        if (estadoSeleccionado == "denegada") {
 
+            Text("Motivo de denegación: ",
+                Modifier.padding(2.dp))
+            OutlinedTextField(
+                value = motivoDenegacion,
+                onValueChange = { motivoDenegacion = it },
+                label = { Text("Escribir...") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp)
+                    .height(54.dp),
+                singleLine = true,
+                shape = RoundedCornerShape(10.dp)
+            )
+            Spacer(Modifier.size(2.dp))
+        }
+
+        Button(
+            onClick = { onEstadoCambiado(estadoSeleccionado, motivoDenegacion, false) },
+//            modifier = Modifier.align(Alignment.CenterHorizontally),
+            enabled = estadoSeleccionado != "pedndiente"
+        ) {
+            Text("Confirmar")
+        }
+
+    }
+}
+
+@Composable
+fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
+
+    // Una variable para mostrar en ModalBottomSheet, AlertDialog o DropDown las opciones de exportar y filtrar
+    var verOpcionesExportado by remember { mutableStateOf(false) }
+    var verOpcionesFiltrado by remember { mutableStateOf(false) }
+
+    Column(
+        Modifier
+            .fillMaxSize()
+    ) {
         // Fila con los botones de filtro y para exportar
-        // Escoger entre ModalBottomSheet, AlertDialog o DropDown
-        Row(Modifier.padding(vertical = 20.dp)) {
+        Row(Modifier.padding(bottom = 20.dp)) {
             Button(
                 onClick = { verOpcionesFiltrado = true },
                 shape = RoundedCornerShape(10.dp),
@@ -270,10 +609,6 @@ fun Notificaciones() {
             ) { Text("Exportar") }
         }
 
-
-        FormacionCardsRegistros(eventos)
-
-
         // Llamo las funciones para mostrar las opciones de exportado/filtrado tras darle al boton
         if (verOpcionesExportado) {
             OpcionesExportado({ verOpcionesExportado = false })
@@ -281,115 +616,94 @@ fun Notificaciones() {
 
         if (verOpcionesFiltrado) {
             OpcionesFiltrado({ verOpcionesFiltrado = false })
-
         }
-    }
-}
 
-@Composable
-fun BotonesFiltrarExportar(verOpcionesFiltrado: Boolean, verOpcionesExportado: Boolean) {
-    // Funcion con LazyColumn donde se irán almacenando los registros
-    // TODO. No funcionaban los botones si los ponia en una funcion aparte. Pendiente por lograr
-}
-
-
-@Composable
-fun FormacionCardsRegistros(eventos: List<ModeloHistorial_se_eliminara>) {
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
-        items(items = eventos, key = { it.id }) { eventoAMostrar ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize()
-                    .clip(RoundedCornerShape(12.dp))
-            ) {
-                Row(Modifier.padding(10.dp)) {
-                    Icon(
-                        painterResource(
-                            when (eventoAMostrar.evento) {
-                                "Acceso Denegado" -> R.drawable.outline_do_not_disturb_on_24
-                                "Apertura Forzada" -> R.drawable.outline_report_24
-                                "Puerta Abierta" -> R.drawable.outline_lock_open_right_24
-                                "Demasiado Tiempo" -> R.drawable.outline_hourglass_empty_24
-                                "Bloqueo de Sala" -> R.drawable.outline_lock_person_24
-                                else -> {
-                                    R.drawable.outline_unknown_med_24
-                                }
-                            }
-                        ), "Estado de Acceso",
-                        tint = Color.Unspecified, // Para que respete los colores asignados a los iconos de drawable
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 20.dp,
-                                vertical = 2.dp
-                            )
-                    )
-
-                    Column {
-                        Text(
-                            eventoAMostrar.evento,
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            items(items = accesos) { accesoAMostrar ->
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize()
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+                    Row(Modifier.padding(10.dp)) {
+                        Icon(
+                            painterResource(
+                                R.drawable.outline_badge_24
+                            ), "Estado de Acceso",
+                            tint = Color.Unspecified, // Para que respete los colores asignados a los iconos de drawable
                             modifier = Modifier
-                                .padding(2.dp),
-//                                style = MaterialTheme.typography.titleLarge,
-                            fontSize = 19.sp,
-                            fontWeight = FontWeight.Bold
+                                .padding(
+                                    horizontal = 20.dp,
+                                    vertical = 2.dp
+                                )
                         )
-                        Row {
-                            Text(
-                                eventoAMostrar.sala,
-                                modifier = Modifier
-                                    .padding(2.dp),
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                            Text(
-                                eventoAMostrar.usuario,
-                                modifier = Modifier
-                                    .padding(2.dp),
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                        }
-                        Row {
-                            Text(
-                                eventoAMostrar.fecha,
-                                modifier = Modifier
-                                    .padding(2.dp),
-                            )
-                            Text(
-                                eventoAMostrar.hora,
-                                modifier = Modifier
-                                    .padding(2.dp),
-                            )
-                        }
 
-                        val expandir = false // Terminar
-                        // TODO. Mostrar un desplegable dónde se vea el detalle del evento
-                        // (ex: por qué se denegó a entrada, cuanto tiempo duró la puerta abierta...)
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        Column {
                             Text(
-                                text = if (expandir) "Ocultar detalles" else "Ver detalles",
-                                style = typography.bodyMedium,
-                                modifier = Modifier.weight(1f)
+                                accesoAMostrar.evento, // ---------- Tarjeta id, que lamara al usuario correspondiente para mostrar su nombre
+                                modifier = Modifier
+                                    .padding(2.dp),
+//                                style = MaterialTheme.typography.titleLarge,
+                                fontSize = 19.sp,
+                                fontWeight = FontWeight.Bold
                             )
-                            Icon(
-                                imageVector = if (expandir) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                contentDescription = "Expandir/Contraer"
-                            )
+                            Row {
+                                Text(
+                                    accesoAMostrar.sala,
+                                    modifier = Modifier
+                                        .padding(2.dp),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                                Text(
+                                    accesoAMostrar.usuario,
+                                    modifier = Modifier
+                                        .padding(2.dp),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+                            Row {
+                                Text(
+                                    accesoAMostrar.fecha,
+                                    modifier = Modifier
+                                        .padding(2.dp),
+                                )
+                                Text(
+                                    accesoAMostrar.hora,
+                                    modifier = Modifier
+                                        .padding(2.dp),
+                                )
+                            }
+
+                            val expandir = false // Terminar
+                            // TODO. Mostrar un desplegable dónde se vea el detalle del evento
+                            // (ex: por qué se denegó a entrada, cuanto tiempo duró la puerta abierta...)
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (expandir) "Ocultar detalles" else "Ver detalles",
+                                    style = typography.bodyMedium,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    imageVector = if (expandir) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Expandir/Contraer"
+                                )
+                            }
                         }
                     }
                 }
@@ -397,7 +711,6 @@ fun FormacionCardsRegistros(eventos: List<ModeloHistorial_se_eliminara>) {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -485,7 +798,7 @@ fun OpcionesExportado(onDismiss: () -> Unit) {
 fun OpcionesFiltrado(onDismiss: () -> Unit) {
 
     // Me copio la lista de Uusarios de la DataClass de Usuarios creada por Asier
-    // TODO. Unificar todo este tipo de cosas de modo que no repitamos código
+    // TODO. Unificar todo este tipo de cosas de modo que no repitamos código (DE LA API)
     val usuarios = listOf(
         ModeloUsuarios_se_eliminara(
             "img1",
@@ -500,15 +813,123 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
             false,
             mutableListOf("A1")
         ),
-        ModeloUsuarios_se_eliminara("img2", "María", "García", "Ruiz", "2º DAW", "maria@mail.com", "600222333", "13/09/23", true, false, mutableListOf("B1", "B2")),
-        ModeloUsuarios_se_eliminara("img3", "Carlos", "Sánchez", "Gil", "1º ASIR", "carlos@mail.com", "600333444", "14/09/23", false, true, mutableListOf("C1")),
-        ModeloUsuarios_se_eliminara("img4", "Laura", "Martín", "Díaz", "2º DAM", "laura@mail.com", "600444555", "15/09/23", true, false, mutableListOf("D1")),
-        ModeloUsuarios_se_eliminara("img5", "Pedro", "Ruiz", "Sanz", "1º DAW", "pedro@mail.com", "600555666", "16/09/23", true, false, mutableListOf("")),
-        ModeloUsuarios_se_eliminara("img6", "Sofía", "López", "Mora", "2º ASIR", "sofia@mail.com", "600666777", "17/09/23", true, false, mutableListOf("F1", "F2")),
-        ModeloUsuarios_se_eliminara("img7", "Javier", "Gómez", "Cano", "1º DAM", "javier@mail.com", "600777888", "18/09/23", false, false, mutableListOf("G1")),
-        ModeloUsuarios_se_eliminara("img8", "Elena", "Torres", "Vila", "2º DAW", "elena@mail.com", "600888999", "19/09/23", true, false, mutableListOf("H1")),
-        ModeloUsuarios_se_eliminara("img9", "Diego", "Díaz", "Pola", "1º ASIR", "diego@mail.com", "600999000", "20/09/23", true, true, mutableListOf("I1")),
-        ModeloUsuarios_se_eliminara("img10", "Ana", "Vargas", "Ríos", "2º DAM", "ana@mail.com", "600000111", "21/09/23", true, false, mutableListOf("J1"))
+        ModeloUsuarios_se_eliminara(
+            "img2",
+            "María",
+            "García",
+            "Ruiz",
+            "2º DAW",
+            "maria@mail.com",
+            "600222333",
+            "13/09/23",
+            true,
+            false,
+            mutableListOf("B1", "B2")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img3",
+            "Carlos",
+            "Sánchez",
+            "Gil",
+            "1º ASIR",
+            "carlos@mail.com",
+            "600333444",
+            "14/09/23",
+            false,
+            true,
+            mutableListOf("C1")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img4",
+            "Laura",
+            "Martín",
+            "Díaz",
+            "2º DAM",
+            "laura@mail.com",
+            "600444555",
+            "15/09/23",
+            true,
+            false,
+            mutableListOf("D1")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img5",
+            "Pedro",
+            "Ruiz",
+            "Sanz",
+            "1º DAW",
+            "pedro@mail.com",
+            "600555666",
+            "16/09/23",
+            true,
+            false,
+            mutableListOf("")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img6",
+            "Sofía",
+            "López",
+            "Mora",
+            "2º ASIR",
+            "sofia@mail.com",
+            "600666777",
+            "17/09/23",
+            true,
+            false,
+            mutableListOf("F1", "F2")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img7",
+            "Javier",
+            "Gómez",
+            "Cano",
+            "1º DAM",
+            "javier@mail.com",
+            "600777888",
+            "18/09/23",
+            false,
+            false,
+            mutableListOf("G1")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img8",
+            "Elena",
+            "Torres",
+            "Vila",
+            "2º DAW",
+            "elena@mail.com",
+            "600888999",
+            "19/09/23",
+            true,
+            false,
+            mutableListOf("H1")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img9",
+            "Diego",
+            "Díaz",
+            "Pola",
+            "1º ASIR",
+            "diego@mail.com",
+            "600999000",
+            "20/09/23",
+            true,
+            true,
+            mutableListOf("I1")
+        ),
+        ModeloUsuarios_se_eliminara(
+            "img10",
+            "Ana",
+            "Vargas",
+            "Ríos",
+            "2º DAM",
+            "ana@mail.com",
+            "600000111",
+            "21/09/23",
+            true,
+            false,
+            mutableListOf("J1")
+        )
     )
 
     val salas = listOf(
@@ -522,6 +943,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
         "Sala 9",
         "Sala 10",
     )
+
     val tipoEventos = listOf(
 //        "Todos",
         "Acceso Denegado",
@@ -647,10 +1069,10 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
             }
         }
 
-        var usuariosFiltro : List<String>
-        var salasFiltro : List<String>
-        var eventosFiltro : List<String>
-        var fechaFiltro : List<String>
+        var usuariosFiltro: List<String>
+        var salasFiltro: List<String>
+        var eventosFiltro: List<String>
+        var fechaFiltro: List<String>
 
         when {
             mostrarUsuarios -> FiltrarPorUsuarios(usuarios, { mostrarUsuarios = false })
@@ -927,9 +1349,6 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
 
 @Composable
 fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
-
-    var expandir by remember { mutableStateOf(false) } // Para usar el DropDown
-    var seleccion by remember { mutableStateOf(eventos[0]) } // Para recordar selección, en principio mostrará la opción "Todos"
 
 
     Dialog(
@@ -1243,12 +1662,18 @@ fun Buscador(textoIntruducido: String) {
     // ---------------------------- Fin del buscador
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun PreviewNotificaciones() {
     Notificaciones()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun PreviewFormacionCardsAcceso() {
+    FormacionCardsAccesos(listOf())
 }
 
 @Preview(showBackground = true)

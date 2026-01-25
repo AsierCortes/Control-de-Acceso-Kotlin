@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -156,7 +157,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                 false; notificacionesChecked = false
             },
             icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Icono salas") },
-            label = { Text(text = "Salas") }
+            label = { Text(text = stringResource(id = R.string.salas)) }
 
         )
 
@@ -173,7 +174,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                     contentDescription = "Icono usuarios"
                 )
             },
-            label = { Text(text = "Usuarios") }
+            label = { Text(text = stringResource(id = R.string.Usuarios)) }
 
         )
         // NOTIFICACIONES
@@ -189,7 +190,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                     contentDescription = "Icono notificaciones"
                 )
             },
-            label = { Text(text = "Notificaciones") }
+            label = { Text(text = stringResource(id = R.string.Notificaciones)) }
 
         )
     }

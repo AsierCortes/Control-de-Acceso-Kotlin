@@ -71,6 +71,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -182,7 +183,7 @@ fun Notificaciones() {
     ) {
 
         Text(
-            "Historial de eventos",
+            text = stringResource(id = R.string.Historial_Eventos),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -190,7 +191,7 @@ fun Notificaciones() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Visualiza y exporta el historial de eventos de las salas",
+            text = stringResource(id = R.string.Visualiza),
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray
         )
@@ -301,7 +302,7 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
             tabSeleccionado = 0
         }) {
             Text(
-                text = "Incidencias",
+                text = stringResource(id = R.string.Incidencias),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -316,7 +317,7 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
             tabSeleccionado = 1
         }) {
             Text(
-                text = "Accesos",
+                text = stringResource(id = R.string.Accesos),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -597,7 +598,7 @@ fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
                 modifier = Modifier
                     .weight(1f) // Hace referencia a unidades de peso, tal como flex-grow en CSS
                     .padding(end = 8.dp)
-            ) { Text("Filtrar") }
+            ) { Text(stringResource(id = R.string.Filtrar)) }
             Button(
                 onClick = { verOpcionesExportado = true },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
@@ -605,7 +606,7 @@ fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
-            ) { Text("Exportar") }
+            ) { Text(stringResource(id = R.string.Exportar)) }
         }
 
         // Llamo las funciones para mostrar las opciones de exportado/filtrado tras darle al boton
@@ -1630,7 +1631,7 @@ fun Buscador(textoIntruducido: String) {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar",
+                    contentDescription = stringResource(id = R.string.Buscar) + " ...",
                     tint = Color.Gray,
                     modifier = Modifier.size(20.dp)
                 )
@@ -1652,7 +1653,7 @@ fun Buscador(textoIntruducido: String) {
                 .height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar",
+                text = stringResource(id = R.string.Buscar),
                 style = typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )

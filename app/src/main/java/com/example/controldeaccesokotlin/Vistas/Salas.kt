@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,7 +85,7 @@ fun Salas(controller: ControlAccesoViewModel = viewModel()) {
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Salas",
+            text = stringResource(id = R.string.salas),
             style = typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -128,7 +129,7 @@ fun BuscadorSencillo() {
                 .height(50.dp), // Mantenemos la altura compacta
             placeholder = {
                 Text(
-                    text = "Buscar sala...", style = typography.bodyMedium, color = Color.Gray
+                    text =stringResource(id = R.string.Buscar_sala) , style = typography.bodyMedium, color = Color.Gray
                 )
             },
             singleLine = true,
@@ -161,7 +162,7 @@ fun BuscadorSencillo() {
             modifier = Modifier.height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar", style = typography.labelLarge, fontWeight = FontWeight.Bold
+                text = stringResource(id = R.string.Buscar), style = typography.labelLarge, fontWeight = FontWeight.Bold
             )
         }
     }
@@ -197,7 +198,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 0
         }) {
             Text(
-                text = "Todas",
+                text = stringResource(id = R.string.Todas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -215,7 +216,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 1
         }) {
             Text(
-                text = "Libres",
+                text = stringResource(id = R.string.Libres),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -232,7 +233,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 2
         }) {
             Text(
-                text = "Ocupadas",
+                text = stringResource(id = R.string.Ocupadas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -249,7 +250,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 3
         }) {
             Text(
-                text = "Bloqueadas",
+                text = stringResource(id = R.string.Bloqueadas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -289,7 +290,7 @@ fun Todas(controller: ControlAccesoViewModel = viewModel()) {
         ) {
             GenerarSalas(todasLasSalas)
         }
-
+        /*
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd) // Alineado abajo a la derecha
@@ -297,7 +298,7 @@ fun Todas(controller: ControlAccesoViewModel = viewModel()) {
         ) {
             BotonFlotanteAniadirSala()
         }
-
+        */
 
     }
 }
@@ -408,7 +409,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
 
                     )
                     Spacer(Modifier.padding(4.dp))
-                    Text(text = "Capacidad: ${infoSalaActual.capacidad.roundToInt()} personas")
+                    Text(text = "${stringResource(id = R.string.Capacidad)}: ${infoSalaActual.capacidad.roundToInt()} ${stringResource(id = R.string.Personas)}")
                 }
             }
 
@@ -506,7 +507,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Información de la Sala",
+                        text = stringResource(id = R.string.Info_sala),
                         style = typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
@@ -521,7 +522,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Id:",
+                            text = "ID:",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -546,7 +547,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Nombre:",
+                            text = "${stringResource(id = R.string.Nombre)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -571,7 +572,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Ubicación:",
+                            text = "${stringResource(id = R.string.Ubicacion)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -596,7 +597,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Tipo de cerradura:",
+                            text = "${stringResource(id = R.string.Tipo_cerradura)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -622,7 +623,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Capacidad:",
+                            text = "${stringResource(id = R.string.Capacidad)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -647,7 +648,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Estado:",
+                            text = "${stringResource(id = R.string.Estado)}: ",
                             style = typography.bodyLarge,
                             textDecoration = TextDecoration.Underline,
                             fontWeight = FontWeight.Bold,
@@ -656,11 +657,11 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
 
                         Text(
                             text = if (salaMostrar?.estado.equals("libre", ignoreCase = true)) {
-                                "Libre \uD83D\uDFE2"
+                                "${stringResource(id = R.string.Libres)} \uD83D\uDFE2"
                             } else if(salaMostrar?.estado.equals("ocupada", ignoreCase = true)){
-                                "Ocupado \uD83D\uDFE0"
+                                "${stringResource(id = R.string.Ocupadas)} \uD83D\uDFE0"
                             }else{
-                                "Bloqueado \uD83D\uDD34"
+                                "${stringResource(id = R.string.Bloqueadas)} \uD83D\uDD34"
                             },
                             modifier = Modifier.weight(0.6f)
 
@@ -679,7 +680,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "Usuarios en la sala:",
+                            text = "${stringResource(id = R.string.Usuarios_en_sala)}:",
                             textDecoration = TextDecoration.Underline,
                             fontWeight = FontWeight.Bold,
                             style = typography.bodyLarge
@@ -745,7 +746,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                                             horizontalArrangement = Arrangement.spacedBy(5.dp)
                                         ) {
                                             Text(
-                                                text = "Hora de acceso:",
+                                                text = "${stringResource(id = R.string.Hora_acceso)}:",
                                                 style = typography.bodyLarge,
                                                 fontWeight = FontWeight.Bold
                                             )
@@ -771,7 +772,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
         }
     }
 }
-
+/*
 @Composable
 fun BotonFlotanteAniadirSala() {
     // Pulsa y llama a la funcion crearNuevaSala()
@@ -785,7 +786,7 @@ fun BotonFlotanteAniadirSala() {
         Icon(imageVector = Icons.Default.Refresh, contentDescription = "Add")
     }
 }
-
+*/
 @Preview(showBackground = true)
 @Composable
 fun PreviewSalas() {

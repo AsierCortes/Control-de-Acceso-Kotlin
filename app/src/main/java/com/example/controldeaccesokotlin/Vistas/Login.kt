@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.controldeaccesokotlin.R
 
@@ -32,20 +37,65 @@ fun Login(changePrincipal: (String) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.background),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
 
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(180.dp))
-            Button(onClick = { changePrincipal("salas") }) { Text("Acceder SSO") }
+            Column (
+                modifier = Modifier.fillMaxWidth(0.85f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ){
+                Image(
+                    painter = painterResource(R.drawable.logobueno),
+                    contentDescription = "Foto salas",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(200.dp)
+                        .align(Alignment.CenterHorizontally)
+
+                )
+                Text(
+                    text = stringResource(id = R.string.correo),
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 50.dp)
+                )
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp),
+                    onValueChange = {},
+                    value = ""
+                )
+
+                Spacer(Modifier.padding(20.dp))
+                Text(
+                    text = stringResource(id = R.string.pwd),
+                    modifier = Modifier.align(Alignment.Start)
+
+                )
+
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp),
+                    onValueChange = {},
+                    value = ""
+                )
+
+                Button(
+                    onClick = { changePrincipal("salas") },
+                    modifier = Modifier.padding(top = 30.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.mensaje_btn_acceder)
+                    )
+                }
+            }
+
         }
     }
 
@@ -85,4 +135,10 @@ fun CustomTopBar() {
             )
         }
     )
+}
+
+@Composable
+@Preview
+fun PreviewLogin(){
+    Login {  }
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun Usuarios(controller: ControlAccesoViewModel = viewModel()) {
     ) {
 
         Text(
-            text = "Gestión de Usuarios",
+            text = stringResource(id = R.string.Info_sala),
             style = typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -112,7 +113,7 @@ fun BuscarTexto(
                 .weight(1f)
                 .height(50.dp),
             placeholder = {
-                Text("Buscar usuarios...", color = Color.Gray)
+                Text(stringResource(id = R.string.Buscar_usuarios), color = Color.Gray)
             },
             singleLine = true,
             textStyle = typography.bodyMedium, // IMPORTANTE: Texto un poco más pequeño para que quepa bien
@@ -145,7 +146,7 @@ fun BuscarTexto(
                 .height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar",
+                text = stringResource(id = R.string.Buscar),
                 style = typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -163,7 +164,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
     ) {
         Icon(Icons.Filled.AddCircle, contentDescription = "Filtrar")
         Spacer(modifier = Modifier.width(8.dp))
-        Text("Filtros")
+        Text(stringResource(id = R.string.Filtros))
     }
 }
 
@@ -223,7 +224,7 @@ fun Filtros(
 
     AlertDialog(
         onDismissRequest = Cancelar,
-        title = { Text("Filtros") },
+        title = { Text(stringResource(id = R.string.Filtros)) },
         text = {
             Column {
                 DesplegableEstado(estado) { estado = it }
@@ -233,12 +234,12 @@ fun Filtros(
         },
         confirmButton = {
             Button(onClick = { Aplicar(estado, orden) }) {
-                Text("Guardar")
+                Text(stringResource(id = R.string.Guardar))
             }
         },
         dismissButton = {
             Button(onClick = Cancelar) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.Cancelar))
             }
         }
     )
@@ -247,7 +248,7 @@ fun Filtros(
 // ------------------ DESPLEGABLES ------------------
 @Composable
 fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Todos", "Activo", "Inactivo", "Bloqueado")
+    val opciones = listOf(stringResource(id = R.string.Todos), stringResource(id = R.string.Activo), stringResource(id = R.string.Inactivo), stringResource(id = R.string.Bloqueadas))
     var expandir by remember { mutableStateOf(false) }
 
     Column {
@@ -280,7 +281,7 @@ fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit)
 
 @Composable
 fun DesplegableOrdenarPor(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Nombre A-Z", "Nombre Z-A", "FechaAlta(Reciente)", "FechaAlta(Antigua)")
+    val opciones = listOf(stringResource(id = R.string.Nombre_a_z), stringResource(id = R.string.Nombre_z_a), stringResource(id = R.string.FechaAltaReciente), stringResource(id = R.string.FehaAltaAntigua))
     var expandir by remember { mutableStateOf(false) }
 
     Column {

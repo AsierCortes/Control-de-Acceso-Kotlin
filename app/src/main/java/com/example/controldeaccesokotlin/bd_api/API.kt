@@ -1,6 +1,7 @@
 package com.example.controldeaccesokotlin.bd_api
 
 import com.example.controldeaccesokotlin.dao.DaoControlAcceso
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.jvm.java
@@ -11,7 +12,7 @@ import kotlin.jvm.java
 object API {
     private const val BASE_URL = "http://2.139.157.85:8002/api/v1/"
 
-    // Para registro e inicio de sesion
+    // Para registro
     private const val BASE_URL_INICIO_SESION = "http://2.139.157.85:8000/api/v1/"
 
     //Lazy: Se inicializa sólo cuando se necesita.

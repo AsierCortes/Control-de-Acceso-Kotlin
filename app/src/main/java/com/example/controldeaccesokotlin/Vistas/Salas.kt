@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,24 +24,19 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
@@ -51,7 +45,10 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,21 +59,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
+import com.example.controldeaccesokotlin.bd_api.Sala
 import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
+import com.example.controldeaccesokotlin.viewModel.ControlAccesoViewModel
+import kotlin.math.roundToInt
 
 @Composable
-fun Salas() {
+fun Salas(controller: ControlAccesoViewModel = viewModel()) {
+    val getDatosSalas = controller.publicModelo.collectAsState()
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -175,19 +177,24 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
     var todas = true
     var libres = false
     var ocupadas = false
+    var bloqueadas = false
 
-    var tabSeleccionado by remember { mutableStateOf(0) }
+    var tabSeleccionado by remember { mutableIntStateOf(0) }
 
 
     var selectedDestination by rememberSaveable { mutableStateOf("todas") }
 
-    PrimaryTabRow(selectedTabIndex = tabSeleccionado) {
+    PrimaryTabRow(
+        selectedTabIndex = tabSeleccionado,
+
+    ) {
         // TODAS
         Tab(todas, {
             navController.navigate("todas")
             todas = true
             libres = false
             ocupadas = false
+            bloqueadas = false
 
             tabSeleccionado = 0
         }) {
@@ -204,6 +211,8 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             libres = true
             todas = false
             ocupadas = false
+            bloqueadas = false
+
 
             tabSeleccionado = 1
         }) {
@@ -220,11 +229,29 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             ocupadas = true
             todas = false
             libres = false
+            bloqueadas = false
 
             tabSeleccionado = 2
         }) {
             Text(
                 text = "Ocupadas",
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+        }
+
+        // BLOQUEADAS
+        Tab(ocupadas, {
+            navController.navigate("bloqueadas")
+            bloqueadas = true
+            ocupadas = false
+            todas = false
+            libres = false
+
+            tabSeleccionado = 3
+        }) {
+            Text(
+                text = "Bloqueadas",
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -235,6 +262,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
         composable("todas") { Todas() }
         composable("libres") { Libres() }
         composable("ocupadas") { Ocupadas() }
+        composable("bloqueadas") { Bloqueadas() }
 
 
     }
@@ -242,9 +270,14 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Todas() {
-    // Se activa y se pone a true si alguien lo pulsa
+fun Todas(controller: ControlAccesoViewModel = viewModel()) {
+    val publicModel = controller.publicModelo.collectAsState()
+    val todasLasSalas : List <Sala> = publicModel.value.salas
 
+
+    println("DESDE TODAS todasLasSalas: " + todasLasSalas + ", public model salas: " + publicModel.value.salas)
+
+    // Se activa y se pone a true si alguien lo pulsa
     // 1. Usamos BOX para apilar capas (Lista al fondo, Botón arriba)
     Box(
         modifier = Modifier.fillMaxSize()
@@ -256,57 +289,69 @@ fun Todas() {
             contentAlignment = Alignment.TopCenter  // Lo alinea en el centro horizontal
 
         ) {
-            GenerarSalas()
+            GenerarSalas(todasLasSalas)
         }
 
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd) // Alineado abajo a la derecha
+                .padding(25.dp)             // Margen para no pegar al borde
+        ) {
+            BotonFlotanteAniadirSala()
+        }
+
+
     }
 }
 
 
 @Composable
-fun Libres() {
+fun Libres(controller: ControlAccesoViewModel = viewModel()) {
+
+    val publicModel = controller.publicModelo.collectAsState()
+    val salasLibres : List <Sala> = publicModel.value.salasLibres
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GenerarSalas()
+        GenerarSalas(salasLibres)
     }
 }
 
 @Composable
-fun Ocupadas() {
+fun Ocupadas(controller: ControlAccesoViewModel = viewModel()) {
+    val publicModel = controller.publicModelo.collectAsState()
+    val salasOcupadas : List <Sala> = publicModel.value.salasOcupadas
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GenerarSalas()
+        GenerarSalas(salasOcupadas)
     }
 }
 
 @Composable
-fun GenerarSalas() {
-    val salas = listOf<String>(
-        "Sala 01",
-        "Sala 02",
-        "Sala 03",
-        "Sala 04",
-        "Sala 05",
-        "Sala 06",
-        "Sala 07",
-        "Sala 08",
-        "Sala 09",
-        "Sala 10",
-        "Sala 11",
-        "Sala 12",
-        "Sala 13",
-        "Sala 14",
-        "Sala 15"
-    )
+fun Bloqueadas(controller: ControlAccesoViewModel = viewModel()) {
+    val publicModel = controller.publicModelo.collectAsState()
+    val salasBloqueadas : List <Sala> = publicModel.value.salasBloqueadas
 
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        GenerarSalas(salasBloqueadas)
+    }
+}
+
+@Composable
+fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel = viewModel()) {
     // Este es null al principio, si alguien pulsa una sala, guarda el nombre de la sala pulsada
-    var salaSeleccionada by remember { mutableStateOf<String?>(null) }
+    var idSalaSeleccionada by remember { mutableStateOf<Int?>(-1) }
+    val publicModel = controller.publicModelo.collectAsState()
 
 
     LazyVerticalGrid(
@@ -318,7 +363,7 @@ fun GenerarSalas() {
         horizontalArrangement = Arrangement.Center,
         verticalArrangement = Arrangement.spacedBy(18.dp)    // Separación entre elementos
     ) {
-        items(salas) { infoSalaActual ->
+        items(salasAPintar) { infoSalaActual ->
 
             // CARTA -> No sirve como contenedor de modifier
             Card(
@@ -327,7 +372,7 @@ fun GenerarSalas() {
                 border = BorderStroke(1.dp, Color.Black),
                 // Hacemos que sea clickeable
                 modifier = Modifier.clickable(
-                    onClick = { salaSeleccionada = infoSalaActual }
+                    onClick = { idSalaSeleccionada = infoSalaActual.id }
 
                 )) {
                 // La columna ocupa el 85% de la LazyVerticalGrid
@@ -339,9 +384,21 @@ fun GenerarSalas() {
                         .align(Alignment.CenterHorizontally), horizontalAlignment = Alignment.Start
                 ) {
                     // Forzamos para que vaya a la izq
-                    Text(text = infoSalaActual, style = typography.titleMedium)
+                    Text(text = infoSalaActual.nombre, style = typography.titleMedium)
                     // Forzamos para que vaya a la izq
-                    Text(text = "\uD83D\uDFE2")
+
+                    Text(
+                        text = if (infoSalaActual.estado.equals("libre", ignoreCase = true)) {
+                            "\uD83D\uDFE2"
+                        } else if(infoSalaActual.estado.equals("ocupada", ignoreCase = true)){
+                            "\uD83D\uDFE0"
+                        }else{
+                            "\uD83D\uDD34"
+                        }
+                    )
+
+
+
                     // Se alinia al centro por la columna padre
                     Image(
                         painter = painterResource(R.drawable.sala),
@@ -353,9 +410,7 @@ fun GenerarSalas() {
 
                     )
                     Spacer(Modifier.padding(4.dp))
-                    Text(text = "Capacidad: 7m2")
-                    Spacer(Modifier.padding(2.dp))
-                    Text(text = "Ultimo acceso: Juan Arechabela")
+                    Text(text = "Capacidad: ${infoSalaActual.capacidad.roundToInt()} personas")
                 }
             }
 
@@ -365,29 +420,22 @@ fun GenerarSalas() {
     // El dialogo se pone fuera de la lazyGrid para que solo pinte la sala seleccionada. Ya que de lo contrario,
     // pintaria todas
     // Solo aparece el dialogo si alguien ha pusado una sala (Es decir, cuando salaSeleccionada es distinto de null)
-    if (salaSeleccionada != null) {
+    if (idSalaSeleccionada != -1) {
+        // SOlo cuando cambie el id se ejecutara
+        LaunchedEffect(idSalaSeleccionada) {
+            controller.recogerInfoSalaSeleccionada(idSalaSeleccionada)
+        }
+        val infoSalaSeleccionada : Sala? = publicModel.value.salaSeleccionada
+
         MostrarDialogoInformacionSala(
-            textoMostrar = salaSeleccionada!!, // Pasamos la sala seleccionada
+            salaMostrar = infoSalaSeleccionada, // Pasamos la sala seleccionada
             pulsarFuera = {
-                salaSeleccionada = null
+                idSalaSeleccionada = -1
             } // Al pulsar fuera del dialogo, se sale y se vuelve a null
         )
     }
 
 
-}
-
-
-@Composable
-fun BotonFlotanteAniadirSala(pulsaBotonFlontante: () -> Unit) {
-    // Pulsa y llama a la funcion crearNuevaSala()
-    FloatingActionButton(
-        { pulsaBotonFlontante() },
-        shape = CircleShape,
-        containerColor = Color(0xFFFFFFE0),
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-    }
 }
 
 
@@ -426,7 +474,7 @@ fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
 
 
 @Composable
-fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit) {
+fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
     Dialog(
         onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
         properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
@@ -460,6 +508,31 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                         fontWeight = FontWeight.Bold,
                     )
 
+                    // Id de la sala
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Id:",
+                            style = typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.weight(0.3f)
+                        )
+
+                        Text(
+                            text = "${salaMostrar?.id}",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
+
+                    }
+
                     // Nombre de la sala
                     Row(
                         modifier = Modifier
@@ -478,7 +551,7 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                         )
 
                         Text(
-                            text = "B104",
+                            text = "${salaMostrar?.nombre}",
                             style = typography.bodyLarge,
                             modifier = Modifier.weight(0.6f)
                         )
@@ -486,68 +559,82 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                     }
 
                     // Ubicación
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f),
+                            .weight(1f)
+                            .padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Parrafo Ubicación Negro
-                        Row(
-                            modifier = Modifier.weight(1.2f)    //Para tener un poco de separacion
-                        ) {
-                            Text(
-                                text = "Ubicación:",
-                                textDecoration = TextDecoration.Underline,
-                                fontWeight = FontWeight.Bold,
-                                style = typography.bodyLarge
-                            )
-                        }
+                        Text(
+                            text = "Ubicación:",
+                            style = typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.weight(0.3f)
+                        )
 
-
-                        // EDIFICIO Y VALOR
-                        Row(
-                            modifier = Modifier.weight(1f)
-                        ) {
-
-                            // EDIFICIO
-                            Text(
-                                text = "Edificio:",
-                                style = typography.bodyLarge,
-                                modifier = Modifier.weight(0.3f)
-                            )
-
-                            // VALOR
-                            Text(
-                                text = "Berlín",
-                                style = typography.bodyLarge,
-                                modifier = Modifier.weight(0.6f)
-                            )
-
-                        }
-
-                        // NUMERO Y VALOR
-                        Row(
-                            modifier = Modifier.weight(1f)
-                        ) {
-
-                            // NUMERO
-                            Text(
-                                text = "Número:",
-                                style = typography.bodyLarge,
-                                modifier = Modifier.weight(0.3f)
-                            )
-
-                            // VALOR
-                            Text(
-                                text = "104",
-                                style = typography.bodyLarge,
-                                modifier = Modifier.weight(0.6f)
-                            )
-
-                        }
-
+                        Text(
+                            text = "${salaMostrar?.ubicacion}",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
 
                     }
+
+                    // Tipo de cerradura
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Tipo de cerradura:",
+                            style = typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.weight(0.3f)
+                        )
+
+                        Text(
+                            text = "${salaMostrar?.tipo_cerradura}",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
+
+                    }
+
+
+                    // Capacidad
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Capacidad:",
+                            style = typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.weight(0.3f)
+                        )
+
+                        Text(
+                            text = "${salaMostrar?.capacidad?.roundToInt()}",
+                            style = typography.bodyLarge,
+                            modifier = Modifier.weight(0.6f)
+                        )
+
+                    }
+
+
                     // Estado
                     Row(
                         modifier = Modifier
@@ -565,31 +652,15 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                         )
 
                         Text(
-                            text = "Libre \uD83D\uDFE2",
-                            style = typography.bodyLarge,
+                            text = if (salaMostrar?.estado.equals("libre", ignoreCase = true)) {
+                                "Libre \uD83D\uDFE2"
+                            } else if(salaMostrar?.estado.equals("ocupada", ignoreCase = true)){
+                                "Ocupado \uD83D\uDFE0"
+                            }else{
+                                "Bloqueado \uD83D\uDD34"
+                            },
                             modifier = Modifier.weight(0.6f)
-                        )
 
-                    }
-
-                    // Cantidad de usuarios
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Text(
-                            text = "Cantidad de usuarios:",
-                            style = typography.bodyLarge,
-                            textDecoration = TextDecoration.Underline,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Spacer(Modifier.padding(5.dp))
-                        Text(
-                            text = "10",
-                            style = typography.bodyLarge
                         )
 
                     }
@@ -751,9 +822,9 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
                                     shape = RoundedCornerShape(4.dp)
 
                                 ) {
-                                    Column (
+                                    Column(
                                         modifier = Modifier.fillMaxWidth()
-                                    ){
+                                    ) {
 
 
                                         // IMG Y NOMBRE
@@ -811,8 +882,17 @@ fun MostrarDialogoInformacionSala(textoMostrar: String, pulsarFuera: () -> Unit)
 }
 
 @Composable
-fun MostrarInformacionSalaDetallada() {
+fun BotonFlotanteAniadirSala() {
+    // Pulsa y llama a la funcion crearNuevaSala()
+    FloatingActionButton(
+        onClick = {
 
+        },
+        shape = CircleShape,
+        containerColor = Color(0xFFFFFFE0),
+    ) {
+        Icon(imageVector = Icons.Default.Refresh, contentDescription = "Add")
+    }
 }
 
 @Preview(showBackground = true)
@@ -824,12 +904,3 @@ fun PreviewSalas() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PrevierMostrarDialogoInformacionSala() {
-    ControlDeAccesoKotlinTheme {
-        MostrarDialogoInformacionSala("Sala1") {
-
-        }
-    }
-}

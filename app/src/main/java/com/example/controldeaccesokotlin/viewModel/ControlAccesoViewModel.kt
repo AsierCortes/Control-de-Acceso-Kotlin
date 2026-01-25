@@ -3,10 +3,15 @@ package com.example.controldeaccesokotlin.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.controldeaccesokotlin.bd_api.API
+import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
 import com.example.controldeaccesokotlin.bd_api.ModeloControlAcceso
+import com.example.controldeaccesokotlin.bd_api.ModeloTarjeta
 import com.example.controldeaccesokotlin.bd_api.Sala
+import com.example.controldeaccesokotlin.bd_api.Tarjeta
 import com.example.controldeaccesokotlin.bd_api.Usuario
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,7 +24,6 @@ class ControlAccesoViewModel : ViewModel() {
     val publicModelo = privateModelo.asStateFlow()
 
 
-
     // Para que carge la info antes
     init {
         recogerInfoSalasPorPagina()
@@ -28,12 +32,12 @@ class ControlAccesoViewModel : ViewModel() {
 
 
     // --------------------- SALAS --------------------------------
-    fun recogerInfoSalaSeleccionada(idSala: Int?){
+    fun recogerInfoSalaSeleccionada(idSala: Int?) {
         if (idSala != -1) {
             viewModelScope.launch {
-                val response : Response<Sala> = API.apiDao.getSalaEspecifica(idSala)
-                if(response.isSuccessful){
-                    val salaSeleccionada : Sala? = response.body()
+                val response: Response<Sala> = API.apiDao.getSalaEspecifica(idSala)
+                if (response.isSuccessful) {
+                    val salaSeleccionada: Sala? = response.body()
 
                     // Actualizar el modelo
                     // Actualizamos el modelo:
@@ -70,7 +74,8 @@ class ControlAccesoViewModel : ViewModel() {
 
         viewModelScope.launch {
             var response = API.apiDao.getSalasPorPagina(cantidadPaginas)
-            var cantidadDeSalas = response.body()?.get("total")!!.asInt                 // Lo recibe coo JSONObject, obtenemos el primitive de total (al hacer get) y hay que convertir el dato a int
+            var cantidadDeSalas = response.body()
+                ?.get("total")!!.asInt                 // Lo recibe coo JSONObject, obtenemos el primitive de total (al hacer get) y hay que convertir el dato a int
 
             val resultado = cantidadDeSalas % 10
             if (resultado == 0) {
@@ -85,13 +90,13 @@ class ControlAccesoViewModel : ViewModel() {
             // Bucle for hasta rellenar todas las salas
             for (i in 1..cantidadPaginas) {
                 val respuestaServidor = API.apiDao.getSalasPorPagina(i)
-                val jsonArray = respuestaServidor.body()?.get("data")?.asJsonArray
+                val listaDataSalas = respuestaServidor.body()?.get("data")?.asJsonArray
                 /*
                     El problema es que es un JSON array, y yo quiero convertirlo los JSONELements (es decir, cada sala)
                     en object sala, es por ello que utilizo un map y recorro el JSON array para convertir cada JSON ELEMENT
                     a un objecto de tipo sala
                  */
-                val salasPorPagina: List<Sala> = jsonArray?.map { jsonElement ->
+                val salasPorPagina: List<Sala> = listaDataSalas?.map { jsonElement ->
                     gson.fromJson(jsonElement, Sala::class.java)
                 } ?: emptyList()
                 salasTotales.addAll(salasPorPagina)     // Agregamos a salas totales
@@ -102,7 +107,7 @@ class ControlAccesoViewModel : ViewModel() {
             // Ya tenemos todas las salas, el problemas es que estan desordenadas, entonces vamos
             // a ordenarlas por id. El sorted by no modifica la lsita original, te devuelve una copia nueva
             // ordenada
-            val salasOrdenadas = salasTotales.sortedBy {sala ->
+            val salasOrdenadas = salasTotales.sortedBy { sala ->
                 sala.id
             }
             val salasLibres = salasOrdenadas.filter { sala ->
@@ -114,7 +119,6 @@ class ControlAccesoViewModel : ViewModel() {
             val salasBloqueadas = salasOrdenadas.filter { sala ->
                 sala.estado.equals("bloqueada", ignoreCase = true)
             }
-
 
 
             // Actualizamos el modelo:
@@ -139,10 +143,69 @@ class ControlAccesoViewModel : ViewModel() {
         }
     }
 
+    fun getAccesosSalaEspecifica(idSala: Int?) {
+        val gson = Gson()   // Para no tener que crear un json por cada sala
 
+        if (idSala != -1) {
+            viewModelScope.launch {
+                val response: Response<JsonObject> = API.apiDao.getAccesosPorSala(idSala)
+
+                if (response.isSuccessful) {
+                    val listarDataAccesos = response.body()?.get("data")?.asJsonArray
+                    // Basicamente un usuario puede entrar y salir varias veces, por tanto,
+                    // solo quiero guardar los accesos en los que no se repita la tarjeta_id,
+                    // y asi guardar corectamente los usuarios y que estos no aparezcan duplicados
+                    // DistincBy solo guarda el primero que tenga ese id concreto, por mucho que
+                    // haya dos ids de tarjeta iguales, guarda el primero
+                    val accesosSala: List<ModeloAcceso> = listarDataAccesos?.map { jsonElement ->
+                        gson.fromJson(jsonElement, ModeloAcceso::class.java)
+                    }?.distinctBy { it.tarjeta_id } ?: emptyList()
+
+                    println("Accesos sala id 44: " + accesosSala)
+
+                    // Ahora tenemos que guardar la fecha de entrada
+                    var listaHoraEntrada: MutableList<String> = mutableListOf()
+                    var listaTarjetasId: MutableList<Int> = mutableListOf()
+                    var listaUsuarios: MutableList<Usuario> = mutableListOf()
+
+                    for (acceso in accesosSala) {
+                        listaHoraEntrada.add(acceso.fecha_entrada)
+                        listaTarjetasId.add(acceso.tarjeta_id)
+
+                        // Llamamos al endpoint para recibir info de esa tarjeta en concreto
+                        val response2: Response<Tarjeta> =
+                            API.apiDao.getInfoTarjeta(acceso.tarjeta_id)
+
+                        if (response2.isSuccessful && response2.body() != null) {
+                            val tarjeta: Tarjeta =
+                                response2.body()!!    // Aseguramos de que no va a ser null
+                            val usuario: Usuario = tarjeta.usuario
+
+                            // Lo agregamos a la lista de ususarios
+                            listaUsuarios.add(usuario)
+                        }
+                    }
+
+                    println("Fechas de accesos: " + listaHoraEntrada)
+                    println("Tarjetas id: " + listaTarjetasId)
+                    println("Usuarios en la sala: " + listaUsuarios)
+
+
+                    // ACTUALIZAMOS EL MODELO
+                    privateModelo.update {
+                        it.copy(
+                            listaUsuariosSalaSeleccionada = listaUsuarios,
+                            listaHorasEntradasSalaSeleccionada = listaHoraEntrada
+                        )
+                    }
+
+                }
+            }
+        }
+    }
 
     // --------------------- USUARIOS --------------------------------
-    fun recogerInfoUsuariosPorPagina(){
+    fun recogerInfoUsuariosPorPagina() {
         var cantidadPaginas: Int = 0;
         val gson = Gson()   // Para no tener que crear un json por cada sala
         var usuariosTotales: MutableList<Usuario> = mutableListOf()
@@ -150,7 +213,8 @@ class ControlAccesoViewModel : ViewModel() {
 
         viewModelScope.launch {
             var response = API.apiDao.getUsuariosPorPagina(cantidadPaginas)
-            var cantidadDeUsuarios = response.body()?.get("total")!!.asInt                 // Lo recibe coo JSONObject, obtenemos el primitive de total (al hacer get) y hay que convertir el dato a int
+            var cantidadDeUsuarios = response.body()
+                ?.get("total")!!.asInt                 // Lo recibe coo JSONObject, obtenemos el primitive de total (al hacer get) y hay que convertir el dato a int
 
             val resultado = cantidadDeUsuarios % 10
             if (resultado == 0) {
@@ -182,16 +246,15 @@ class ControlAccesoViewModel : ViewModel() {
             // Ya tenemos todas las usuarios, el problemas es que estan desordenadas, entonces vamos
             // a ordenarlas por id. El sorted by no modifica la lsita original, te devuelve una copia nueva
             // ordenada
-            val usuariosOrdenados = usuariosTotales.sortedBy {usuario ->
+            val usuariosOrdenados = usuariosTotales.sortedBy { usuario ->
                 usuario.id
             }
-
 
 
             // Actualizamos el modelo:
             privateModelo.update {
                 it.copy(
-                    usuraios = usuariosOrdenados
+                    usuarios = usuariosOrdenados
                 )
 
             }

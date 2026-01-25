@@ -12,12 +12,23 @@ data class ModeloControlAcceso(
     val salaSeleccionada : Sala? = null,
 
     // PARA USUARIOS
-    val usuraios : List<Usuario> = emptyList<Usuario>()
+    val usuarios : List<Usuario> = emptyList<Usuario>(),
 
-
+    // Para ver los Usuarios que hay en una sala en concreto
+    val listaUsuariosSalaSeleccionada : List<Usuario> = emptyList<Usuario>(),
+    val listaHorasEntradasSalaSeleccionada : List <String> = emptyList<String>()
 )
 
 
+
+data class Tarjeta(
+    val bloqueada: Int,
+    val created_at: String,
+    val id: Int,
+    val updated_at: String,
+    val usuario: Usuario,
+    val usuario_id: Int
+)
 
 data class Sala(
     val id: Int,
@@ -43,6 +54,12 @@ data class Usuario (
     val created_at: String = "",
     val updated_at: String = ""
 )
+
+
+
+
+
+
 
 
 
@@ -90,13 +107,6 @@ data class ModeloRol(
     val tipo: String
 )
 
-data class ModeloSala(
-    val nombre: String,
-    val ubicacion: String,
-    val estado: String,
-    val capacidad: Double,
-    val tipo_cerradura: String
-)
 
 data class ModeloTarjeta(
     val bloqueada: Boolean,

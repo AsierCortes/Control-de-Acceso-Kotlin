@@ -23,8 +23,8 @@ interface DaoControlAcceso {
 
     // Endpoints para ACCESO ------------
 
-    @GET("/acceso")
-    suspend fun getAccesoPorSala(@Query("includes") sala: String): Response<Any>
+    @GET("acceso")
+    suspend fun getAccesosPorSala(@Query("sala_id") idSala: Int?): Response<JsonObject>
 
     @GET("/acceso")
     suspend fun getAcceso(): Response<Any>
@@ -111,6 +111,8 @@ interface DaoControlAcceso {
 
     // Endpoints para TARJETA ------------
 
+    @GET("tarjeta/{id}")
+    suspend fun getInfoTarjeta(@Path("id") idTarjeta: Int): Response<Tarjeta>
 
     @GET("/tarjeta")
     suspend fun getTarjetas(): Response<Any>
@@ -118,14 +120,6 @@ interface DaoControlAcceso {
     @GET("/tarjeta")
     suspend fun getTarjetasPorUsuario(@Query("includes") usuario: Usuario): Response<Any>
 
-    @POST("/tarjeta")
-    suspend fun createTarjetas(@Body registrarTarjetas: ModeloTarjeta): Response<Any>
-
-    @PUT("/tarjeta/{id}")
-    suspend fun updateTarjetas(@Path("id") id: Int): Response<Any>
-
-    @DELETE("/tarjeta/{id}")
-    suspend fun deleteTarjetas(@Path("id") id: Int): Response<Any>
 
 
 

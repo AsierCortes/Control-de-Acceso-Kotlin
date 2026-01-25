@@ -67,7 +67,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
 import com.example.controldeaccesokotlin.bd_api.Sala
 import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
@@ -423,6 +422,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
         // SOlo cuando cambie el id se ejecutara
         LaunchedEffect(idSalaSeleccionada) {
             controller.recogerInfoSalaSeleccionada(idSalaSeleccionada)
+            controller.getAccesosSalaEspecifica(idSalaSeleccionada)
         }
         val infoSalaSeleccionada : Sala? = publicModel.value.salaSeleccionada
 
@@ -473,7 +473,11 @@ fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
 
 
 @Composable
-fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
+fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, controller: ControlAccesoViewModel = viewModel()) {
+    val getDatos = controller.publicModelo.collectAsState()
+    val listaUsuarios = getDatos.value.listaUsuariosSalaSeleccionada
+    val listaHorarioEntrada = getDatos.value.listaHorasEntradasSalaSeleccionada
+    var contadorHoraEntrada = -1
     Dialog(
         onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
         properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
@@ -682,130 +686,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         )
 
 
-                        // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
-                        val listaUsuariosMutable = listOf(
-                            ModeloUsuarios_se_eliminara(
-                                "img1",
-                                "Juan",
-                                "Pérez",
-                                "López",
-                                "1º DAM",
-                                "juan@mail.com",
-                                "600111222",
-                                "12/09/23",
-                                true,
-                                false,
-                                mutableListOf("A1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img2",
-                                "María",
-                                "García",
-                                "Ruiz",
-                                "2º DAW",
-                                "maria@mail.com",
-                                "600222333",
-                                "13/09/23",
-                                true,
-                                false,
-                                mutableListOf("B1", "B2")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img3",
-                                "Carlos",
-                                "Sánchez",
-                                "Gil",
-                                "1º ASIR",
-                                "carlos@mail.com",
-                                "600333444",
-                                "14/09/23",
-                                false,
-                                true,
-                                mutableListOf("C1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img4",
-                                "Laura",
-                                "Martín",
-                                "Díaz",
-                                "2º DAM",
-                                "laura@mail.com",
-                                "600444555",
-                                "15/09/23",
-                                true,
-                                false,
-                                mutableListOf("D1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img5",
-                                "Pedro",
-                                "Ruiz",
-                                "Sanz",
-                                "1º DAW",
-                                "pedro@mail.com",
-                                "600555666",
-                                "16/09/23",
-                                true,
-                                false,
-                                mutableListOf()
-                            ), ModeloUsuarios_se_eliminara(
-                                "img6",
-                                "Sofía",
-                                "López",
-                                "Mora",
-                                "2º ASIR",
-                                "sofia@mail.com",
-                                "600666777",
-                                "17/09/23",
-                                true,
-                                false,
-                                mutableListOf("F1", "F2")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img7",
-                                "Javier",
-                                "Gómez",
-                                "Cano",
-                                "1º DAM",
-                                "javier@mail.com",
-                                "600777888",
-                                "18/09/23",
-                                false,
-                                false,
-                                mutableListOf("G1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img8",
-                                "Elena",
-                                "Torres",
-                                "Vila",
-                                "2º DAW",
-                                "elena@mail.com",
-                                "600888999",
-                                "19/09/23",
-                                true,
-                                false,
-                                mutableListOf("H1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img9",
-                                "Diego",
-                                "Díaz",
-                                "Pola",
-                                "1º ASIR",
-                                "diego@mail.com",
-                                "600999000",
-                                "20/09/23",
-                                true,
-                                true,
-                                mutableListOf("I1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img10",
-                                "Ana",
-                                "Vargas",
-                                "Ríos",
-                                "2º DAM",
-                                "ana@mail.com",
-                                "600000111",
-                                "21/09/23",
-                                true,
-                                false,
-                                mutableListOf("J1")
-                            )
-                        )
+
 
 
                         // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
@@ -814,7 +695,9 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             // Recorre la lista de usuarios (Instancias ModeloUsuario)
-                            items(listaUsuariosMutable) { usuarioActual ->
+                            items(listaUsuarios) { usuarioActual ->
+
+                                contadorHoraEntrada++
                                 Card(
                                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                                     border = BorderStroke(1.dp, Color.Black),
@@ -840,8 +723,17 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                                                 contentScale = ContentScale.Fit,
                                                 modifier = Modifier.size(60.dp)
                                             )
+                                            Column(
+                                                Modifier.padding(start = 2.dp),
+                                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                                            ) {
+                                                Text("Id: ${usuarioActual.id}")
+                                                Text(usuarioActual.nombre, fontWeight = FontWeight.Bold)
+                                                Text(usuarioActual.email)
+                                                Text("Rol: ${usuarioActual.rol_id}")
+                                            }
 
-                                            Text(text = usuarioActual.nombreCompleto)
+
                                         }
 
                                         // HORA ACCESO
@@ -859,7 +751,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                                             )
 
                                             Text(
-                                                text = "9:34 AM",
+                                                text = listaHorarioEntrada[contadorHoraEntrada],
                                                 style = typography.bodyLarge,
                                             )
 

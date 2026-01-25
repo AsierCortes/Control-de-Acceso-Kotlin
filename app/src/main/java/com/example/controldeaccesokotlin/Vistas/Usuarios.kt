@@ -27,40 +27,45 @@ import com.example.controldeaccesokotlin.viewModel.UsuariosViewModel
 
 // ------------------ PANTALLA PRINCIPAL ------------------
 @Composable
-fun Usuarios(
-    viewModel: UsuariosViewModel = viewModel()
-) {
-    var texto by remember { mutableStateOf("") }
+fun Usuarios(viewModel: UsuariosViewModel = viewModel()) {
+    var textoBusqueda by remember { mutableStateOf("") }
     var mostrarFiltros by remember { mutableStateOf(false) }
     var ordenSeleccionado by remember { mutableStateOf("Nombre A-Z") }
-    var rolIdSeleccionado by remember { mutableStateOf<Int?>(null) }
+
     val usuarios by viewModel.usuarios.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.getUsuarios()
+    LaunchedEffect(Unit) { viewModel.getUsuarios() }
+
+    val usuariosOrdenados = remember(usuarios, ordenSeleccionado) {
+        if (ordenSeleccionado == "Nombre A-Z") usuarios.sortedBy { it.nombre }
+        else usuarios.sortedByDescending { it.nombre }
     }
 
-    val usuariosFiltrados = usuarios
-        .filter {
-            it.nombre.contains(texto, true) || it.email.contains(texto, true)
-        }
-        .sortedWith(
-            if (ordenSeleccionado == "Nombre A-Z") compareBy { it.nombre }
-            else compareByDescending { it.nombre }
+    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+        Text(
+            "Gestión de Usuarios",
+            style = typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        BuscarTexto(
+            texto = textoBusqueda,
+            onTextoChange = { textoBusqueda = it },
+            onBuscarClick = { viewModel.buscarUsuarios(textoBusqueda) }
         )
 
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
-        Text("Gestión de Usuarios", style = typography.headlineMedium, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(24.dp))
-        BuscarTexto(texto = texto, onTextoChange = { texto = it })
         Spacer(modifier = Modifier.height(16.dp))
 
         BotonFiltrar { mostrarFiltros = true }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(usuariosFiltrados) { usuario -> Tarjeta(usuario) }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(usuariosOrdenados) { usuario -> Tarjeta(usuario) }
         }
     }
 
@@ -68,73 +73,37 @@ fun Usuarios(
         Filtros(
             ordenActual = ordenSeleccionado,
             Cancelar = { mostrarFiltros = false },
-            Aplicar = { orden, id ->
-                ordenSeleccionado = orden
-                rolIdSeleccionado = id
+            Aplicar = { nuevoOrden ->
+                ordenSeleccionado = nuevoOrden
                 mostrarFiltros = false
-
-                viewModel.filtrarPorRol(id)
             }
-
-            ,
-            rolActual = rolIdSeleccionado
         )
     }
 }
-// ------------------ BUSCADOR ------------------
+
 @Composable
-fun BuscarTexto(
-    texto: String,
-    onTextoChange: (String) -> Unit
-) {
+fun BuscarTexto(texto: String, onTextoChange: (String) -> Unit, onBuscarClick: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
             value = texto,
             onValueChange = onTextoChange,
-            modifier = Modifier
-                .weight(1f)
-                .height(50.dp),
-            placeholder = {
-                Text("Buscar usuarios...", color = Color.Gray)
-            },
+            modifier = Modifier.weight(1f).height(50.dp),
+            placeholder = { Text("Buscar usuarios...", color = Color.Gray) },
             singleLine = true,
-            textStyle = typography.bodyMedium,
             shape = RoundedCornerShape(10.dp),
-
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(20.dp)
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.LightGray
-            )
+            leadingIcon = { Icon(Icons.Default.Search, null, modifier = Modifier.size(20.dp)) }
         )
 
         Button(
-            onClick = {},
+            onClick = onBuscarClick,
             shape = RoundedCornerShape(10.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = Modifier
-                .height(50.dp)
+            modifier = Modifier.height(50.dp)
         ) {
-            Text(
-                text = "Buscar",
-                style = typography.labelLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Text("Buscar", fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -156,36 +125,35 @@ fun BotonFiltrar(onClick: () -> Unit) {
 // ------------------ TARJETA ------------------
 @Composable
 fun Tarjeta(usuario: ModeloUsuario1) {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
             .clip(RoundedCornerShape(12.dp)),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Column(Modifier.padding(12.dp)) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.perfilusuario),
+                contentDescription = null,
+                modifier = Modifier.size(60.dp).clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.width(12.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.perfilusuario),
-                    contentDescription = "foto perfil usuario",
-                    modifier = Modifier.size(60.dp),
-                    contentScale = ContentScale.Fit
+            Column {
+                Text(usuario.nombre, fontWeight = FontWeight.Bold, style = typography.titleMedium)
+                Text(usuario.email, style = typography.bodySmall)
+                Text(
+                    text = "Rol: ${usuario.rol?.tipo ?: usuario.rol_id}",
+                    style = typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
-
-                Spacer(Modifier.width(8.dp))
-
-                Column {
-                    Text(usuario.nombre, fontWeight = FontWeight.Bold)
-                    Text(usuario.email)
-                    Text("Rol: ${usuario.rol_id}")
-                }
             }
-
         }
     }
 }
@@ -194,57 +162,28 @@ fun Tarjeta(usuario: ModeloUsuario1) {
 @Composable
 fun Filtros(
     ordenActual: String,
-    rolActual: Int?,
     Cancelar: () -> Unit,
-    Aplicar: (String, Int?) -> Unit
+    Aplicar: (String) -> Unit
 ) {
     var orden by remember { mutableStateOf(ordenActual) }
-    var idSeleccionado by remember { mutableStateOf(rolActual) }
 
     AlertDialog(
         onDismissRequest = Cancelar,
-        title = { Text("Filtros de Búsqueda") },
+        title = { Text("Opciones de Visualización") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text("Ordenar por:", fontWeight = FontWeight.Bold)
+                Text("Ordenar lista local:", fontWeight = FontWeight.Bold)
                 DesplegableSimple(orden) { orden = it }
-
-                Text("Filtrar por Rol:", fontWeight = FontWeight.Bold)
-                DesplegableID(idSeleccionado) { idSeleccionado = it }
             }
         },
         confirmButton = {
-            Button(onClick = { Aplicar(orden, idSeleccionado) }) { Text("Aplicar") }
+            Button(onClick = { Aplicar(orden) }) { Text("Aplicar") }
         },
         dismissButton = {
             TextButton(onClick = Cancelar) { Text("Cancelar") }
         }
     )
 }
-@Composable
-fun DesplegableID(seleccionado: Int?, onSeleccion: (Int?) -> Unit) {
-    val opciones = listOf(null, 1, 2, 3, 4, 5)
-    var expandir by remember { mutableStateOf(false) }
-
-    Box {
-        OutlinedButton(onClick = { expandir = true }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (seleccionado == null) "Todos los Roles" else "Rol ID: $seleccionado")
-            Icon(Icons.Default.ArrowDropDown, null)
-        }
-        DropdownMenu(expanded = expandir, onDismissRequest = { expandir = false }) {
-            opciones.forEach { id ->
-                DropdownMenuItem(
-                    text = { Text(if (id == null) "Ver Todos" else "Rol ID: $id") },
-                    onClick = {
-                        onSeleccion(id)
-                        expandir = false
-                    }
-                )
-            }
-        }
-    }
-}
-
 @Composable
 fun DesplegableSimple(seleccionado: String, onSeleccion: (String) -> Unit) {
     val opciones = listOf("Nombre A-Z", "Nombre Z-A")

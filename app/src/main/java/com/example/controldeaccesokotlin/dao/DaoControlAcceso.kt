@@ -139,14 +139,14 @@ interface DaoControlAcceso {
 
     // Endpoints para USUARIO ------------
 
-    @GET("usuario")
-    suspend fun getUsuarios(): Response<JsonObject>
 
-    @GET("usuario")
-    suspend fun getUsuariosPorRol(@Query("includes") includes: String = "rol"): Response<JsonObject>
+        @GET("usuario")
+        suspend fun getUsuarios(): Response<JsonObject>
 
+        @GET("usuario")
+        suspend fun getUsuariosPorNombre(@Query("nombre") nombre: String, @Query("includes") includes: String = "rol"): Response<JsonObject>
+    }
 
-}
 
 
 

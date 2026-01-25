@@ -61,8 +61,10 @@ data class ModeloPermiso(
 )
 
 data class ModeloRol(
+    val id: Int,
     val tipo: String
 )
+
 
 data class ModeloSala(
     val nombre: String,
@@ -80,5 +82,6 @@ data class ModeloTarjeta(
 data class ModeloUsuario1(
     val nombre: String,
     val email: String,
-    val rol_id: Int
+    val rol_id: Int,
+    val rol: ModeloRol? = null
 )

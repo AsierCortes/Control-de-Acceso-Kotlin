@@ -2,6 +2,7 @@ package com.example.controldeaccesokotlin.Vistas
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
@@ -57,6 +58,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -81,14 +83,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.controldeaccesokotlin.bd_api.ModeloHistorial_se_eliminara
 import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
+import com.example.controldeaccesokotlin.bd_api.Incidencia
 import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
-import com.example.controldeaccesokotlin.bd_api.ModeloIncidencia
+import com.example.controldeaccesokotlin.bd_api.Sala
+import com.example.controldeaccesokotlin.viewModel.ControlAccesoViewModel
 import kotlin.collections.mutableListOf
 import kotlin.collections.set
 
@@ -210,66 +215,66 @@ fun Notificaciones() {
 fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
 
     // En una lista almaceno de manera provisional las incidencias
-    val listaIncidencias = remember {
-        mutableStateListOf(
-            ModeloIncidencia(
-                nombre = "Puerta Abierta",
-                fecha_hora = "2025-11-13 09:10:00",
-                estado = "pendiente",
-                tipo_incidencia = "Puerta sin cerrar",
-                motivo_denegacion = "",
-                sala_id = 1
-            ),
-            ModeloIncidencia(
-                nombre = "Apertura Forzada",
-                fecha_hora = "2025-11-13 09:30:00",
-                estado = "aceptada",
-                tipo_incidencia = "Fuerza en cerradura",
-                motivo_denegacion = "",
-                sala_id = 2
-            ),
-            ModeloIncidencia(
-                nombre = "Bloqueo de Sala",
-                fecha_hora = "2025-11-13 10:00:00",
-                estado = "denegada",
-                tipo_incidencia = "Bloqueo manual",
-                motivo_denegacion = "Incidencia previa",
-                sala_id = 3
-            ),
-            ModeloIncidencia(
-                nombre = "Demasiado Tiempo",
-                fecha_hora = "2025-11-13 10:45:00",
-                estado = "pendiente",
-                tipo_incidencia = "Estancia prolongada",
-                motivo_denegacion = "-",
-                sala_id = 1
-            ),
-            ModeloIncidencia(
-                nombre = "Acceso Denegado",
-                fecha_hora = "2025-11-13 11:15:00",
-                estado = "aceptada",
-                tipo_incidencia = "Tarjeta bloqueada",
-                motivo_denegacion = "",
-                sala_id = 2
-            ),
-            ModeloIncidencia(
-                nombre = "Puerta Abierta",
-                fecha_hora = "2025-11-13 12:00:00",
-                estado = "pendiente",
-                tipo_incidencia = "Puerta quedó abierta tras salida",
-                motivo_denegacion = "",
-                sala_id = 3
-            ),
-            ModeloIncidencia(
-                nombre = "Acceso Denegado",
-                fecha_hora = "2025-11-13 12:20:00",
-                estado = "pendiente",
-                tipo_incidencia = "Intento de acceso sin permiso",
-                motivo_denegacion = "",
-                sala_id = 1
-            )
-        )
-    }
+//    val listaIncidencias = remember {
+//        mutableStateListOf(
+//            ModeloIncidencia(
+//                nombre = "Puerta Abierta",
+//                fecha_hora = "2025-11-13 09:10:00",
+//                estado = "pendiente",
+//                tipo_incidencia = "Puerta sin cerrar",
+//                motivo_denegacion = "",
+//                sala_id = 1
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Apertura Forzada",
+//                fecha_hora = "2025-11-13 09:30:00",
+//                estado = "aceptada",
+//                tipo_incidencia = "Fuerza en cerradura",
+//                motivo_denegacion = "",
+//                sala_id = 2
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Bloqueo de Sala",
+//                fecha_hora = "2025-11-13 10:00:00",
+//                estado = "denegada",
+//                tipo_incidencia = "Bloqueo manual",
+//                motivo_denegacion = "Incidencia previa",
+//                sala_id = 3
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Demasiado Tiempo",
+//                fecha_hora = "2025-11-13 10:45:00",
+//                estado = "pendiente",
+//                tipo_incidencia = "Estancia prolongada",
+//                motivo_denegacion = "-",
+//                sala_id = 1
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Acceso Denegado",
+//                fecha_hora = "2025-11-13 11:15:00",
+//                estado = "aceptada",
+//                tipo_incidencia = "Tarjeta bloqueada",
+//                motivo_denegacion = "",
+//                sala_id = 2
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Puerta Abierta",
+//                fecha_hora = "2025-11-13 12:00:00",
+//                estado = "pendiente",
+//                tipo_incidencia = "Puerta quedó abierta tras salida",
+//                motivo_denegacion = "",
+//                sala_id = 3
+//            ),
+//            ModeloIncidencia(
+//                nombre = "Acceso Denegado",
+//                fecha_hora = "2025-11-13 12:20:00",
+//                estado = "pendiente",
+//                tipo_incidencia = "Intento de acceso sin permiso",
+//                motivo_denegacion = "",
+//                sala_id = 1
+//            )
+//        )
+//    }
 
     //En otra lista, también provisional almaceno los accesos
     val listaAccesos = listOf(
@@ -327,13 +332,17 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
     Spacer(modifier = Modifier.height(8.dp))
 
     NavHost(navController, startDestination = "incidencias") {
-        composable("incidencias") { FormacionCardsIncidencias(listaIncidencias) }
+        composable("incidencias") { FormacionCardsIncidencias() }
         composable("accesos") { FormacionCardsAccesos(eventos) }
     }
 }
 
 @Composable
-    fun FormacionCardsIncidencias(listaIncidencias: List<ModeloIncidencia>) {
+fun FormacionCardsIncidencias(controller: ControlAccesoViewModel = viewModel()) {
+
+    val publicModel = controller.publicModelo.collectAsState()
+
+    val listaIncidencias: List<Incidencia> = publicModel.value.incidencias
 
     LazyColumn(
         modifier = Modifier
@@ -407,7 +416,7 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
                         val pesoTexto = if (esPendiente) FontWeight.Bold else FontWeight.Normal
 
                         Text(
-                            "${incidenciaAMostrar.sala_id}", // Tengo que obtener el nombre de la sala apartir de las incidencias
+                            "${incidenciaAMostrar.sala_id}", // Tengo que obtener el nombre de la sala apartir de su id con enpoints de Asier o con  un map
                             modifier = Modifier
                                 .padding(2.dp),
                             style = MaterialTheme.typography.bodyLarge,
@@ -431,8 +440,8 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
 
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { expandir = !expandir },
+                                .fillMaxWidth(),
+//                                .clickable { expandir = !expandir },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
@@ -468,7 +477,11 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
 
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = "Expandir"
+                                contentDescription = "Expandir",
+                                Modifier.clickable {
+                                    print("PRUEBA VER DETALLES")
+                                    expandir = !expandir
+                                }
                             )
                         }
 
@@ -487,8 +500,12 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
                                     IncidenciaPendiente(
                                         incidenciaAMostrar
                                     ) { nuevoEstado, motivoDenenegacion, contraer ->
-                                        incidenciaAMostrar.estado = nuevoEstado
-                                        incidenciaAMostrar.motivo_denegacion = motivoDenenegacion
+                                        controller.actualizarEstadoIncidencia(
+                                            incidenciaAMostrar.id,
+                                            nuevoEstado,
+                                            motivoDenenegacion
+                                        )
+
                                         expandir = contraer
                                     }
 
@@ -511,7 +528,10 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
 }
 
 @Composable
-fun IncidenciaPendiente(incidencia: ModeloIncidencia, onEstadoCambiado: (String, String, Boolean) -> Unit) {
+fun IncidenciaPendiente(
+    incidencia: Incidencia,
+    onEstadoCambiado: (String, String, Boolean) -> Unit
+) {
 // La lamba que recibe, devolverá:
     // Un string, que será el nuevo estado al que se cambiará la incidencia cuando sea antendida
     // Un motivo de denegación si es el caso
@@ -521,8 +541,10 @@ fun IncidenciaPendiente(incidencia: ModeloIncidencia, onEstadoCambiado: (String,
 
     Column {
 
-        Text("Responder incidencia",
-            Modifier.padding(2.dp))
+        Text(
+            "Responder incidencia",
+            Modifier.padding(2.dp)
+        )
 
         Row(
             modifier = Modifier
@@ -549,10 +571,15 @@ fun IncidenciaPendiente(incidencia: ModeloIncidencia, onEstadoCambiado: (String,
                 Text("Denegar")
             }
         }
-        if (estadoSeleccionado == "denegada") {
 
-            Text("Motivo de denegación: ",
-                Modifier.padding(2.dp))
+        if (estadoSeleccionado == "aceptada") {
+            motivoDenegacion = "-"
+        } else if (estadoSeleccionado == "denegada") {
+
+            Text(
+                "Motivo de denegación: ",
+                Modifier.padding(2.dp)
+            )
             OutlinedTextField(
                 value = motivoDenegacion,
                 onValueChange = { motivoDenegacion = it },
@@ -568,9 +595,14 @@ fun IncidenciaPendiente(incidencia: ModeloIncidencia, onEstadoCambiado: (String,
         }
 
         Button(
-            onClick = { onEstadoCambiado(estadoSeleccionado, motivoDenegacion, false) },
+            onClick = {
+                print("BOTON CONFIRMAR CAMBIOS ---- ESTADO SELECCIONADO $estadoSeleccionado  --- MOTIVO DENEGACION ${incidencia.motivo_denegacion}")
+                onEstadoCambiado(estadoSeleccionado, motivoDenegacion, false)
+                Log.d("DEPURACION", "1. Clic en Confirmar detectado")
+            },
+
 //            modifier = Modifier.align(Alignment.CenterHorizontally),
-            enabled = estadoSeleccionado != "pedndiente"
+//            enabled = estadoSeleccionado != "pendiente"
         ) {
             Text("Confirmar")
         }
@@ -650,60 +682,45 @@ fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
 
                         Column {
                             Text(
-                                accesoAMostrar.evento, // ---------- Tarjeta id, que lamara al usuario correspondiente para mostrar su nombre
+                                "Acceso a Sala 001",
+//                                accesoAMostrar.evento,
                                 modifier = Modifier
                                     .padding(2.dp),
 //                                style = MaterialTheme.typography.titleLarge,
                                 fontSize = 19.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            Row {
-                                Text(
-                                    accesoAMostrar.sala,
-                                    modifier = Modifier
-                                        .padding(2.dp),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                                Text(
-                                    accesoAMostrar.usuario,
-                                    modifier = Modifier
-                                        .padding(2.dp),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                            }
-                            Row {
-                                Text(
-                                    accesoAMostrar.fecha,
-                                    modifier = Modifier
-                                        .padding(2.dp),
-                                )
-                                Text(
-                                    accesoAMostrar.hora,
-                                    modifier = Modifier
-                                        .padding(2.dp),
-                                )
-                            }
 
-                            val expandir = false // Terminar
-                            // TODO. Mostrar un desplegable dónde se vea el detalle del evento
-                            // (ex: por qué se denegó a entrada, cuanto tiempo duró la puerta abierta...)
-
-                            Row(
+                            Text(
+                                "Jennyfer Dayanna Triana",
+//                                    accesoAMostrar.fecha, // ---------- Tarjeta id, que lamara al usuario correspondiente para mostrar su nombre
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                                    .padding(2.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold
+                            )
+
+                            Row {
                                 Text(
-                                    text = if (expandir) "Ocultar detalles" else "Ver detalles",
-                                    style = typography.bodyMedium,
-                                    modifier = Modifier.weight(1f)
+                                    "2025-11-13",
+//                                    accesoAMostrar.sala,
+                                    modifier = Modifier
+                                        .padding(2.dp)
                                 )
-                                Icon(
-                                    imageVector = if (expandir) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                    contentDescription = "Expandir/Contraer"
+                                Text(
+                                    "2025-11-13",
+//                                    accesoAMostrar.usuario,
+                                    modifier = Modifier
+                                        .padding(2.dp)
+
                                 )
                             }
+                            Text(
+                                "Duración 01:30:00",
+//                                    accesoAMostrar.hora,
+                                modifier = Modifier
+                                    .padding(2.dp),
+                            )
                         }
                     }
                 }

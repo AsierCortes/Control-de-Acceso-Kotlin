@@ -8,7 +8,10 @@ data class ModeloControlAcceso(
     val salasLibres : List<Sala> = emptyList(),
     val salasOcupadas : List<Sala> = emptyList(),
     val salasBloqueadas : List<Sala> = emptyList(),
-    val salaSeleccionada : Sala? = null
+    val salaSeleccionada : Sala? = null,
+
+    val incidencias : List<Incidencia> = emptyList(),
+    val estadoIncidencia: Incidencia? = null
 )
 
 
@@ -63,13 +66,20 @@ data class ModeloAcceso(
     val sala_id: Int = 0
 )
 
-data class ModeloIncidencia(
+data class Incidencia(
+    val id: Int = 0,
     val nombre: String = "",
     val fecha_hora: String = "",
     var estado: String = "",
     val tipo_incidencia: String = "",
     var motivo_denegacion: String = "",
-    val sala_id: Int =1
+    val sala_id: Int = 0
+)
+
+data class EstadoIncidencia(
+    val id: Int = 0,
+    var estado: String = "",
+    var motivo_denegacion: String = "",
 )
 
 data class ModeloPermiso(

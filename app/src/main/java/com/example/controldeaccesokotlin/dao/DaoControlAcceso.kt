@@ -43,21 +43,14 @@ interface DaoControlAcceso {
 
     // Endpoints para INCIDENCIA ------------
 
-    @GET("/incidencia")
-    suspend fun getIncidencias(): Response<Any>
+    @GET("incidencia")        // Devuelve JSON OBJECT
+    suspend fun getIncidenciasPorPagina(@Query("page") num: Int): Response<JsonObject>
 
     @GET("/incidencia")
-    suspend fun getIncidenciasPorSala(@Query("includes") sala: String): Response<Any>
+    suspend fun getIncidenciasPorNombre(@Query("includes") sala: String): Response<JsonObject>
 
-    @POST( "/incidencia")
-    suspend fun createIncidencias(@Body registrarIncidencias: ModeloIncidencia): Response<Any>
-
-    @PUT("/incidencia/{id}")
-    suspend fun updateIncidencias(@Path("id") id: Int): Response<Any>
-
-    @DELETE("/incidencia/{id}")
-    suspend fun deleteIncidencias(@Path("id") id: Int): Response<Any>
-
+    @PUT("incidencia/{id}")
+    suspend fun updateIncidencias(@Path("id") id: Int, @Body incidencia: EstadoIncidencia): Response<Incidencia>
 
 
     // Endpoints para PERMISO ------------

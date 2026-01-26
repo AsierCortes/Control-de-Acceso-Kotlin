@@ -1136,7 +1136,10 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 }
 
 @Composable
-fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: () -> Unit) {
+fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: () -> Unit, controller: ControlAccesoViewModel = viewModel()) {
+    val getDatos = controller.publicModelo.collectAsState()
+    val listaUsuarios = getDatos.value.usuarios
+
 
     var usuarioIntroducido by remember { mutableStateOf("") }
 
@@ -1191,7 +1194,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
                 )
                 {
                     // Recorre la lista de usuarios (Instancias ModeloUsuario)
-                    items(usuarios) { usuarioActual ->
+                    items(listaUsuarios) { usuarioActual ->
                         Card(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                             border = BorderStroke(1.dp, Color.Black),
@@ -1214,14 +1217,14 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
                                 )
 
                                 Text(
-                                    text = usuarioActual.nombreCompleto,
+                                    text = usuarioActual.nombre,
                                     Modifier
                                         .weight(1f)
                                 )
 
                                 Checkbox(
-                                    seleccionados[usuarioActual.fotoPerfil] ?: false,
-                                    { seleccionados[usuarioActual.fotoPerfil] = it },
+                                    seleccionados[usuarioActual.nombre] ?: false,
+                                    { seleccionados[usuarioActual.nombre] = it },
                                 )
                             }
                         }

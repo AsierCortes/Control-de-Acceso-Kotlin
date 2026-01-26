@@ -3,6 +3,8 @@ package com.example.controldeaccesokotlin.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.controldeaccesokotlin.bd_api.API
+import com.example.controldeaccesokotlin.bd_api.EstadoIncidencia
+import com.example.controldeaccesokotlin.bd_api.Incidencia
 import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
 import com.example.controldeaccesokotlin.bd_api.ModeloControlAcceso
 import com.example.controldeaccesokotlin.bd_api.ModeloTarjeta
@@ -27,7 +29,7 @@ class ControlAccesoViewModel : ViewModel() {
     // Para que carge la info antes
     init {
         recogerInfoSalasPorPagina()
-        recogerInfoUsuariosPorPagina()
+        recogerInfoIncidenciasPorPagina()
     }
 
 
@@ -120,7 +122,6 @@ class ControlAccesoViewModel : ViewModel() {
                 sala.estado.equals("bloqueada", ignoreCase = true)
             }
 
-
             // Actualizamos el modelo:
             privateModelo.update {
                 it.copy(
@@ -138,7 +139,6 @@ class ControlAccesoViewModel : ViewModel() {
                 println(contador.toString() + ". " + sala.nombre)
                 contador++
             }
-
 
         }
     }
@@ -288,5 +288,82 @@ class ControlAccesoViewModel : ViewModel() {
         }
     }
 
+    // ---------------------INCIDENCIAS------------------------------------------------
+    // Recojo la información de las incidencias usando la misma lógica de las salas
+    // Intentar dejar una sola funcion que podamos usar todos
+    fun recogerInfoIncidenciasPorPagina() {
 
+        var cantidadPaginas: Int = 0;
+        val gson = Gson()
+        var incidenciasTotales: MutableList<Incidencia> = mutableListOf()
+
+        viewModelScope.launch {
+            var response = API.apiDao.getIncidenciasPorPagina(cantidadPaginas)
+            var totalIncidencias = response.body()?.get("total")!!.asInt
+            val resultado = totalIncidencias % 10
+            if (resultado == 0) {
+                cantidadPaginas = totalIncidencias / 10
+            } else {
+                cantidadPaginas = (totalIncidencias / 10) + 1
+            }
+            println("Cantidad de paginas: $cantidadPaginas")
+            println("Cantidad de incidencias: $totalIncidencias")
+
+            for (i in 1..cantidadPaginas) {
+
+                val respuestaServidor = API.apiDao.getIncidenciasPorPagina(i)
+                val jsonArray = respuestaServidor.body()?.get("data")?.asJsonArray
+                val incidenciasPorPagina: List<Incidencia> = jsonArray?.map { jsonElement ->
+                    gson.fromJson(jsonElement, Incidencia::class.java)
+                } ?: emptyList()
+                incidenciasTotales.addAll(incidenciasPorPagina)
+                println("Pagina $i incidencias, obtenidas: $incidenciasPorPagina")
+            }
+
+            privateModelo.update {
+                it.copy(
+                    incidencias = incidenciasTotales
+                )
+            }
+        }
+    }
+
+    // Para llamar el endpoint que hace el update a la api
+    fun actualizarEstadoIncidencia(idIncidencia: Int, estado: String, motivoDenegacion: String) {
+
+        print("PRUEBA ID ------------ $idIncidencia")
+        val estadoCambiado = EstadoIncidencia(idIncidencia, estado, motivoDenegacion)
+
+        viewModelScope.launch {
+
+            val response: Response<Incidencia> =
+                API.apiDao.updateIncidencias(idIncidencia, estadoCambiado)
+            if (response.isSuccessful) {
+
+                val incidenciaEstadoCambiado: Incidencia? = response.body()
+                print("PRUEBA NUEVO ESTADO ----------------- ${incidenciaEstadoCambiado?.estado}")
+
+                // Lo hice de esta forma, ya que al ser llamada desde una LazyColum, no se deja actualizar, asi que es una "lista auxiliar" para ver lo cambios
+                if (incidenciaEstadoCambiado != null) {
+                    privateModelo.update { estadoActual ->
+
+                        val nuevaLista = estadoActual.incidencias.map {
+                            if (it.id == idIncidencia) incidenciaEstadoCambiado else it
+                        }
+                        print("PRUEBA LISTA NUEVA ------------------ $nuevaLista")
+                        estadoActual.copy(incidencias = nuevaLista)
+                    }
+                } else {
+                    println(
+                        "RESPUESTA API : ${response.code()} Mensaje: ${
+                            response.errorBody()?.string()
+                        }"
+                    )
+
+                }
+            }
+        }
+    }
+
+    // ------------ ACCESOS --------------------------------------------
 }

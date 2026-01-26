@@ -1,7 +1,6 @@
 package com.example.controldeaccesokotlin.bd_api
 
 import com.google.gson.annotations.SerializedName
-
 // MODELO PRINCIPAL
 data class ModeloControlAcceso(
     // PARA SALAS
@@ -11,15 +10,18 @@ data class ModeloControlAcceso(
     val salasBloqueadas : List<Sala> = emptyList(),
     val salaSeleccionada : Sala? = null,
 
+    // PARA INCIDENCIAS
+    val incidencias : List<Incidencia> = emptyList(),
+    val estadoIncidencia: Incidencia? = null,
+
     // PARA USUARIOS
     val usuarios : List<Usuario> = emptyList<Usuario>(),
 
     // Para ver los Usuarios que hay en una sala en concreto
     val listaUsuariosSalaSeleccionada : List<Usuario> = emptyList<Usuario>(),
     val listaHorasEntradasSalaSeleccionada : List <String> = emptyList<String>()
+
 )
-
-
 
 data class Tarjeta(
     val bloqueada: Int,
@@ -87,13 +89,20 @@ data class ModeloAcceso(
     val sala_id: Int = 0
 )
 
-data class ModeloIncidencia(
+data class Incidencia(
+    val id: Int = 0,
     val nombre: String = "",
     val fecha_hora: String = "",
     var estado: String = "",
     val tipo_incidencia: String = "",
     var motivo_denegacion: String = "",
     val sala_id: Int =1
+)
+
+data class EstadoIncidencia(
+    val id: Int = 0,
+    var estado: String = "",
+    var motivo_denegacion: String = ""
 )
 
 data class ModeloPermiso(

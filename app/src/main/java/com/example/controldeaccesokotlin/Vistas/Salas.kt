@@ -129,7 +129,7 @@ fun BuscadorSencillo() {
                 .height(50.dp), // Mantenemos la altura compacta
             placeholder = {
                 Text(
-                    text =stringResource(id = R.string.Buscar_sala) , style = typography.bodyMedium, color = Color.Gray
+                    text =stringResource(id = R.string.Buscar_sala) , style = typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             singleLine = true,
@@ -142,15 +142,15 @@ fun BuscadorSencillo() {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Buscar",
-                    tint = Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             )
         )
 
@@ -368,7 +368,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
             Card(
                 elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),   // SOMBRA TARJETA
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 // Hacemos que sea clickeable
                 modifier = Modifier.clickable(
                     onClick = { idSalaSeleccionada = infoSalaActual.id }
@@ -492,7 +492,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -701,7 +701,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, c
                                 contadorHoraEntrada++
                                 Card(
                                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                                    border = BorderStroke(1.dp, Color.Black),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                     shape = RoundedCornerShape(4.dp)
 
                                 ) {
@@ -794,5 +794,18 @@ fun PreviewSalas() {
         Salas()
     }
 }
-
+@Preview(showBackground = true, name = "Modo Claro")
+@Preview(
+    showBackground = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES,
+    name = "Modo Oscuro"
+)
+@Composable
+fun PreviewSalasDual() {
+    ControlDeAccesoKotlinTheme {
+        androidx.compose.material3.Surface {
+            Salas()
+        }
+    }
+}
 

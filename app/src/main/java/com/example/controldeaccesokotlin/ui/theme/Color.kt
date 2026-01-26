@@ -11,7 +11,18 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 
-// Colores MODO CLARO
+
+// Modo Claro
+val Blanco = Color(0xFFFFFFFF)
+val Negro = Color(0xFF000000)
+val GrisClaro = Color.LightGray
+val GrisMedio = Color.Gray
+val FondoTarjetaClaro = Color(0xFFF5F5F5)
+val MoradoPrincipal = Color(0xFF6650a4)
 
 
-// Colores MODO OSCURO
+// Modo Oscuro
+val FondoOscuro = Color(0xFF121212)
+val SuperficieOscura = Color(0xFF1E1E1E)
+val BordeOscuro = Color(0xFF8E8E93)
+val TextoOscuro = Color(0xFFE3E3E3)

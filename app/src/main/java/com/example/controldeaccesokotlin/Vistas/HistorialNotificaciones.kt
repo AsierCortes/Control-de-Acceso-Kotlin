@@ -193,7 +193,7 @@ fun Notificaciones() {
         Text(
             text = stringResource(id = R.string.Visualiza),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         // Plantearse quitar el buscador
@@ -731,7 +731,7 @@ fun OpcionesExportado(onDismiss: () -> Unit) {
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -980,7 +980,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
 
         ) {
 
@@ -1054,7 +1054,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
                     HorizontalDivider(
                         modifier = Modifier.padding(),
                         thickness = 1.dp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
                 }
 
@@ -1137,7 +1137,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
                 .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1147,7 +1147,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
 //                        .clickable()
                     .padding(end = 25.dp, top = 12.dp),
                 fontStyle = FontStyle.Italic,
-                color = Color.Blue
+                color = MaterialTheme.colorScheme.primary
             )
 
             Column(
@@ -1250,7 +1250,7 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
                 .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1364,7 +1364,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
 //                .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1492,7 +1492,7 @@ fun FiltrarPorFecha(onDismiss: () -> Unit) {
 //                .fillMaxHeight(0.4f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1619,7 +1619,7 @@ fun Buscador(textoIntruducido: String) {
                 Text(
                     text = "Buscar...",
                     style = typography.bodyMedium,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             singleLine = true,
@@ -1632,15 +1632,15 @@ fun Buscador(textoIntruducido: String) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(id = R.string.Buscar) + " ...",
-                    tint = Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             )
         )
 

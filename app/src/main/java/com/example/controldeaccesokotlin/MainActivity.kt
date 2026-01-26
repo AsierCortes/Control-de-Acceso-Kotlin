@@ -29,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,6 +38,7 @@ import com.example.controldeaccesokotlin.Vistas.Login
 import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
+import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -157,7 +157,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                 false; notificacionesChecked = false
             },
             icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Icono salas") },
-            label = { Text(text = stringResource(id = R.string.salas)) }
+            label = { Text(text = "Salas") }
 
         )
 
@@ -174,7 +174,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                     contentDescription = "Icono usuarios"
                 )
             },
-            label = { Text(text = stringResource(id = R.string.Usuarios)) }
+            label = { Text(text = "Usuarios") }
 
         )
         // NOTIFICACIONES
@@ -190,7 +190,7 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
                     contentDescription = "Icono notificaciones"
                 )
             },
-            label = { Text(text = stringResource(id = R.string.Notificaciones)) }
+            label = { Text(text = "Notificaciones") }
 
         )
     }
@@ -198,8 +198,3 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
-    Main()
-}

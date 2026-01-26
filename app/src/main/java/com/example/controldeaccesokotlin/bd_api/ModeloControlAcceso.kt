@@ -1,20 +1,36 @@
 package com.example.controldeaccesokotlin.bd_api
 
 import com.google.gson.annotations.SerializedName
-
 // MODELO PRINCIPAL
 data class ModeloControlAcceso(
+    // PARA SALAS
     val salas : List<Sala> = emptyList(),
     val salasLibres : List<Sala> = emptyList(),
     val salasOcupadas : List<Sala> = emptyList(),
     val salasBloqueadas : List<Sala> = emptyList(),
     val salaSeleccionada : Sala? = null,
 
+    // PARA INCIDENCIAS
     val incidencias : List<Incidencia> = emptyList(),
-    val estadoIncidencia: Incidencia? = null
+    val estadoIncidencia: Incidencia? = null,
+
+    // PARA USUARIOS
+    val usuarios : List<Usuario> = emptyList<Usuario>(),
+
+    // Para ver los Usuarios que hay en una sala en concreto
+    val listaUsuariosSalaSeleccionada : List<Usuario> = emptyList<Usuario>(),
+    val listaHorasEntradasSalaSeleccionada : List <String> = emptyList<String>()
+
 )
 
-
+data class Tarjeta(
+    val bloqueada: Int,
+    val created_at: String,
+    val id: Int,
+    val updated_at: String,
+    val usuario: Usuario,
+    val usuario_id: Int
+)
 
 data class Sala(
     val id: Int,
@@ -32,9 +48,7 @@ data class Sala(
     val fechaSalaActualizada: String
 )
 
-// La estamos usando de manera provisional para ver algo en las vistas, pero terminará desapareciendo
-// Ya esta creada la de la API
-data class ModeloUsuario (
+data class Usuario (
     val id: Int = 0,
     val nombre: String = "",
     val email: String = "",
@@ -42,6 +56,15 @@ data class ModeloUsuario (
     val created_at: String = "",
     val updated_at: String = ""
 )
+
+
+
+
+
+
+
+
+
 
 data class Profile(
     val name: String = "",
@@ -73,13 +96,13 @@ data class Incidencia(
     var estado: String = "",
     val tipo_incidencia: String = "",
     var motivo_denegacion: String = "",
-    val sala_id: Int = 0
+    val sala_id: Int =1
 )
 
 data class EstadoIncidencia(
     val id: Int = 0,
     var estado: String = "",
-    var motivo_denegacion: String = "",
+    var motivo_denegacion: String = ""
 )
 
 data class ModeloPermiso(
@@ -93,13 +116,6 @@ data class ModeloRol(
     val tipo: String
 )
 
-data class ModeloSala(
-    val nombre: String,
-    val ubicacion: String,
-    val estado: String,
-    val capacidad: Double,
-    val tipo_cerradura: String
-)
 
 data class ModeloTarjeta(
     val bloqueada: Boolean,

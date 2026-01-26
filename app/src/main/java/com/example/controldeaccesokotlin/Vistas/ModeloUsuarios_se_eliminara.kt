@@ -1,4 +1,4 @@
-package com.example.controldeaccesokotlin
+package com.example.controldeaccesokotlin.Vistas
 
 data class ModeloUsuarios_se_eliminara(
     val fotoPerfil : String = "",

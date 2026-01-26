@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -58,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,7 +68,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
 import com.example.controldeaccesokotlin.bd_api.Sala
 import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
@@ -77,7 +76,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun Salas(controller: ControlAccesoViewModel = viewModel()) {
-    val getDatosSalas = controller.publicModelo.collectAsState()
+    val getDatos = controller.publicModelo.collectAsState()
 
 
     Column(
@@ -86,7 +85,7 @@ fun Salas(controller: ControlAccesoViewModel = viewModel()) {
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Salas",
+            text = stringResource(id = R.string.salas),
             style = typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -130,7 +129,7 @@ fun BuscadorSencillo() {
                 .height(50.dp), // Mantenemos la altura compacta
             placeholder = {
                 Text(
-                    text = "Buscar sala...", style = typography.bodyMedium, color = Color.Gray
+                    text =stringResource(id = R.string.Buscar_sala) , style = typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             singleLine = true,
@@ -143,15 +142,15 @@ fun BuscadorSencillo() {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Buscar",
-                    tint = Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             )
         )
 
@@ -163,7 +162,7 @@ fun BuscadorSencillo() {
             modifier = Modifier.height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar", style = typography.labelLarge, fontWeight = FontWeight.Bold
+                text = stringResource(id = R.string.Buscar), style = typography.labelLarge, fontWeight = FontWeight.Bold
             )
         }
     }
@@ -199,7 +198,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 0
         }) {
             Text(
-                text = "Todas",
+                text = stringResource(id = R.string.Todas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -217,7 +216,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 1
         }) {
             Text(
-                text = "Libres",
+                text = stringResource(id = R.string.Libres),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -234,7 +233,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 2
         }) {
             Text(
-                text = "Ocupadas",
+                text = stringResource(id = R.string.Ocupadas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -251,7 +250,7 @@ fun SelectorListaSalas(modifier: Modifier = Modifier) {
             tabSeleccionado = 3
         }) {
             Text(
-                text = "Bloqueadas",
+                text = stringResource(id = R.string.Bloqueadas),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -291,7 +290,7 @@ fun Todas(controller: ControlAccesoViewModel = viewModel()) {
         ) {
             GenerarSalas(todasLasSalas)
         }
-
+        /*
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd) // Alineado abajo a la derecha
@@ -299,7 +298,7 @@ fun Todas(controller: ControlAccesoViewModel = viewModel()) {
         ) {
             BotonFlotanteAniadirSala()
         }
-
+        */
 
     }
 }
@@ -369,7 +368,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
             Card(
                 elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),   // SOMBRA TARJETA
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 // Hacemos que sea clickeable
                 modifier = Modifier.clickable(
                     onClick = { idSalaSeleccionada = infoSalaActual.id }
@@ -410,7 +409,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
 
                     )
                     Spacer(Modifier.padding(4.dp))
-                    Text(text = "Capacidad: ${infoSalaActual.capacidad.roundToInt()} personas")
+                    Text(text = "${stringResource(id = R.string.Capacidad)}: ${infoSalaActual.capacidad.roundToInt()} ${stringResource(id = R.string.Personas)}")
                 }
             }
 
@@ -424,6 +423,7 @@ fun GenerarSalas(salasAPintar : List <Sala>, controller: ControlAccesoViewModel 
         // SOlo cuando cambie el id se ejecutara
         LaunchedEffect(idSalaSeleccionada) {
             controller.recogerInfoSalaSeleccionada(idSalaSeleccionada)
+            controller.getAccesosSalaEspecifica(idSalaSeleccionada)
         }
         val infoSalaSeleccionada : Sala? = publicModel.value.salaSeleccionada
 
@@ -474,7 +474,11 @@ fun Desplegable(modifier: Modifier, opciones: MutableList<String>) {
 
 
 @Composable
-fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
+fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit, controller: ControlAccesoViewModel = viewModel()) {
+    val getDatos = controller.publicModelo.collectAsState()
+    val listaUsuarios = getDatos.value.listaUsuariosSalaSeleccionada
+    val listaHorarioEntrada = getDatos.value.listaHorasEntradasSalaSeleccionada
+    var contadorHoraEntrada = -1
     Dialog(
         onDismissRequest = { pulsarFuera() },    // Si pulsa fuera del dialog
         properties = DialogProperties(usePlatformDefaultWidth = false)      // para que el fondo oscurecido no sea tan brusco
@@ -488,7 +492,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -503,7 +507,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Información de la Sala",
+                        text = stringResource(id = R.string.Info_sala),
                         style = typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                     )
@@ -518,7 +522,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Id:",
+                            text = "ID:",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -543,7 +547,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Nombre:",
+                            text = "${stringResource(id = R.string.Nombre)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -568,7 +572,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Ubicación:",
+                            text = "${stringResource(id = R.string.Ubicacion)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -593,7 +597,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Tipo de cerradura:",
+                            text = "${stringResource(id = R.string.Tipo_cerradura)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -619,7 +623,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Capacidad:",
+                            text = "${stringResource(id = R.string.Capacidad)}: ",
                             style = typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textDecoration = TextDecoration.Underline,
@@ -644,7 +648,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Estado:",
+                            text = "${stringResource(id = R.string.Estado)}: ",
                             style = typography.bodyLarge,
                             textDecoration = TextDecoration.Underline,
                             fontWeight = FontWeight.Bold,
@@ -653,11 +657,11 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
 
                         Text(
                             text = if (salaMostrar?.estado.equals("libre", ignoreCase = true)) {
-                                "Libre \uD83D\uDFE2"
+                                "${stringResource(id = R.string.Libres)} \uD83D\uDFE2"
                             } else if(salaMostrar?.estado.equals("ocupada", ignoreCase = true)){
-                                "Ocupado \uD83D\uDFE0"
+                                "${stringResource(id = R.string.Ocupadas)} \uD83D\uDFE0"
                             }else{
-                                "Bloqueado \uD83D\uDD34"
+                                "${stringResource(id = R.string.Bloqueadas)} \uD83D\uDD34"
                             },
                             modifier = Modifier.weight(0.6f)
 
@@ -676,137 +680,14 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "Usuarios en la sala:",
+                            text = "${stringResource(id = R.string.Usuarios_en_sala)}:",
                             textDecoration = TextDecoration.Underline,
                             fontWeight = FontWeight.Bold,
                             style = typography.bodyLarge
                         )
 
 
-                        // CREAMOS LOS USUARIO DE EJEMPLO (DATA CLASS ModeloUsuarios)
-                        val listaUsuariosMutable = listOf(
-                            ModeloUsuarios_se_eliminara(
-                                "img1",
-                                "Juan",
-                                "Pérez",
-                                "López",
-                                "1º DAM",
-                                "juan@mail.com",
-                                "600111222",
-                                "12/09/23",
-                                true,
-                                false,
-                                mutableListOf("A1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img2",
-                                "María",
-                                "García",
-                                "Ruiz",
-                                "2º DAW",
-                                "maria@mail.com",
-                                "600222333",
-                                "13/09/23",
-                                true,
-                                false,
-                                mutableListOf("B1", "B2")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img3",
-                                "Carlos",
-                                "Sánchez",
-                                "Gil",
-                                "1º ASIR",
-                                "carlos@mail.com",
-                                "600333444",
-                                "14/09/23",
-                                false,
-                                true,
-                                mutableListOf("C1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img4",
-                                "Laura",
-                                "Martín",
-                                "Díaz",
-                                "2º DAM",
-                                "laura@mail.com",
-                                "600444555",
-                                "15/09/23",
-                                true,
-                                false,
-                                mutableListOf("D1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img5",
-                                "Pedro",
-                                "Ruiz",
-                                "Sanz",
-                                "1º DAW",
-                                "pedro@mail.com",
-                                "600555666",
-                                "16/09/23",
-                                true,
-                                false,
-                                mutableListOf()
-                            ), ModeloUsuarios_se_eliminara(
-                                "img6",
-                                "Sofía",
-                                "López",
-                                "Mora",
-                                "2º ASIR",
-                                "sofia@mail.com",
-                                "600666777",
-                                "17/09/23",
-                                true,
-                                false,
-                                mutableListOf("F1", "F2")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img7",
-                                "Javier",
-                                "Gómez",
-                                "Cano",
-                                "1º DAM",
-                                "javier@mail.com",
-                                "600777888",
-                                "18/09/23",
-                                false,
-                                false,
-                                mutableListOf("G1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img8",
-                                "Elena",
-                                "Torres",
-                                "Vila",
-                                "2º DAW",
-                                "elena@mail.com",
-                                "600888999",
-                                "19/09/23",
-                                true,
-                                false,
-                                mutableListOf("H1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img9",
-                                "Diego",
-                                "Díaz",
-                                "Pola",
-                                "1º ASIR",
-                                "diego@mail.com",
-                                "600999000",
-                                "20/09/23",
-                                true,
-                                true,
-                                mutableListOf("I1")
-                            ), ModeloUsuarios_se_eliminara(
-                                "img10",
-                                "Ana",
-                                "Vargas",
-                                "Ríos",
-                                "2º DAM",
-                                "ana@mail.com",
-                                "600000111",
-                                "21/09/23",
-                                true,
-                                false,
-                                mutableListOf("J1")
-                            )
-                        )
+
 
 
                         // queda implementar aqui una grid lazy column, que muestre usuarios que haya dentro
@@ -815,10 +696,12 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             // Recorre la lista de usuarios (Instancias ModeloUsuario)
-                            items(listaUsuariosMutable) { usuarioActual ->
+                            items(listaUsuarios) { usuarioActual ->
+
+                                contadorHoraEntrada++
                                 Card(
                                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                                    border = BorderStroke(1.dp, Color.Black),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                     shape = RoundedCornerShape(4.dp)
 
                                 ) {
@@ -841,8 +724,17 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                                                 contentScale = ContentScale.Fit,
                                                 modifier = Modifier.size(60.dp)
                                             )
+                                            Column(
+                                                Modifier.padding(start = 2.dp),
+                                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                                            ) {
+                                                Text("Id: ${usuarioActual.id}")
+                                                Text(usuarioActual.nombre, fontWeight = FontWeight.Bold)
+                                                Text(usuarioActual.email)
+                                                Text("Rol: ${usuarioActual.rol_id}")
+                                            }
 
-                                            Text(text = usuarioActual.nombreCompleto)
+
                                         }
 
                                         // HORA ACCESO
@@ -854,13 +746,13 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
                                             horizontalArrangement = Arrangement.spacedBy(5.dp)
                                         ) {
                                             Text(
-                                                text = "Hora de acceso:",
+                                                text = "${stringResource(id = R.string.Hora_acceso)}:",
                                                 style = typography.bodyLarge,
                                                 fontWeight = FontWeight.Bold
                                             )
 
                                             Text(
-                                                text = "9:34 AM",
+                                                text = listaHorarioEntrada[contadorHoraEntrada],
                                                 style = typography.bodyLarge,
                                             )
 
@@ -880,7 +772,7 @@ fun MostrarDialogoInformacionSala(salaMostrar: Sala?, pulsarFuera: () -> Unit) {
         }
     }
 }
-
+/*
 @Composable
 fun BotonFlotanteAniadirSala() {
     // Pulsa y llama a la funcion crearNuevaSala()
@@ -894,7 +786,7 @@ fun BotonFlotanteAniadirSala() {
         Icon(imageVector = Icons.Default.Refresh, contentDescription = "Add")
     }
 }
-
+*/
 @Preview(showBackground = true)
 @Composable
 fun PreviewSalas() {
@@ -902,5 +794,18 @@ fun PreviewSalas() {
         Salas()
     }
 }
-
+@Preview(showBackground = true, name = "Modo Claro")
+@Preview(
+    showBackground = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES,
+    name = "Modo Oscuro"
+)
+@Composable
+fun PreviewSalasDual() {
+    ControlDeAccesoKotlinTheme {
+        androidx.compose.material3.Surface {
+            Salas()
+        }
+    }
+}
 

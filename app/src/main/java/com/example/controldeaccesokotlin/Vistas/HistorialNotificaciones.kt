@@ -73,6 +73,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -88,7 +89,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.controldeaccesokotlin.bd_api.ModeloHistorial_se_eliminara
-import com.example.controldeaccesokotlin.ModeloUsuarios_se_eliminara
 import com.example.controldeaccesokotlin.R
 import com.example.controldeaccesokotlin.bd_api.Incidencia
 import com.example.controldeaccesokotlin.bd_api.ModeloAcceso
@@ -188,7 +188,7 @@ fun Notificaciones() {
     ) {
 
         Text(
-            "Historial de eventos",
+            text = stringResource(id = R.string.Historial_Eventos),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -196,9 +196,9 @@ fun Notificaciones() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Visualiza y exporta el historial de eventos de las salas",
+            text = stringResource(id = R.string.Visualiza),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         // Plantearse quitar el buscador
@@ -307,7 +307,7 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
             tabSeleccionado = 0
         }) {
             Text(
-                text = "Incidencias",
+                text = stringResource(id = R.string.Incidencias),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -322,7 +322,7 @@ fun SelectorAccesosIncidencias(eventos: List<ModeloHistorial_se_eliminara>) {
             tabSeleccionado = 1
         }) {
             Text(
-                text = "Accesos",
+                text = stringResource(id = R.string.Accesos),
                 style = typography.titleMedium,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
@@ -630,7 +630,7 @@ fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
                 modifier = Modifier
                     .weight(1f) // Hace referencia a unidades de peso, tal como flex-grow en CSS
                     .padding(end = 8.dp)
-            ) { Text("Filtrar") }
+            ) { Text(stringResource(id = R.string.Filtrar)) }
             Button(
                 onClick = { verOpcionesExportado = true },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
@@ -638,7 +638,7 @@ fun FormacionCardsAccesos(accesos: List<ModeloHistorial_se_eliminara>) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
-            ) { Text("Exportar") }
+            ) { Text(stringResource(id = R.string.Exportar)) }
         }
 
         // Llamo las funciones para mostrar las opciones de exportado/filtrado tras darle al boton
@@ -748,7 +748,7 @@ fun OpcionesExportado(onDismiss: () -> Unit) {
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -997,7 +997,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
 
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
 
         ) {
 
@@ -1071,7 +1071,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
                     HorizontalDivider(
                         modifier = Modifier.padding(),
                         thickness = 1.dp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
                 }
 
@@ -1154,7 +1154,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
                 .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1164,7 +1164,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
 //                        .clickable()
                     .padding(end = 25.dp, top = 12.dp),
                 fontStyle = FontStyle.Italic,
-                color = Color.Blue
+                color = MaterialTheme.colorScheme.primary
             )
 
             Column(
@@ -1267,7 +1267,7 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
                 .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1381,7 +1381,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
 //                .fillMaxHeight(0.8f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1509,7 +1509,7 @@ fun FiltrarPorFecha(onDismiss: () -> Unit) {
 //                .fillMaxHeight(0.4f),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
 
             Text(
@@ -1636,7 +1636,7 @@ fun Buscador(textoIntruducido: String) {
                 Text(
                     text = "Buscar...",
                     style = typography.bodyMedium,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             singleLine = true,
@@ -1648,16 +1648,16 @@ fun Buscador(textoIntruducido: String) {
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar",
-                    tint = Color.Gray,
+                    contentDescription = stringResource(id = R.string.Buscar) + " ...",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             )
         )
 
@@ -1670,7 +1670,7 @@ fun Buscador(textoIntruducido: String) {
                 .height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar",
+                text = stringResource(id = R.string.Buscar),
                 style = typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )

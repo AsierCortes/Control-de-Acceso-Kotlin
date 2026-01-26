@@ -38,6 +38,7 @@ import com.example.controldeaccesokotlin.Vistas.Login
 import com.example.controldeaccesokotlin.Vistas.Notificaciones
 import com.example.controldeaccesokotlin.Vistas.Salas
 import com.example.controldeaccesokotlin.Vistas.Usuarios
+import com.example.controldeaccesokotlin.ui.theme.ControlDeAccesoKotlinTheme
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -197,8 +198,3 @@ fun CustomBottomBar(changeView: (String) -> Unit) {
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ControlDeAccesoKotlinTheme(content: @Composable () -> Unit) {
-    Main()
-}

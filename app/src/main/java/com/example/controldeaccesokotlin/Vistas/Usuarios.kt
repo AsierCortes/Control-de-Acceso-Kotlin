@@ -1,6 +1,5 @@
 package com.example.controldeaccesokotlin.Vistas
 
-import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,101 +18,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.controldeaccesokotlin.R
+import com.example.controldeaccesokotlin.bd_api.Usuario
+import com.example.controldeaccesokotlin.viewModel.ControlAccesoViewModel
 
-// ------------------ MODELO ------------------
-data class Usuario(
-    val nombre: String,
-    val email: String,
-    val telefono: String,
-    val fecha: String,
-    val activo: Boolean,
-    val bloqueado: Boolean
-)
 
 // ------------------ PANTALLA PRINCIPAL ------------------
 @Composable
-fun Usuarios() {
+fun Usuarios(controller: ControlAccesoViewModel = viewModel()) {
+    val getDatos = controller.publicModelo.collectAsState()
 
     var texto by remember { mutableStateOf("") }
     var mostrarFiltros by remember { mutableStateOf(false) }
     var estadoSeleccionado by remember { mutableStateOf("Todos") }
     var ordenSeleccionado by remember { mutableStateOf("Nombre A-Z") }
 
-    var usuarios by remember {
-        mutableStateOf(
-            listOf(
-                Usuario("Bruno Linares", "bruno@gmail.com", "600111222", "13/03/2024", true, false),
-                Usuario("Ana Pérez", "ana@gmail.com", "600222333", "13/03/2024", true, false),
-                Usuario("Carlos Ruiz", "carlos@gmail.com", "600333444", "13/03/2024", true, false),
-                Usuario("Lucía Gómez", "lucia@gmail.com", "600444555", "13/03/2024", true, false),
-                Usuario(
-                    "Miguel Torres",
-                    "miguel@gmail.com",
-                    "600555666",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "Sofía Martínez",
-                    "sofia@gmail.com",
-                    "600666777",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario(
-                    "David Fernández",
-                    "david@gmail.com",
-                    "600777888",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Laura Sánchez", "laura@gmail.com", "600888999", "13/03/2024", true, false),
-                Usuario(
-                    "Javier Morales",
-                    "javier@gmail.com",
-                    "600999000",
-                    "13/03/2024",
-                    true,
-                    false
-                ),
-                Usuario("Elena Navarro", "elena@gmail.com", "601000111", "13/03/2024", true, false)
-            )
-        )
-    }
+    val listaUsuarios: List<Usuario> = getDatos.value.usuarios
 
-    val usuariosFiltrados = usuarios
-        .filter {
-            it.nombre.contains(texto, true) ||
-                    it.email.contains(texto, true)
-        }
-        .filter {
-            when (estadoSeleccionado) {
-                "Activo" -> it.activo && !it.bloqueado
-                "Inactivo" -> !it.activo
-                "Bloqueado" -> it.bloqueado
-                else -> true
-            }
-        }
-        .sortedWith(
-            when (ordenSeleccionado) {
-                "Nombre A-Z" -> compareBy { it.nombre }
-                "Nombre Z-A" -> compareByDescending { it.nombre }
-                "FechaAlta(Reciente)" -> compareByDescending { it.fecha }
-                "FechaAlta(Antigua)" -> compareBy { it.fecha }
-                else -> compareBy { it.nombre }
-            }
-        )
+
+
 
     Column(
         modifier = Modifier
@@ -122,7 +51,7 @@ fun Usuarios() {
     ) {
 
         Text(
-            text = "Gestión de Usuarios",
+            text = stringResource(id = R.string.Info_sala),
             style = typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -144,8 +73,8 @@ fun Usuarios() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(usuariosFiltrados) { usuario ->
-                Tarjeta(usuario)
+            items(listaUsuarios) { usuarioActual ->
+                Tarjeta(usuarioActual)
             }
         }
     }
@@ -168,7 +97,7 @@ fun Usuarios() {
 @Composable
 fun BuscarTexto(
     texto: String,
-    onTextoChange: (String) -> Unit
+    onTextoChange: (String) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -184,7 +113,7 @@ fun BuscarTexto(
                 .weight(1f)
                 .height(50.dp),
             placeholder = {
-                Text("Buscar usuarios...", color = Color.Gray)
+                Text(stringResource(id = R.string.Buscar_usuarios), color = Color.Gray)
             },
             singleLine = true,
             textStyle = typography.bodyMedium, // IMPORTANTE: Texto un poco más pequeño para que quepa bien
@@ -217,7 +146,7 @@ fun BuscarTexto(
                 .height(50.dp) // Misma altura que el input
         ) {
             Text(
-                text = "Buscar",
+                text = stringResource(id = R.string.Buscar),
                 style = typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -235,7 +164,7 @@ fun BotonFiltrar(onClick: () -> Unit) {
     ) {
         Icon(Icons.Filled.AddCircle, contentDescription = "Filtrar")
         Spacer(modifier = Modifier.width(8.dp))
-        Text("Filtros")
+        Text(stringResource(id = R.string.Filtros))
     }
 }
 
@@ -243,9 +172,6 @@ fun BotonFiltrar(onClick: () -> Unit) {
 @Composable
 fun Tarjeta(usuario: Usuario) {
 
-    var mostrarMenuEdicion by remember { mutableStateOf(false) }
-    var expandir by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -270,127 +196,20 @@ fun Tarjeta(usuario: Usuario) {
                 Spacer(Modifier.width(8.dp))
 
                 Column {
+                    Text("Id: ${usuario.id}")
                     Text(usuario.nombre, fontWeight = FontWeight.Bold)
                     Text(usuario.email)
+                    Text("Rol: ${usuario.rol_id}")
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { expandir = !expandir },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    if (expandir) "Ocultar acciones" else "Mostrar acciones",
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    if (expandir) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = null
-                )
-            }
-
-            if (expandir) {
-                Spacer(Modifier.height(8.dp))
-                Button(
-                    onClick = { mostrarMenuEdicion = true },
-                    modifier = Modifier.fillMaxWidth()
-                ) { Text("Editar") }
-
-                Button(
-                    onClick = {
-                        Toast.makeText(context, "Usuario Eliminado", Toast.LENGTH_SHORT).show()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
-                ) {
-                    Text("Eliminar")
-                }
-            }
         }
     }
 
-    if (mostrarMenuEdicion) {
-        EditarUsuario(
-            usuario = usuario,
-            Cancelar = { mostrarMenuEdicion = false },
-            Aplicar = { mostrarMenuEdicion = false },
-            Permisos = { mostrarMenuEdicion = false },
-            Bloquear = { mostrarMenuEdicion = false }
-        )
-    }
+
 }
 
-// ------------------ EDITAR USUARIO ------------------
-@Composable
-fun EditarUsuario(
-    usuario: Usuario,
-    Cancelar: () -> Unit,
-    Permisos: () -> Unit,
-    Bloquear: () -> Unit,
-    Aplicar: () -> Unit
-) {
-    var nombre by remember { mutableStateOf(usuario.nombre) }
-    var email by remember { mutableStateOf(usuario.email) }
-    var telefono by remember { mutableStateOf(usuario.telefono) }
-    var fecha by remember { mutableStateOf(usuario.fecha) }
-    var activo by remember { mutableStateOf(usuario.activo) }
-    var bloqueado by remember { mutableStateOf(usuario.bloqueado) }
-
-    Dialog(
-        onDismissRequest = Cancelar,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-
-                Text("Información del usuario", fontWeight = FontWeight.Bold)
-
-                TextField(
-                    value = nombre,
-                    onValueChange = { nombre = it },
-                    label = { Text("Nombre") })
-                TextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
-                TextField(
-                    value = telefono,
-                    onValueChange = { telefono = it },
-                    label = { Text("Teléfono") })
-                TextField(value = fecha, onValueChange = { fecha = it }, label = { Text("Fecha") })
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Activo")
-                    Switch(checked = activo, onCheckedChange = { activo = it })
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Bloqueado")
-                    Switch(checked = bloqueado, onCheckedChange = { bloqueado = it })
-                }
-
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = Cancelar) { Text("Cancelar") }
-                    Spacer(Modifier.width(8.dp))
-                    Button(onClick = Aplicar) { Text("Guardar") }
-                }
-            }
-        }
-    }
-}
 
 // ------------------ FILTROS ------------------
 @Composable
@@ -398,14 +217,14 @@ fun Filtros(
     estadoActual: String,
     ordenActual: String,
     Cancelar: () -> Unit,
-    Aplicar: (String, String) -> Unit
+    Aplicar: (String, String) -> Unit,
 ) {
     var estado by remember { mutableStateOf(estadoActual) }
     var orden by remember { mutableStateOf(ordenActual) }
 
     AlertDialog(
         onDismissRequest = Cancelar,
-        title = { Text("Filtros") },
+        title = { Text(stringResource(id = R.string.Filtros)) },
         text = {
             Column {
                 DesplegableEstado(estado) { estado = it }
@@ -415,12 +234,12 @@ fun Filtros(
         },
         confirmButton = {
             Button(onClick = { Aplicar(estado, orden) }) {
-                Text("Guardar")
+                Text(stringResource(id = R.string.Guardar))
             }
         },
         dismissButton = {
             Button(onClick = Cancelar) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.Cancelar))
             }
         }
     )
@@ -429,7 +248,7 @@ fun Filtros(
 // ------------------ DESPLEGABLES ------------------
 @Composable
 fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Todos", "Activo", "Inactivo", "Bloqueado")
+    val opciones = listOf(stringResource(id = R.string.Todos), stringResource(id = R.string.Activo), stringResource(id = R.string.Inactivo), stringResource(id = R.string.Bloqueadas))
     var expandir by remember { mutableStateOf(false) }
 
     Column {
@@ -462,7 +281,7 @@ fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit)
 
 @Composable
 fun DesplegableOrdenarPor(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf("Nombre A-Z", "Nombre Z-A", "FechaAlta(Reciente)", "FechaAlta(Antigua)")
+    val opciones = listOf(stringResource(id = R.string.Nombre_a_z), stringResource(id = R.string.Nombre_z_a), stringResource(id = R.string.FechaAltaReciente), stringResource(id = R.string.FehaAltaAntigua))
     var expandir by remember { mutableStateOf(false) }
 
     Column {

@@ -32,14 +32,18 @@ import com.example.controldeaccesokotlin.viewModel.ControlAccesoViewModel
 // ------------------ PANTALLA PRINCIPAL ------------------
 @Composable
 fun Usuarios(controller: ControlAccesoViewModel = viewModel()) {
-    val getDatos = controller.publicModelo.collectAsState()
 
-    var texto by remember { mutableStateOf("") }
-    var mostrarFiltros by remember { mutableStateOf(false) }
-    var estadoSeleccionado by remember { mutableStateOf("Todos") }
-    var ordenSeleccionado by remember { mutableStateOf("Nombre A-Z") }
+        // Se obtiene el StateFlow del ViewModel un un state y cada vez que hay un cambio se actualiza
+        val getDatos = controller.publicModelo.collectAsState()
 
-    val listaUsuarios: List<Usuario> = getDatos.value.usuarios
+
+    // variables locales para el manejo de la UI
+        var texto by remember { mutableStateOf("") }
+        var mostrarFiltros by remember { mutableStateOf(false) }
+        var ordenSeleccionado by remember { mutableStateOf("Nombre A-Z") }
+
+        // se obtiene la lista de usuarios del StateFlow y se actualiza cuando cambie
+        val listaUsuarios: List<Usuario> = getDatos.value.usuarios
 
 
 
@@ -68,7 +72,7 @@ fun Usuarios(controller: ControlAccesoViewModel = viewModel()) {
         BotonFiltrar(onClick = { mostrarFiltros = true })
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        //muestra los usuarios en la pantalla
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -78,14 +82,12 @@ fun Usuarios(controller: ControlAccesoViewModel = viewModel()) {
             }
         }
     }
-
+        //filtros sin mostrar el estado de los usarios
     if (mostrarFiltros) {
         Filtros(
-            estadoActual = estadoSeleccionado,
             ordenActual = ordenSeleccionado,
             Cancelar = { mostrarFiltros = false },
-            Aplicar = { estado, orden ->
-                estadoSeleccionado = estado
+            Aplicar = { orden ->
                 ordenSeleccionado = orden
                 mostrarFiltros = false
             }
@@ -106,6 +108,7 @@ fun BuscarTexto(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // textfield para introducir la busqueda de usuario
         OutlinedTextField(
             value = texto,
             onValueChange = onTextoChange,
@@ -116,11 +119,11 @@ fun BuscarTexto(
                 Text(stringResource(id = R.string.Buscar_usuarios), color = Color.Gray)
             },
             singleLine = true,
-            textStyle = typography.bodyMedium, // IMPORTANTE: Texto un poco más pequeño para que quepa bien
+            textStyle = typography.bodyMedium,
             shape = RoundedCornerShape(10.dp),
 
-            // --- HE BORRADO LA LÍNEA contentPadding QUE DABA ERROR ---
 
+            //Icono de busuqeda
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -137,7 +140,7 @@ fun BuscarTexto(
             )
         )
 
-        // 2. EL BOTÓN
+        // boton para buscar usuarios
         Button(
             onClick = {},
             shape = RoundedCornerShape(10.dp),
@@ -172,7 +175,6 @@ fun BotonFiltrar(onClick: () -> Unit) {
 @Composable
 fun Tarjeta(usuario: Usuario) {
 
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,7 +187,7 @@ fun Tarjeta(usuario: Usuario) {
         Column(Modifier.padding(12.dp)) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-
+                //perfil del usuario
                 Image(
                     painter = painterResource(id = R.drawable.perfilusuario),
                     contentDescription = "foto perfil usuario",
@@ -194,7 +196,7 @@ fun Tarjeta(usuario: Usuario) {
                 )
 
                 Spacer(Modifier.width(8.dp))
-
+                // datos del usuario
                 Column {
                     Text("Id: ${usuario.id}")
                     Text(usuario.nombre, fontWeight = FontWeight.Bold)
@@ -214,12 +216,11 @@ fun Tarjeta(usuario: Usuario) {
 // ------------------ FILTROS ------------------
 @Composable
 fun Filtros(
-    estadoActual: String,
     ordenActual: String,
     Cancelar: () -> Unit,
-    Aplicar: (String, String) -> Unit,
+    Aplicar: (String) -> Unit,
 ) {
-    var estado by remember { mutableStateOf(estadoActual) }
+    //variable para filtrar segun el orden
     var orden by remember { mutableStateOf(ordenActual) }
 
     AlertDialog(
@@ -227,13 +228,11 @@ fun Filtros(
         title = { Text(stringResource(id = R.string.Filtros)) },
         text = {
             Column {
-                DesplegableEstado(estado) { estado = it }
-                Spacer(Modifier.height(8.dp))
                 DesplegableOrdenarPor(orden) { orden = it }
             }
         },
         confirmButton = {
-            Button(onClick = { Aplicar(estado, orden) }) {
+            Button(onClick = { Aplicar(orden) }) {
                 Text(stringResource(id = R.string.Guardar))
             }
         },
@@ -245,32 +244,33 @@ fun Filtros(
     )
 }
 
-// ------------------ DESPLEGABLES ------------------
+// ------------------ DESPLEGABLE ------------------
+
+//Actualizado a un solo desplegable debido a que solo hay dos opciones
 @Composable
-fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf(stringResource(id = R.string.Todos), stringResource(id = R.string.Activo), stringResource(id = R.string.Inactivo), stringResource(id = R.string.Bloqueadas))
+fun DesplegableOrdenarPor(orden: String, onSeleccionChange: (String) -> Unit) {
+    val opciones = listOf("Nombre A - Z", "Nombre Z - A")
     var expandir by remember { mutableStateOf(false) }
 
-    Column {
-        Row(
+    Box {
+        // El texto que pulsas
+        Text(
+            text = orden,
             modifier = Modifier
-                .fillMaxWidth()
                 .clickable { expandir = true }
-                .padding(8.dp)
-        ) {
-            Text(seleccionado, Modifier.weight(1f))
-            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-        }
+                .padding(16.dp)
+        )
 
+        // Lo que se despliega
         DropdownMenu(
             expanded = expandir,
             onDismissRequest = { expandir = false }
         ) {
-            opciones.forEach {
+            opciones.forEach { opcion ->
                 DropdownMenuItem(
-                    text = { Text(it) },
+                    text = { Text(opcion) },
                     onClick = {
-                        onSeleccionChange(it)
+                        onSeleccionChange(opcion)
                         expandir = false
                     }
                 )
@@ -279,38 +279,6 @@ fun DesplegableEstado(seleccionado: String, onSeleccionChange: (String) -> Unit)
     }
 }
 
-@Composable
-fun DesplegableOrdenarPor(seleccionado: String, onSeleccionChange: (String) -> Unit) {
-    val opciones = listOf(stringResource(id = R.string.Nombre_a_z), stringResource(id = R.string.Nombre_z_a), stringResource(id = R.string.FechaAltaReciente), stringResource(id = R.string.FehaAltaAntigua))
-    var expandir by remember { mutableStateOf(false) }
-
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expandir = true }
-                .padding(8.dp)
-        ) {
-            Text(seleccionado, Modifier.weight(1f))
-            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-        }
-
-        DropdownMenu(
-            expanded = expandir,
-            onDismissRequest = { expandir = false }
-        ) {
-            opciones.forEach {
-                DropdownMenuItem(
-                    text = { Text(it) },
-                    onClick = {
-                        onSeleccionChange(it)
-                        expandir = false
-                    }
-                )
-            }
-        }
-    }
-}
 
 // ------------------ PREVIEWS ------------------
 @Preview

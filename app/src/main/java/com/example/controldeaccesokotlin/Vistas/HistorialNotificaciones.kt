@@ -962,19 +962,18 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
     )
 
     val tipoEventos = listOf(
-//        "Todos",
-        "Acceso Denegado",
-        "Apertura Forzada",
-        "Puerta Abierta",
-        "Demasiado Tiempo",
-        "Bloqueo de Sala"
+        stringResource(id = R.string.Acceso_denegado),
+        stringResource(id = R.string.Apertura_forzada),
+        stringResource(id = R.string.Puerta_abierta),
+        stringResource(id = R.string.Demasiado_tiempo),
+        stringResource(id = R.string.Bloqueo_sala)
     )
 
     val filtros = listOf(
-        "Usuarios",
-        "Salas",
-        "Tipo de evento",
-        "Fecha"
+        stringResource(id = R.string.Usuarios),
+        stringResource(id = R.string.salas),
+        stringResource(id = R.string.Tipo_evento),
+        stringResource(id = R.string.Fecha)
     )
 
     var mostrarUsuarios by remember { mutableStateOf(false) }
@@ -1002,7 +1001,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
         ) {
 
             Text(
-                "Suprimir filtros",
+                stringResource(id = R.string.Suprimir_filtros),
                 modifier = Modifier
                     .align(Alignment.End)
 //                        .clickable()
@@ -1020,7 +1019,7 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
             {
 
                 Text(
-                    text = "Opciones de filtrado",
+                    text = stringResource(id = R.string.Opciones_filtrado),
                     style = typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -1250,7 +1249,9 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
 }
 
 @Composable
-fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
+fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit, controller: ControlAccesoViewModel = viewModel()) {
+    val getDatos = controller.publicModelo.collectAsState()
+    val salas = getDatos.value.salas
 
     var salaIntroducida by remember { mutableStateOf("") }
 
@@ -1289,7 +1290,7 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
             {
 
                 Text(
-                    "Salas",
+                    stringResource(id = R.string.salas),
                     style = typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -1331,15 +1332,16 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
                                 )
 
                                 Text(
-                                    text = salaActual,
+                                    text = "ID: ${salaActual.id}, ${salaActual.nombre}",
                                     Modifier
                                         .weight(1f)
                                         .padding(start = 5.dp)
                                 )
 
+
                                 Checkbox(
-                                    seleccionados[salaActual] ?: false,
-                                    { seleccionados[salaActual] = it },
+                                    seleccionados[salaActual.nombre] ?: false,
+                                    { seleccionados[salaActual.nombre] = it },
                                 )
                             }
                         }
@@ -1350,13 +1352,13 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit) {
 
                 Button(
                     {
-                        val salasSeleccionadas = salas.filter { seleccionados[it] == true }
+                        val salasSeleccionadas = salas.filter { seleccionados[it.nombre] == true }
                         println(salasSeleccionadas)
                         onDismiss()
                     },
                     Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Aplicar")
+                    Text(stringResource(id = R.string.Aplicar))
                 }
 //                println(salas.filter { seleccionados[it] == true }) // Prueba--------------------------
             }
@@ -1385,7 +1387,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
         ) {
 
             Text(
-                "Cancelar",
+                stringResource(id = R.string.Cancelar),
                 modifier = Modifier
                     .align(Alignment.End)
 //                        .clickable()
@@ -1634,7 +1636,7 @@ fun Buscador(textoIntruducido: String) {
                 .height(50.dp), // Mantenemos la altura compacta
             placeholder = {
                 Text(
-                    text = "Buscar...",
+                    text = stringResource(id = R.string.Buscar) + " ...",
                     style = typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

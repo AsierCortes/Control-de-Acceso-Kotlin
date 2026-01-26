@@ -45,4 +45,11 @@
     <string name="Fecha">Date</string>
     <string name="Seleccionar_fecha">Select date</string>
     <string name="Aplicar">Apply</string>
+    <string name="Mostrar_resultados">Show Results</string>
+    <string name="Suprimir_filtros">Remove filters</string>
+    <string name="Acceso_denegado">Access denied</string>
+    <string name="Apertura_forzada">Forced opening</string>
+    <string name="Puerta_abierta">Open door</string>
+    <string name="Demasiado_tiempo">Enough time</string>
+    <string name="Bloqueo_sala">Room Lockout</string>
 </resources>

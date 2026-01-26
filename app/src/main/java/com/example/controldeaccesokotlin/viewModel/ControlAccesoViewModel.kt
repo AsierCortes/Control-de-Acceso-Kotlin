@@ -30,6 +30,7 @@ class ControlAccesoViewModel : ViewModel() {
     init {
         recogerInfoSalasPorPagina()
         recogerInfoIncidenciasPorPagina()
+        recogerInfoUsuariosPorPagina()
     }
 
 
@@ -275,15 +276,21 @@ class ControlAccesoViewModel : ViewModel() {
         val usuarios: List<Usuario> = publicModelo.value.usuarios
         var correoExiste: Boolean = false
 
+
+        println("Correo comprobar: " + correoComprobar)
+
         for (usuarioActual in usuarios) {
+            println("Coreo: " + usuarioActual.email)
             if (correoComprobar.equals(usuarioActual.email, ignoreCase = false)) {
                 correoExiste = true
             }
         }
 
         if (correoExiste) {
+            println("El correo es válido")
             return true
         } else {
+            println("El correo NO es válido")
             return false
         }
     }

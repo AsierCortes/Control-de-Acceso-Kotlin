@@ -51,4 +51,5 @@
     <string name="Puerta_abierta">Puerta abierta</string>
     <string name="Demasiado_tiempo">Demasiado tiempo</string>
     <string name="Bloqueo_sala">Bloqueo de sala</string>
+    <string name="Eventos">Eventos</string>
 </resources>

@@ -1036,10 +1036,10 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
                                 role = Role.Button,
                                 onClick = {
                                     when (item) {
-                                        "Usuarios" -> mostrarUsuarios = true
-                                        "Salas" -> mostrarSalas = true
-                                        "Tipo de evento" -> mostrarEventos = true
-                                        "Fecha" -> seleccionarFecha = true
+                                        "Usuarios", "Users" -> mostrarUsuarios = true
+                                        "Salas", "Rooms" -> mostrarSalas = true
+                                        "Tipo de evento", "Type of event" -> mostrarEventos = true
+                                        "Fecha", "Date" -> seleccionarFecha = true
                                     }
                                 }
                             )
@@ -1053,10 +1053,10 @@ fun OpcionesFiltrado(onDismiss: () -> Unit) {
                         )
                         IconButton({
                             when (item) {
-                                "Usuarios" -> mostrarUsuarios = true
-                                "Salas" -> mostrarSalas = true
-                                "Tipo de evento" -> mostrarEventos = true
-                                "Fecha" -> seleccionarFecha = true
+                                "Usuarios", "Users" -> mostrarUsuarios = true
+                                "Salas", "Rooms" -> mostrarSalas = true
+                                "Tipo de evento", "Type of event" -> mostrarEventos = true
+                                "Fecha", "Date" -> seleccionarFecha = true
                             }
                         }
                         ) {
@@ -1157,7 +1157,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
         ) {
 
             Text(
-                "Cancelar",
+                stringResource(id = R.string.Cancelar),
                 modifier = Modifier
                     .align(Alignment.End)
 //                        .clickable()
@@ -1175,7 +1175,7 @@ fun FiltrarPorUsuarios(usuarios: List<ModeloUsuarios_se_eliminara>, onDismiss: (
             {
 
                 Text(
-                    "Usuarios",
+                    stringResource(id = R.string.Usuarios),
                     style = typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -1272,7 +1272,7 @@ fun FiltrarPorSalas(salas: List<String>, onDismiss: () -> Unit, controller: Cont
         ) {
 
             Text(
-                "Cancelar",
+                stringResource(id = R.string.Cancelar),
                 modifier = Modifier
                     .align(Alignment.End)
 //                        .clickable()
@@ -1405,7 +1405,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
 
             {
                 Text(
-                    "Eventos",
+                    stringResource(id = R.string.Eventos),
                     style = typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -1432,11 +1432,11 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
                             Icon(
                                 painterResource(
                                     when (eventoActual) {
-                                        "Acceso Denegado" -> R.drawable.outline_do_not_disturb_on_24
-                                        "Apertura Forzada" -> R.drawable.outline_report_24
-                                        "Puerta Abierta" -> R.drawable.outline_lock_open_right_24
-                                        "Demasiado Tiempo" -> R.drawable.outline_hourglass_empty_24
-                                        "Bloqueo de Sala" -> R.drawable.outline_lock_person_24
+                                        "Acceso Denegado", "Access denied" -> R.drawable.outline_do_not_disturb_on_24
+                                        "Apertura Forzada", "Forced opening" -> R.drawable.outline_report_24
+                                        "Puerta Abierta", "Open door" -> R.drawable.outline_lock_open_right_24
+                                        "Demasiado Tiempo", "Enough time" -> R.drawable.outline_hourglass_empty_24
+                                        "Bloqueo de Sala", "Room Lockout" -> R.drawable.outline_lock_person_24
                                         else -> {
                                             R.drawable.outline_unknown_med_24
                                         }
@@ -1488,7 +1488,7 @@ fun FiltrarPorEvento(eventos: List<String>, onDismiss: () -> Unit) {
 // Ejemplo copiado exactamente del ej de la documentacion de Material3
 fun FiltrarPorFecha(onDismiss: () -> Unit) {
 
-    //TODO Adaptarlo al ejercicio, que se vea en un cuadro de dialogo (DONE)
+    //TODOo Adaptarlo al ejercicio, que se vea en un cuadro de dialogo (DONE)
     // Tiene que ser en pantalla completa ya que colapsa si se  cambia su tamaño
     // Mover la "x" a la derecha e intentar poner un boton como en las demas opciones de filtrado
     val snackState = remember { SnackbarHostState() }
@@ -1515,7 +1515,7 @@ fun FiltrarPorFecha(onDismiss: () -> Unit) {
         ) {
 
             Text(
-                "Cancelar",
+                stringResource(id = R.string.Cancelar),
                 modifier = Modifier
                     .align(Alignment.End)
 //                        .clickable()
@@ -1531,7 +1531,7 @@ fun FiltrarPorFecha(onDismiss: () -> Unit) {
                 // Add a row with "Save" and dismiss actions.
 
                 Text(
-                    "Seleccionar fecha",
+                    stringResource(id = R.string.Seleccionar_fecha),
                     style = typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )

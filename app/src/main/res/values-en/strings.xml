@@ -52,4 +52,5 @@
     <string name="Puerta_abierta">Open door</string>
     <string name="Demasiado_tiempo">Enough time</string>
     <string name="Bloqueo_sala">Room Lockout</string>
+    <string name="Eventos">Events</string>
 </resources>

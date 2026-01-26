@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 fun Main() {
     val navController = rememberNavController();
 
-    // Te dice en que pantalla estas actualmente (Es como un GPS)
+    // Te dice en quee pantalla estas actualmente (Es como un GPS)
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
 

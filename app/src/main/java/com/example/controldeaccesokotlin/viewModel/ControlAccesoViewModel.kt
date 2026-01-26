@@ -271,4 +271,22 @@ class ControlAccesoViewModel : ViewModel() {
     }
 
 
+    fun comprobarCorreoExiste(correoComprobar: String): Boolean {
+        val usuarios: List<Usuario> = publicModelo.value.usuarios
+        var correoExiste: Boolean = false
+
+        for (usuarioActual in usuarios) {
+            if (correoComprobar.equals(usuarioActual.email, ignoreCase = false)) {
+                correoExiste = true
+            }
+        }
+
+        if (correoExiste) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+
 }
